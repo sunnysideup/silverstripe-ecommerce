@@ -9,8 +9,11 @@ use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
@@ -26,6 +29,33 @@ trait EcommerceOrderReportTrait
     public function group()
     {
         return _t('EcommerceSideReport.ECOMMERCEGROUP', 'Ecommerce');
+    }
+
+    /**
+     * Order reports list (and can export to CSV) customer names, email addresses, phone numbers and addresses
+     * of ALL orders, and the check on each individual order is not made for reports.
+     * The default for reports is: anyone who can use the CMS. That is too much for this data:
+     * only shop administrators can see these reports.
+     *
+     * @param null|false|\SilverStripe\Security\Member $member
+     */
+    public function canView($member = null)
+    {
+        if (! $member && false !== $member) {
+            $member = Security::getCurrentUser();
+        }
+
+        $extended = $this->extendedCan('canView', $member);
+        if (null !== $extended) {
+            return $extended;
+        }
+
+        if (! $member) {
+            return false;
+        }
+
+        return Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))
+            || EcommerceRole::current_member_is_shop_admin($member);
     }
 
     /**

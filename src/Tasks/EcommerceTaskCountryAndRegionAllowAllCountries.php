@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 
@@ -21,6 +22,10 @@ class EcommerceTaskCountryAndRegionAllowAllCountries extends BuildTask
 
     public function run($request)
     {
+        if (! DestructiveTaskGuard::mayRun($request, $this, 'Allows sales to ALL countries.', DestructiveTaskGuard::NOT_LIVE)) {
+            return;
+        }
+
         $allowedArray = EcommerceCountry::get()
             ->filter(['DoNotAllowSales' => 1]);
         if ($allowedArray->exists()) {

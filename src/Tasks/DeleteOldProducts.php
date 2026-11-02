@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DB;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -25,6 +26,10 @@ class DeleteOldProducts extends BuildTask
 
     public function run($request)
     {
+        if (! DestructiveTaskGuard::mayRun($request, $this, 'Deletes the products that are not for sale and have not been sold for a long time, live and draft.', DestructiveTaskGuard::ANYWHERE)) {
+            return;
+        }
+
         $cutOfTs = strtotime('-' . $this->Config()->get('last_sold_days_ago') . ' days');
         DB::alteration_message('<h1>Deleting products that are not for sale, last sold since: ' . date('Y-m-d', $cutOfTs) . '</h1>');
 

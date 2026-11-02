@@ -7,6 +7,7 @@ use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -60,11 +61,15 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
         if (! Director::isDev() || Director::isLive()) {
             DB::alteration_message('you can only run this in dev mode!');
         } else {
-            if (! isset($_REQUEST['i-am-sure'])) {
-                $_REQUEST['i-am-sure'] = '';
+            // On the command line you have to say that you are sure (as before).
+            if (Director::is_cli() && 'yes' !== (string) ($_REQUEST['i-am-sure'] ?? '')) {
+                DB::alteration_message("ARE YOU SURE? Add i-am-sure=yes to the command, e.g. sake dev/tasks/EcommerceTaskDeleteAllOrders i-am-sure=yes", 'error');
+
+                return 0;
             }
-            if ('yes' !== $_REQUEST['i-am-sure']) {
-                die("<h1>ARE YOU SURE?</h1><br /><br /><br /> please add the 'i-am-sure' get variable to your request and set it to 'yes' ... e.g. <br />http://www.mysite.com/dev/ecommerce/ecommercetaskdeleteallorders/?i-am-sure=yes");
+            // On the web you have to confirm on a page first (a link can not run this task).
+            if (! DestructiveTaskGuard::mayRun($request, $this, 'Deletes ALL orders and payments that have ever been placed.', DestructiveTaskGuard::DEV_ONLY)) {
+                return 0;
             }
             $oldCarts = Order::get();
             $count = 0;

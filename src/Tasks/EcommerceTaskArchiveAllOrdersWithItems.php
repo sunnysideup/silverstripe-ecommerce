@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -34,6 +35,10 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
 
     public function run($request)
     {
+        if (! DestructiveTaskGuard::mayRun($request, $this, 'Moves orders to the Archived step and ADDS submit records (a migration task).', DestructiveTaskGuard::NOT_LIVE)) {
+            return;
+        }
+
         set_time_limit(1200);
         //IMPORTANT!
         $lastOrderStep = DataObject::get_one(

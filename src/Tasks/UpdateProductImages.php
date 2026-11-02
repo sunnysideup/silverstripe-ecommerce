@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Assets\Image;
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DB;
 
 /**
@@ -24,6 +25,10 @@ class UpdateProductImages extends BuildTask
 
     public function run($request)
     {
+        if (! DestructiveTaskGuard::mayRun($request, $this, 'Changes the class of all images in the database (a migration task).', DestructiveTaskGuard::NOT_LIVE)) {
+            return;
+        }
+
         DB::query('
             UPDATE "File"
             SET "ClassName" = \'' . Image::class . '\'

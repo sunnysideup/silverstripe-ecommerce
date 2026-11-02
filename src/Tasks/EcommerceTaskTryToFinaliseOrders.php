@@ -9,6 +9,7 @@ use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
@@ -41,6 +42,10 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
 
     public function run($request)
     {
+        if (! DestructiveTaskGuard::mayRun($request, $this, 'Tries to finalise orders: this moves orders along and can send emails to customers.', DestructiveTaskGuard::ANYWHERE)) {
+            return;
+        }
+
         //IMPORTANT!
         if (! $this->sendEmails) {
             Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');

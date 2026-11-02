@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -204,6 +205,10 @@ class EcommerceTaskCartCleanup extends BuildTask
             }
 
             if ($request->getVar('purge')) {
+                // purge also deletes carts that are linked to a member
+                if (! DestructiveTaskGuard::mayRun($request, $this, 'Deletes abandoned carts, INCLUDING carts that are linked to a customer account (purge).', DestructiveTaskGuard::ANYWHERE)) {
+                    return;
+                }
                 $this->neverDeleteIfLinkedToMember = false;
             }
         }

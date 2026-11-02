@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
@@ -24,6 +25,10 @@ class EcommerceTaskDeleteProducts extends BuildTask
 
     public function run($request)
     {
+        if (! DestructiveTaskGuard::mayRun($request, $this, 'Deletes ALL products (every buyable), live and draft.', DestructiveTaskGuard::NOT_LIVE)) {
+            return;
+        }
+
         $arrayOfBuyables = EcommerceConfig::get(EcommerceDBConfig::class, 'array_of_buyables');
         foreach ($arrayOfBuyables as $buyable) {
             $allproducts = $buyable::get();

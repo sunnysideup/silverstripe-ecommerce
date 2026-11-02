@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DB;
 
 /**
@@ -22,6 +23,10 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
 
     public function run($request)
     {
+        if (! DestructiveTaskGuard::mayRun($request, $this, 'Changes (and removes) broken order submission records.', DestructiveTaskGuard::ANYWHERE)) {
+            return;
+        }
+
         $problem = DB::query('SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLogSubmitted INNER JOIN OrderStatusLog ON OrderStatusLogSubmitted.ID = OrderStatusLog.ID WHERE OrderID = 0');
         if ($problem->value()) {
             DB::alteration_message('the size of the problem is: ' . $problem->value(), 'deleted');

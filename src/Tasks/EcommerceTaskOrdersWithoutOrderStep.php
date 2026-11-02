@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -31,6 +32,9 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
     public function run($request)
     {
         $doCancel = $request->getVar('cancel');
+        if ($doCancel && ! DestructiveTaskGuard::mayRun($request, $this, 'Cancels and archives all orders that do not have an order step.', DestructiveTaskGuard::ANYWHERE)) {
+            return;
+        }
         if (! $doCancel) {
             DB::alteration_message('You can add <strong>cancel</strong> as a getvar to cancel and archive all orders.', 'edited');
         }
