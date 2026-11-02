@@ -2,11 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
+use Psr\Log\LoggerInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
@@ -35,7 +37,9 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
+use SilverStripe\SessionManager\Models\LoginSession;
 use SilverStripe\View\Requirements;
+use Throwable;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
@@ -542,13 +546,55 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 'UPDATE "Member" SET "EmailVerifiedAt" = ?, "Password" = NULL, "Salt" = NULL, "PasswordEncryption" = ?, "AutoLoginHash" = NULL, "AutoLoginExpired" = NULL WHERE "ID" = ?',
                 [$now, self::default_password_encryption(), (int) $owner->ID]
             );
-            // remember-me logins also have to go.
             // NB: we do NOT change the password on $owner itself: that would make a later write() hash an empty password.
-            RememberLoginHash::get()->filter(['MemberID' => $owner->ID])->removeAll();
         } else {
             DB::prepared_query('UPDATE "Member" SET "EmailVerifiedAt" = ? WHERE "ID" = ?', [$now, (int) $owner->ID]);
         }
         $owner->EmailVerifiedAt = $now;
+
+        // Nobody had proven that they own this email address until now, so every login that exists
+        // for this account (e.g. from someone who registered it with an email address that is not theirs)
+        // can not be trusted any more. Only the login that has just happened (with the code) is kept.
+        // remember-me logins also have to go.
+        RememberLoginHash::get()->filter(['MemberID' => $owner->ID])->removeAll();
+        $this->revokeOtherLoginSessions();
+    }
+
+    /**
+     * Ends all the logins of this member (see the silverstripe/session-manager module),
+     * except the login of the current request.
+     * A request is logged out as soon as its login session is gone, so this takes effect straight away.
+     *
+     * If the current login can not be worked out, then all logins are ended (the member can simply log in again).
+     */
+    protected function revokeOtherLoginSessions(): void
+    {
+        if (! class_exists(LoginSession::class)) {
+            return;
+        }
+
+        $owner = $this->getOwner();
+        try {
+            $keepID = 0;
+            if (Controller::has_curr()) {
+                $current = LoginSession::getCurrentLoginSession(Controller::curr()->getRequest());
+                if ($current && (int) $current->MemberID === (int) $owner->ID) {
+                    $keepID = (int) $current->ID;
+                }
+            }
+
+            $sessions = LoginSession::get()->filter(['MemberID' => $owner->ID]);
+            if ($keepID) {
+                $sessions = $sessions->exclude(['ID' => $keepID]);
+            }
+
+            $sessions->removeAll();
+        } catch (Throwable $throwable) {
+            // do not break the login, but do not hide the problem either.
+            Injector::inst()->get(LoggerInterface::class)->error(
+                'Could not end the other logins of member ' . (int) $owner->ID . ': ' . $throwable->getMessage()
+            );
+        }
     }
 
     /**
