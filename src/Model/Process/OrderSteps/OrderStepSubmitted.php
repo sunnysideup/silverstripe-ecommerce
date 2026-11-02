@@ -10,6 +10,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
@@ -151,7 +152,15 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
                     $order->MemberID = $memberOrderID;
                 }
             }
-
+            // Every customer gets a member, even if they checked out as a guest.
+            // (only if there is no member with the email address of the order yet,
+            // see EcommerceRole::find_or_create_guest_member_for_order)
+            if (! $order->MemberID) {
+                $guestMember = EcommerceRole::find_or_create_guest_member_for_order($order);
+                if ($guestMember) {
+                    $order->MemberID = $guestMember->ID;
+                }
+            }
             $order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
         }
 
