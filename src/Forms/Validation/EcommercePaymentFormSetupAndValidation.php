@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
@@ -328,8 +329,11 @@ class EcommercePaymentFormSetupAndValidation
 
         //payment is done, redirect to either returntolink
         //OR to the link of the order ....
-        if (isset($data['returntolink'])) {
-            $form->getController()->redirect($data['returntolink']);
+        // returntolink is posted by the browser so it can not be trusted:
+        // we only redirect to pages on this website (open redirect protection).
+        $returnToLink = isset($data['returntolink']) && is_string($data['returntolink']) ? $data['returntolink'] : '';
+        if ('' !== $returnToLink && Director::is_site_url($returnToLink)) {
+            $form->getController()->redirect($returnToLink);
         } else {
             $form->getController()->redirect($order->Link());
         }
