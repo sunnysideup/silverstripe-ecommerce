@@ -477,7 +477,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return strtolower(trim($comparisonString));
     }
 
-    protected function validateMemberForAutocompletion(Member $member): bool
+    public function validateMemberForAutocompletion(Member $member): bool
     {
         $loggedInUser = Security::getCurrentUser();
         return $member && $member->exists() && $loggedInUser && $member->ID === $loggedInUser->ID && ! $member->IsShopAdmin();
