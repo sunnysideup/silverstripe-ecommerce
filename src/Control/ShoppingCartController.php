@@ -832,26 +832,21 @@ class ShoppingCartController extends Controller
      */
     public function ajaxtest(HTTPRequest $request)
     {
-        if (Director::isDev() || Permission::check('ADMIN')) {
-            header('Content-Type', 'text/plain');
-            echo '<pre>';
-            $_REQUEST['ajax'] = 1;
-            $v = $this->cart->setMessageAndReturn('test only');
-            $v = str_replace(',', ",\r\n\t\t", $v);
-            $v = str_replace('}', "\r\n\t}", $v);
-            $v = str_replace('{', "\t{\r\n\t\t", $v);
-            $v = str_replace(']', "\r\n]", $v);
-            echo $v;
-            echo '</pre>';
-        } else {
-            echo 'please <a href="Security/login/?BackURL=' . urlencode($this->config()->get('url_segment') . '/ajaxtest/') . '">log in</a> first.';
+        if (! (Director::isDev() || Permission::check('ADMIN'))) {
+            return Security::permissionFailure($this);
         }
-
-        if (! $request->isAjax()) {
-            user_error('---- make sure to add ?ajax=1 to the URL ---');
+        // we want the same response as for an ajax request
+        $_REQUEST['ajax'] = 1;
+        $v = (string) $this->cart->setMessageAndReturn('test only');
+        // show it nicely formatted - as text (not as HTML, because the response contains data from the cart).
+        $decoded = json_decode($v, true);
+        if (null !== $decoded) {
+            $v = (string) json_encode($decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
+        $response = HTTPResponse::create($v);
+        $response->addHeader('Content-Type', 'text/plain; charset=utf-8');
 
-        return [];
+        return $response;
     }
 
     #[Override]
@@ -970,7 +965,11 @@ class ShoppingCartController extends Controller
     {
         $quantity = $this->getRequest()->getVar('quantity');
         if (is_numeric($quantity)) {
-            return $quantity;
+            // is_numeric also accepts things like 1e999 (infinity): only allow real numbers.
+            $quantity = (float) $quantity;
+            if (is_finite($quantity)) {
+                return $quantity;
+            }
         }
 
         return 1;

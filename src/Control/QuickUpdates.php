@@ -149,8 +149,8 @@ class QuickUpdates extends Controller
                     'HTMLText',
                     '<p class="message success">
                         Updated
-                        <a href="' . $product->CMSEditLink() . '" target="_blank">✎</a>
-                        <a href="' . $product->Link() . '" target="_blank">' . $product->FullName . '</a>
+                        <a href="' . Convert::raw2att($product->CMSEditLink()) . '" target="_blank">✎</a>
+                        <a href="' . Convert::raw2att($product->Link()) . '" target="_blank">' . Convert::raw2xml($product->FullName) . '</a>
                     </p>
                     <p>
                         <a href="' . $this->Link('updateone/' . $product->ID) . '">Edit Again</a> //
