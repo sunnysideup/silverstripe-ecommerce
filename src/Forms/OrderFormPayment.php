@@ -18,11 +18,18 @@ use Sunnysideup\Ecommerce\Model\Order;
 class OrderFormPayment extends Form
 {
     /**
+     * The order this form was built for. dopayment() must only ever act on this order,
+     * never on an order ID taken from the submitted data.
+     */
+    protected ?Order $order = null;
+
+    /**
      * @param string $name
      * @param string $returnToLink
      */
     public function __construct(Controller $controller, $name, Order $order, $returnToLink = '')
     {
+        $this->order = $order;
         $requiredFields = [];
         $fields = new FieldList(
             new HiddenField('OrderID', '', $order->ID)
@@ -87,27 +94,26 @@ class OrderFormPayment extends Form
      */
     public function dopayment($data, $form)
     {
-        $SQLData = Convert::raw2sql($data);
-        if (isset($SQLData['OrderID'])) {
-            $orderID = (int) $SQLData['OrderID'];
-            if ($orderID !== 0) {
-                $order = Order::get_order_cached((int) $orderID);
-                if ($order && $order->canPay()) {
-                    $formHelper = EcommercePayment::ecommerce_payment_form_setup_and_validation_object();
-                    if ($formHelper->validatePayment($order, $data, $form)) {
-                        $outcome = $formHelper->processPaymentFormAndReturnNextStep($order, $data, $form);
-                        if ($outcome === null) {
-                            return $this->controller->redirectBack();
-                        }
-                        return $outcome;
+        $order = $this->order;
+        $orderID = (int) ($data['OrderID'] ?? 0);
+        // the submitted OrderID must match the order this form was built for
+        // and the current user must be allowed to view it.
+        if ($order && $order->exists() && $orderID === (int) $order->ID && $order->canView()) {
+            if ($order->canPay()) {
+                $formHelper = EcommercePayment::ecommerce_payment_form_setup_and_validation_object();
+                if ($formHelper->validatePayment($order, $data, $form)) {
+                    $outcome = $formHelper->processPaymentFormAndReturnNextStep($order, $data, $form);
+                    if ($outcome === null) {
+                        return $this->controller->redirectBack();
                     }
-                    //error messages are set in validation
-                    return $this->controller->redirectBack();
+                    return $outcome;
                 }
-                $form->sessionMessage(_t('OrderForm.NO_PAYMENTS_CAN_BE_MADE_FOR_THIS_ORDER', 'No payments can be made for this order.'), 'bad');
-
+                //error messages are set in validation
                 return $this->controller->redirectBack();
             }
+            $form->sessionMessage(_t('OrderForm.NO_PAYMENTS_CAN_BE_MADE_FOR_THIS_ORDER', 'No payments can be made for this order.'), 'bad');
+
+            return $this->controller->redirectBack();
         }
         $form->sessionMessage(_t('OrderForm.COULDNOTPROCESSPAYMENT', 'Sorry, we could not find the Order for payment.'), 'bad');
 
