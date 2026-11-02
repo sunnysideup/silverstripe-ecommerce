@@ -27,9 +27,8 @@ class InternalItemToTitle extends Controller
     private static $url_segment = 'ecommerceinternalitemtotitle';
 
     private static $allowed_actions = [
-        'index',
-        'lookup',
-        'form',
+        'index' => 'ADMIN',
+        'lookup' => 'ADMIN',
     ];
 
     public function index()
@@ -53,27 +52,25 @@ class InternalItemToTitle extends Controller
     public function lookup(HTTPRequest $request)
     {
         $title = $request->requestVar('InternalItemIDs');
-        $title = Convert::raw2sql($title);
-        $title = str_replace("\n", ',', $title);
-        $title = str_replace('\\n', ',', $title);
-        $title = str_replace("\r", ',', $title);
-        $title = str_replace('\\r', ',', $title);
-        $title = str_replace("\t", ',', $title);
-        $title = str_replace('\\t', ',', $title);
+        if (! is_string($title)) {
+            $title = '';
+        }
+        // values are only ever used in ORM filters (parameterised) or HTML-escaped on output
+        $title = str_replace(["\r", "\n", "\t"], ',', $title);
         $array = explode(',', $title);
+        $array = array_map('trim', $array);
         $array = array_filter($array);
         $array = array_unique($array);
-        $array = array_map('trim', $array);
         $html = '
         <h1>Full Product Names ' . count($array) . '</h1>
-        <p><a href="' . $this->Link() . '">Try again</a></p>
+        <p><a href="' . Convert::raw2att($this->Link()) . '">Try again</a></p>
         <ul>';
         foreach ($array as $code) {
             $product = Product::get()->filter(['InternalItemID' => $code])->first();
             if ($product) {
-                $html .= '<li><a href="' . $product->CMSEditLink() . '"></a><a href="' . $product->Link() . '">' . $product->FullName . '</a></li>';
+                $html .= '<li><a href="' . Convert::raw2att($product->CMSEditLink()) . '"></a><a href="' . Convert::raw2att($product->Link()) . '">' . Convert::raw2xml($product->FullName) . '</a></li>';
             } else {
-                $html .= '<li>Product with code "' . $code . '" not found</li>';
+                $html .= '<li>Product with code "' . Convert::raw2xml($code) . '" not found</li>';
             }
         }
         $html .= '</ul><br /><br />';
