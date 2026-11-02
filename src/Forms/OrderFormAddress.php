@@ -518,7 +518,8 @@ class OrderFormAddress extends Form
      * - AND the member being "tested" is already logged in...
      * in that case the logged in member tries to take on another identity.
      * If you are not logged BUT the the unique field is used by an existing member then we can still
-     * use the field - we just CAN NOT log in the member.
+     * use the field - we just CAN NOT log in the member AND we do NOT attach the order to that member
+     * (it is a guest order until the customer logs in with a one-time code).
      * This method needs to be public because it is used by the OrderFormValidator (see below).
      *
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
@@ -579,7 +580,7 @@ class OrderFormAddress extends Form
      * A2. attach to other member as new one or existing one.
      * 3. can the entered data be used? - if
      * 4. is there no member logged in yet? - If there is one return null, member is already linked to order.
-     * 5. find member from data entered (even if not logged in)
+     * 5. (anonymous visitor) an existing member with the same email is NOT attached to the order - guest order.
      * 6. At this stage, if we dont have a member, we will create one!
      * 7. We do one last check to see if we are allowed to create one.
      *
@@ -640,13 +641,17 @@ class OrderFormAddress extends Form
                     if ($this->debug) {
                         $this->debugArray[] = '4. is there no member logged in yet?';
                     }
-                    //5. find member from data entered (even if not logged in)
-                    //another member with the same email?
-
+                    //5. is there already a member with the email entered?
+                    //SECURITY: we can not prove that this visitor owns that email address.
+                    //We therefore never attach the order to that member (this would put
+                    //the order in their account).  Instead, the order stays a guest order (no member).
+                    //Once the customer has logged in with a one-time code (which proves they own the email address),
+                    //guest orders with their email address are linked to their account
+                    //(see EcommerceRole::claimGuestOrdersForVerifiedEmail).
                     if ($this->debug) {
-                        $this->debugArray[] = '5. find member from data entered (even if not logged in)';
+                        $this->debugArray[] = '5. existing member with same email is NOT attached to order for anonymous visitors';
                     }
-                    $this->orderMember = $this->anotherExistingMemberWithSameUniqueFieldValue($data);
+                    $this->orderMember = null;
 
                     //6. At this stage, if we dont have a member, we will create one!
                     //in case we still dont have a member AND we should create a member for every customer, then we do this below...

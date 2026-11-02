@@ -479,6 +479,58 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     }
 
     /**
+     * Called by the one-time-code login (sunnysideup/one-time-code-authentication)
+     * after the member has logged in with a code that was sent to their email address.
+     * That proves that they control the email address and therefore we can link
+     * the guest orders that were placed with this email address to their account.
+     *
+     * We do NOT do this for other types of logins (e.g. an account that was just created
+     * during checkout) because the email address has not been verified in that case.
+     */
+    public function onAfterOneTimeCodeLogin(): void
+    {
+        $this->claimGuestOrdersForVerifiedEmail();
+    }
+
+    /**
+     * Links submitted orders that do not have a member yet (guest orders) and
+     * that have been placed with the email address of this member (billing address email)
+     * to this member.
+     *
+     * ONLY call this if the member has verified that they control their email address.
+     *
+     * @return int number of orders linked
+     */
+    public function claimGuestOrdersForVerifiedEmail(?int $limit = 200): int
+    {
+        $owner = $this->getOwner();
+        $email = trim((string) $owner->Email);
+        if (! $owner->exists() || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return 0;
+        }
+        // staff place orders on behalf of customers: do not link those to the staff account.
+        if ($owner->IsShopAdmin() || $owner->IsShopAssistant()) {
+            return 0;
+        }
+        $orderIDs = Order::get_datalist_of_orders_with_submit_record(true, false)
+            ->filter(['MemberID' => 0, 'BillingAddress.Email' => $email])
+            ->limit($limit)
+            ->column('ID');
+        $count = 0;
+        foreach ($orderIDs as $orderID) {
+            // direct update: we do not want to change anything else about the (submitted) order,
+            // not even the LastEdited date.
+            DB::prepared_query(
+                'UPDATE "Order" SET "MemberID" = ? WHERE "ID" = ? AND "MemberID" = 0',
+                [(int) $owner->ID, (int) $orderID]
+            );
+            ++$count;
+        }
+
+        return $count;
+    }
+
+    /**
      * we need this function because $this->Orders does not return anything
      * that is probably because Order links the member twice (placed by and cancelled by).
      *
