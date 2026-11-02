@@ -118,6 +118,14 @@ class ShoppingCart
     private static $default_param_filters = [];
 
     /**
+     * The maximum quantity of one order item (in one order).
+     * This stops silly numbers (e.g. 1e999) from ending up in the order.
+     *
+     * @var int
+     */
+    private static $max_quantity_per_item = 10000;
+
+    /**
      * @var string
      */
     private static $response_class = CartResponse::class;
@@ -420,7 +428,7 @@ class ShoppingCart
             $quantity = $this->prepareQuantity($buyable, $quantity);
             if ($item && $quantity) {
                 //find existing order item or make one
-                $item->Quantity += $quantity;
+                $item->Quantity = min($item->Quantity + $quantity, $this->maxQuantityPerItem());
                 $item->write();
                 $this->currentOrder()->Attributes()->add($item);
                 $msg = $quantity > 1 ? _t('Order.ITEMSADDED', 'Items added.') : _t('Order.ITEMADDED', 'Item added.');
@@ -603,14 +611,25 @@ class ShoppingCart
      */
     public function prepareQuantity(BuyableModel $buyable, $quantity)
     {
-        $quantity = round($quantity, $buyable->QuantityDecimals());
-        if ($quantity > 0) {
-            return $quantity;
+        $quantity = is_numeric($quantity) ? (float) $quantity : 0.0;
+        if (is_finite($quantity)) {
+            $quantity = round($quantity, $buyable->QuantityDecimals());
+            if ($quantity > 0) {
+                return min($quantity, $this->maxQuantityPerItem());
+            }
         }
 
         $this->addMessage(_t('Order.INVALIDQUANTITY', 'Invalid quantity.'), 'warning');
 
         return 0;
+    }
+
+    /**
+     * The maximum quantity for one order item.
+     */
+    public function maxQuantityPerItem(): float
+    {
+        return (float) (self::config()->get('max_quantity_per_item') ?: 10000);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Search;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
@@ -23,6 +24,14 @@ class SearchHistory extends DataObject
     public const KEYWORD_LENGTH_LIMIT = 80;
 
     private static $table_name = 'SearchHistory';
+
+    /**
+     * The maximum number of search history entries that are added per minute (for all visitors together).
+     * Set to zero for no limit.
+     *
+     * @var int
+     */
+    private static $max_entries_per_minute = 120;
 
     /**
      * we limit keyword searchres to 80 characters ...
@@ -87,6 +96,31 @@ class SearchHistory extends DataObject
         $member = Security::getCurrentUser();
         if ($member && $member->IsShopAdmin()) {
             return null;
+        }
+        $keywordString = mb_substr(trim($keywordString), 0, self::KEYWORD_LENGTH_LIMIT);
+        if (mb_strlen($keywordString) < 2) {
+            return null;
+        }
+        // Anyone can search, so we limit the number of rows that can be added:
+        // 1. the same keyword is only recorded once per minute per visitor (e.g. page reloads).
+        $now = time();
+        $session = Controller::has_curr() ? Controller::curr()->getRequest()?->getSession() : null;
+        if ($session) {
+            $last = $session->get('SearchHistoryLastEntry');
+            if (is_array($last) && ($last['keyword'] ?? '') === $keywordString && ($now - (int) ($last['time'] ?? 0)) < 60) {
+                return null;
+            }
+            $session->set('SearchHistoryLastEntry', ['keyword' => $keywordString, 'time' => $now]);
+        }
+        // 2. overall maximum number of entries per minute (visitors can change their keyword and drop their session).
+        $max = (int) Config::inst()->get(self::class, 'max_entries_per_minute');
+        if ($max > 0) {
+            $recent = SearchHistory::get()
+                ->filter(['Created:GreaterThan' => date('Y-m-d H:i:s', $now - 60)])
+                ->count();
+            if ($recent >= $max) {
+                return null;
+            }
         }
         $obj = new SearchHistory();
         $obj->Title = $keywordString;

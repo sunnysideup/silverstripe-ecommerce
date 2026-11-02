@@ -250,7 +250,7 @@ class ProductSearchForm extends Form
         }
         if ($doSearchAtAll) {
             $link = $this->getResultsPageLink();
-            if (! strpos('?', $link)) {
+            if (! str_contains($link, '?')) {
                 $link .= '?';
             } else {
                 $link .= '&';
