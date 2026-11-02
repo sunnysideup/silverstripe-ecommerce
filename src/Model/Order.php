@@ -261,9 +261,13 @@ class Order extends DataObject implements EditableEcommerceObject
     private static $modifiers = [];
 
     /**
+     * The number of minutes (after the order has been placed) that the order can be viewed
+     * with the special retrieve link (without logging in).  1440 = one day.
+     * Set to zero for no limit.
+     *
      * @var int
      */
-    private static $minutes_an_order_can_be_viewed_without_logging_in = 4320;
+    private static $minutes_an_order_can_be_viewed_without_logging_in = 1440;
 
     /**
      * @var float
@@ -3677,6 +3681,27 @@ class Order extends DataObject implements EditableEcommerceObject
         $obj->getName();
 
         return $obj;
+    }
+
+    /**
+     * Has the retrieve link (see getRetrieveLink) expired?
+     * The link can be used for a limited time after the order has been placed
+     * (see minutes_an_order_can_be_viewed_without_logging_in).
+     * After that, the customer has to log in to view the order.
+     */
+    public function RetrieveLinkHasExpired(): bool
+    {
+        $minutes = (int) Config::inst()->get(Order::class, 'minutes_an_order_can_be_viewed_without_logging_in');
+        if ($minutes <= 0) {
+            return false;
+        }
+        $submissionLog = $this->SubmissionLog();
+        if (! $submissionLog) {
+            // not placed yet.
+            return false;
+        }
+
+        return (time() - strtotime((string) $submissionLog->Created)) > ($minutes * 60);
     }
 
     /**
