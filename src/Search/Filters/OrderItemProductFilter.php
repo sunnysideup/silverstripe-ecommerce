@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
 use Override;
-use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
@@ -27,19 +26,21 @@ class OrderItemProductFilter extends ExactMatchFilter
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
-        $value = Convert::raw2sql($this->getValue());
+        // no need for Convert::raw2sql: the ORM and prepared queries take care of escaping.
+        $value = is_scalar($this->getValue()) ? (string) $this->getValue() : '';
         $product = Product::get()->filter(['InternalItemID' => $value])->first();
         if ($product) {
             $query->where("BuyableClassName = '" . addslashes((string) $product->ClassName) . '\' AND "BuyableID" = ' . $product->ID);
         } else {
             $done = false;
-            $rows = DB::query(
+            $rows = DB::prepared_query(
                 '
                 SELECT SiteTree_Versions.RecordID, SiteTree_Versions.ClassName
                 FROM Product_Versions
                     INNER JOIN SiteTree_Versions
                         ON SiteTree_Versions.RecordID = Product_Versions.RecordID AND SiteTree_Versions.Version = Product_Versions.Version
-                WHERE InternalItemID = \'' . $value . "' LIMIT 1;"
+                WHERE InternalItemID = ? LIMIT 1;',
+                [$value]
             );
             foreach ($rows as $row) {
                 $query->where("BuyableClassName = '" . addslashes((string) $row['ClassName']) . '\' AND "BuyableID" = ' . $row['RecordID']);

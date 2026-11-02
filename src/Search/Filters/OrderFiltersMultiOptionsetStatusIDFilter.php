@@ -3,7 +3,7 @@
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
 use Override;
-use SilverStripe\Core\Convert;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 
@@ -23,13 +23,23 @@ class OrderFiltersMultiOptionsetStatusIDFilter extends ExactMatchFilter
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
-        $values = Convert::raw2sql($this->getValue());
+        // the values come from the browser: only whole numbers (IDs) are allowed
+        // and they are passed to the database as parameters.
+        $values = $this->getValue();
         if (! is_array($values)) {
             $values = [$values];
         }
-
+        $values = array_values(
+            array_unique(
+                array_filter(
+                    array_map('intval', array_filter($values, 'is_scalar'))
+                )
+            )
+        );
         if ($values !== []) {
-            $query = $query->where('"StatusID" IN (' . implode(', ', $values) . ')');
+            $query = $query->where([
+                '"StatusID" IN (' . DB::placeholders($values) . ')' => $values,
+            ]);
         }
 
         return $query;
