@@ -60,6 +60,15 @@ class CartPageController extends PageController
     protected $overrideCanView = false;
 
     /**
+     * The ID of the one order that $overrideCanView applies to
+     * (the order that was retrieved with the retrieve link, or the order in the session).
+     * $overrideCanView must NEVER be used for any other order.
+     *
+     * @var int
+     */
+    protected $overrideCanViewOrderID = 0;
+
+    /**
      * @var bool
      */
     protected $showCreateAccountForm = false;
@@ -428,6 +437,7 @@ class CartPageController extends PageController
                 if ($retrievedOrder) {
                     $this->currentOrder = $retrievedOrder;
                     $this->overrideCanView = true;
+                    $this->overrideCanViewOrderID = (int) $retrievedOrder->ID;
                     $this->setRetrievalOrderID($this->currentOrder->ID);
                 } else {
                     $this->httpError(404, 'No order was found.');
@@ -442,7 +452,15 @@ class CartPageController extends PageController
             $this->currentOrder = ShoppingCart::current_order();
             if ($this->currentOrder && $this->currentOrder->IsSubmitted()) {
                 $this->overrideCanView = true;
+                $this->overrideCanViewOrderID = (int) $this->currentOrder->ID;
             }
+        }
+
+        //SECURITY: overrideCanView only applies to the order it was granted for.
+        //The order can be replaced by an order from the request (OrderID or the ID in the URL).
+        //If that is another order then we have to check the normal permissions.
+        if ($this->overrideCanView && $this->currentOrder && (int) $this->currentOrder->ID !== $this->overrideCanViewOrderID) {
+            $this->overrideCanView = false;
         }
 
         //redirect if we are viewing the order with the wrong page!

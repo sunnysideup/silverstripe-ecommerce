@@ -549,11 +549,14 @@ class OrderConfirmationPageController extends CartPageController
             $this->currentOrder = Order::get_order_cached((int) $sessionOrderID);
             if ($this->currentOrder instanceof \Sunnysideup\Ecommerce\Model\Order) {
                 $this->overrideCanView = true;
+                // this override is only valid for this order (see CartPageController::init)
+                $this->overrideCanViewOrderID = (int) $this->currentOrder->ID;
                 //more than an hour has passed...
                 $validUntil = (int) $this->getRequest()->getSession()->get('CheckoutPageCurrentRetrievalTime');
                 if ($validUntil < time()) {
                     $this->clearRetrievalOrderID();
                     $this->overrideCanView = false;
+                    $this->overrideCanViewOrderID = 0;
                     $this->currentOrder = null;
                 }
             }
