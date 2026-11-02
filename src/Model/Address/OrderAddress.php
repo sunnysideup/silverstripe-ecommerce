@@ -473,6 +473,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $v = $this->getFieldValueWithPrefix('Country');
         return (string) EcommerceCountry::find_title($v);
     }
+    public function validateMemberForAutocompletion(Member $member): bool
+    {
+        $loggedInUser = Security::getCurrentUser();
+        return $member && $member->exists() && $loggedInUser && $member->ID === $loggedInUser->ID && ! $member->IsShopAdmin();
+    }
 
     /**
      * returns a string that can be used to find out if two addresses are the same.
@@ -988,10 +993,5 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return null;
     }
 
-    public function validateMemberForAutocompletion(Member $member): bool
-    {
-        $loggedInUser = Security::getCurrentUser();
-        return $member && $member->exists() && $loggedInUser && $member->ID === $loggedInUser->ID && ! $member->IsShopAdmin();
-    }
 
 }
