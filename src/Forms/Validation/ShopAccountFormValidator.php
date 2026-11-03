@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -60,7 +59,7 @@ class ShopAccountFormValidator extends RequiredFields
             if ($isShopAdmin || $allowExistingEmail) {
                 //do nothing
             } else {
-                $uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
+                $uniqueFieldValue = preg_replace('/[^A-Za-z0-9]/', '', (string) $data[$uniqueFieldName]);
                 // This check tells people if an email address already has an account.
                 // To stop people from using it to find out which email addresses have accounts,
                 // we limit how often someone can run into an email address that is taken.
@@ -88,26 +87,22 @@ class ShopAccountFormValidator extends RequiredFields
                     ->filter([$uniqueFieldName => $uniqueFieldValue])
                     ->exclude(['ID' => $loggedInMemberID]);
                 if ($otherMembersWithSameEmail->exists()) {
+                    // Existing emails are allowed (see the `$allowExistingEmail` check above) when we are NOT logged in
+                    // and are placing an order, so we only get here for the account form and for logged-in people.
                     $limiter->record();
-                    //we allow existing email
-                    // if we are currently NOT logged in
-                    // in case we place an order!
-                    if ($allowExistingEmail) {
-                        //do nothing
-                    } else {
-                        // NB: we do not repeat the email address and we do not say that an account exists.
-                        $message = _t(
-                            'Account.ALREADYTAKEN',
-                            'This {uniqueFieldName} can not be used. If you already have an account, please log in. Otherwise, please use another {uniqueFieldName}.',
-                            ['uniqueFieldName' => strtolower($uniqueFieldName)]
-                        );
-                        $this->validationError(
-                            $uniqueFieldName,
-                            $message,
-                            'required'
-                        );
-                        $valid = false;
-                    }
+                    // NB: we do not repeat the email address and we do not say that an account exists.
+                    // (Someone can still find out, but only a few times per hour: see the limiter above.)
+                    $message = _t(
+                        'Account.ALREADYTAKEN',
+                        'This {uniqueFieldName} can not be used. If you already have an account, please log in. Otherwise, please use another {uniqueFieldName}.',
+                        ['uniqueFieldName' => strtolower($uniqueFieldName)]
+                    );
+                    $this->validationError(
+                        $uniqueFieldName,
+                        $message,
+                        'required'
+                    );
+                    $valid = false;
                 }
             }
         }
