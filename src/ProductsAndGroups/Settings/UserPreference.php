@@ -6,7 +6,6 @@ use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
@@ -303,7 +302,7 @@ class UserPreference
             }
 
             $sessionValue = $this->request->getSession()->get('ProductGroup_' . $sessionName);
-            $key = Convert::raw2sql($sessionValue);
+            $key = is_scalar($sessionValue) ? (string) $sessionValue : '';
         }
 
         if (! $key) {
