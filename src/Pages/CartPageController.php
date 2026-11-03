@@ -6,7 +6,6 @@ use PageController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
@@ -166,7 +165,9 @@ class CartPageController extends PageController
      */
     public function share(HTTPRequest $request): array|HTTPResponse
     {
-        $codes = Convert::raw2sql($request->param('ID'));
+        // the codes are only ever used to build a link on this site and to look up
+        // buyables by int ID, so we only allow the characters that a valid code can contain
+        $codes = preg_replace('/[^A-Za-z0-9_,.\-]/', '', (string) $request->param('ID'));
         if (! $request->getVar('ready') && ! $request->getVar('done')) {
             return $this->redirect($this->Link('share/' . $codes) . '?ready=1');
         }
@@ -284,6 +285,9 @@ class CartPageController extends PageController
      */
     public function deleteorder(HTTPRequest $request)
     {
+        if (! $this->currentOrder) {
+            return $this->httpError(404);
+        }
         if (! ConfirmAction::isConfirmed($request)) {
             return ConfirmAction::form(
                 $request,
@@ -294,9 +298,9 @@ class CartPageController extends PageController
         if (! $this->CurrentOrderIsInCart() && $this->currentOrder->canDelete()) {
             $this->currentOrder->delete();
             self::set_message(_t('CartPage.ORDERDELETED', 'Order has been deleted.'));
+        } else {
+            self::set_message(_t('CartPage.ORDERNOTDELETED', 'Order could not be deleted.'));
         }
-
-        self::set_message(_t('CartPage.ORDERNOTDELETED', 'Order could not be deleted.'));
 
         return [];
     }
@@ -443,7 +447,7 @@ class CartPageController extends PageController
             //the code below is for submitted orders, but we still put it here so
             //we can do all the retrieval options at once.
             if (('retrieveorder' === $action) && $id && $otherID) {
-                $sessionID = Convert::raw2sql($id);
+                $sessionID = (string) $id;
                 $retrievedOrder = Order::get()->filter(
                     [
                         'SessionID' => $sessionID,
