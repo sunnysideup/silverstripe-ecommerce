@@ -76,25 +76,32 @@ abstract class ProductCollection
             $request = $controller->getRequest();
             if ($request) {
                 $parentId = intval($this->additionalPredeterminedFilters['parentid'] ?? 0);
-                $internalItemIDs = $this->additionalPredeterminedFilters['internalitemsid'] ?? null;
+                $internalItemIDs = $this->additionalPredeterminedFilters['internalitemids'] ?? null;
+                // may come from a url segment as a string like 'ABC.DEF'
+                if (is_string($internalItemIDs) && $internalItemIDs !== '') {
+                    $internalItemIDs = explode('.', $internalItemIDs);
+                }
                 if ($parentId || $internalItemIDs) {
                     $whereArray = [];
                     $stage = '_Live'; // always live
                     if (is_array($internalItemIDs) && !empty($internalItemIDs)) {
-                        $internalItemIDs = Convert::raw2sql($internalItemIDs);
                         $internalItemIDs = array_map(
                             function ($id) {
-                                return str_replace('"', '', $id);
+                                return str_replace('"', '', (string) $id);
                             },
-                            $internalItemIDs
+                            array_values($internalItemIDs)
                         );
-                        $whereArray = '"Product' . $stage . '"."ID" IN (\'' . implode("','", $internalItemIDs) . '\')';
+                        $internalItemIDs = Convert::raw2sql($internalItemIDs);
+                        $whereArray[] = '"Product' . $stage . '"."InternalItemID" IN (\'' . implode("','", $internalItemIDs) . '\')';
                     }
                     if ($parentId) {
                         $parent = ProductGroup::get()->byID($parentId);
                         if ($parent) {
-                            $productIds = $parent->getProducts()->columnUnique();
-                            $whereArray[] = '"Product' . $stage . '"."ID" IN (\'' . implode("','", $productIds) . '\')';
+                            $productIds = array_map('intval', $parent->getProducts()->columnUnique());
+                            $whereArray[] = '"Product' . $stage . '"."ID" IN (' . ($productIds ? implode(',', $productIds) : '0') . ')';
+                        } else {
+                            // unknown group: match nothing, never fall back to everything
+                            $whereArray[] = '1 = 0';
                         }
                     }
                     return !empty($whereArray) ? implode(' AND ', $whereArray) : '';
