@@ -9,9 +9,9 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Permission;
-use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\AttemptLimiter;
 use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -61,12 +61,19 @@ class OrderConfirmationPageController extends CartPageController
     private static $include_as_checkout_step = true;
 
     /**
-     * Customers who own an order can have the email for the current step of their order re-sent
-     * to their own account email. This is the minimum number of seconds between two such sends (per order).
+     * Customers who have access to an order can have the email for the current step of their order re-sent
+     * to the email address of the order. This is the minimum number of seconds between two such sends (per order).
      *
      * @var int
      */
     private static $owner_email_resend_cooldown_in_seconds = 300;
+
+    /**
+     * The maximum number of times per hour (per visitor and per order) that the email can be re-sent.
+     *
+     * @var int
+     */
+    private static $customer_email_resend_max_per_hour = 5;
 
     /**
      * This method exists just so that template
@@ -416,12 +423,13 @@ class OrderConfirmationPageController extends CartPageController
             }
             if ($stepID !== 0) {
                 // Shop admins can send any step email (and test emails, and to any address).
-                // The owner of the order can only re-send the email for the current step of their order,
-                // and only to their own account email (see below).
+                // Anyone else who has access to this order (they are logged in as the owner, they opened the
+                // retrieve link in their email, or they have just placed the order) can only re-send the email for the
+                // current step of the order, and only to the email address of the order (see below).
                 $isShopAdmin = Permission::check('ADMIN') || EcommerceRole::current_member_is_shop_admin();
-                $ownerEmail = $isShopAdmin ? '' : $this->orderOwnerEmail();
+                $customerEmail = $isShopAdmin ? '' : $this->orderCustomerEmail();
                 if (! $isShopAdmin) {
-                    if ($ownerEmail === '' || $isTest || $stepID !== (int) $this->currentOrder->StatusID) {
+                    if ($customerEmail === '' || $isTest || $stepID !== (int) $this->currentOrder->StatusID) {
                         return $this->httpError(403, 'You do not have permission to send order emails.');
                     }
                 }
@@ -446,10 +454,11 @@ class OrderConfirmationPageController extends CartPageController
                         $email = $adminOnlyOrToEmail ? 'site administrator' : $this->currentOrder->getOrderEmail();
                         // goes to Email for order.
                     }
-                    if ($ownerEmail !== '') {
-                        // owner of the order: always send to their account email, nowhere else.
-                        $adminOnlyOrToEmail = $ownerEmail;
-                        $email = $ownerEmail;
+                    if ($customerEmail !== '') {
+                        // not a shop admin: always send to the email address of the order, nowhere else.
+                        // (false = the email goes to the customer email of the order)
+                        $adminOnlyOrToEmail = false;
+                        $email = $customerEmail;
                         $to = '';
                     }
                     if ($request->isPOST()) {
@@ -460,13 +469,19 @@ class OrderConfirmationPageController extends CartPageController
                         $session = $request->getSession();
                         $sessionKey = 'OrderEmailResentAt.' . $this->currentOrder->ID;
                         $cooldown = (int) $this->config()->get('owner_email_resend_cooldown_in_seconds');
-                        if ($ownerEmail !== '' && time() - (int) $session->get($sessionKey) < $cooldown) {
+                        $limiter = AttemptLimiter::create(
+                            'OrderEmailResent' . (int) $this->currentOrder->ID,
+                            (int) $this->config()->get('customer_email_resend_max_per_hour'),
+                            3600
+                        );
+                        if ($customerEmail !== '' && (time() - (int) $session->get($sessionKey) < $cooldown || $limiter->isLimited())) {
                             $outcome = false;
                             $tooSoon = true;
                         } else {
                             $tooSoon = false;
-                            if ($ownerEmail !== '') {
+                            if ($customerEmail !== '') {
                                 $session->set($sessionKey, time());
+                                $limiter->record();
                             }
                             $outcome = $this->currentOrder->sendEmail(
                                 $emailClassName,
@@ -506,21 +521,32 @@ class OrderConfirmationPageController extends CartPageController
     }
 
     /**
-     * If the current user is logged in and owns the (submitted) current order,
-     * then this returns their account email (if valid), otherwise an empty string.
+     * If the current user has access to the (submitted) current order (see CartPageController::init),
+     * then this returns the email address of the order (if it is valid), otherwise an empty string.
+     *
+     * This works for people who are logged in and for people who are not:
+     * a customer who has just placed an order (guest checkout), or who has opened the link in the order email,
+     * is not logged in but must still be able to email the invoice to the address that is on the order.
+     * They can never choose the address, so this can not be used to send email to someone else.
      */
-    protected function orderOwnerEmail(): string
+    protected function orderCustomerEmail(): string
     {
-        $member = Security::getCurrentUser();
         $order = $this->currentOrder;
-        if ($member && $member->exists() && $order && $order->exists() && $order->IsSubmitted() && (int) $order->MemberID === (int) $member->ID) {
-            $email = (string) $member->Email;
-            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                return $email;
+        if (! $this->currentOrderAccessGranted || ! $order || ! $order->exists() || ! $order->IsSubmitted()) {
+            return '';
+        }
+        $email = trim((string) $order->getOrderEmail());
+        if ('' === $email) {
+            return '';
+        }
+        // there can be more than one address (see Order::getOrderEmail)
+        foreach (preg_split('/\s*[;,]\s*/', $email) as $address) {
+            if (! filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                return '';
             }
         }
 
-        return '';
+        return $email;
     }
 
     /**
