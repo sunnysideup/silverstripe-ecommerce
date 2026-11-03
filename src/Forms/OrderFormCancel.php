@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Forms;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -66,7 +65,8 @@ class OrderFormCancel extends Form
      */
     public function docancel(array $data, Form $form, HTTPRequest $request)
     {
-        $SQLData = Convert::raw2sql($data);
+        // no raw2sql: the values are only used via the ORM, which escapes them
+        $SQLData = $data;
         $member = Security::getCurrentUser();
         if ($member && isset($SQLData['OrderID'])) {
             $order = Order::get_order_cached((int) $SQLData['OrderID']);

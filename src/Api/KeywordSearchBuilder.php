@@ -47,7 +47,7 @@ class KeywordSearchBuilder
         $sql = $this->createSql('ProductSearchTable', 'ProductID', $phrase, $where, $limit);
         $result = $this->addPriceAdjustment(DB::prepared_query($sql, $this->ifParams));
         if ($this->debug) {
-            print_r($sql);
+            echo '<pre>' . htmlspecialchars(print_r($sql, true)) . '</pre>';
             echo $this->arrayToHtmlTable($result);
         }
         return array_column($result, 'ProductID');
@@ -315,9 +315,9 @@ class KeywordSearchBuilder
 
     protected function cleanPhrase(string $phrase): string
     {
-        //remove special characters ...
-        // return ProductSearchFilter::keyword_sanitised($phrase);
-        // should be already done in ProductSearchFilter...
-        return $phrase;
+        // remove special characters (quotes, backslashes, %, etc.) and limit the length.
+        // This is normally already done in ProductSearchFilter, but this class should not depend on that
+        // (the sanitiser can safely be applied more than once).
+        return ProductSearchFilter::keyword_sanitised($phrase);
     }
 }

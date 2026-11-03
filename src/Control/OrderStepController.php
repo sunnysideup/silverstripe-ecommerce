@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Control;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
@@ -183,21 +182,21 @@ abstract class OrderStepController extends Controller
                 isset($dataOrRequest['OrderID'], $dataOrRequest['OrderSessionID'])
             ) {
                 $id = (int) $dataOrRequest['OrderID'];
-                $sessionID = Convert::raw2sql($dataOrRequest['OrderSessionID']);
+                $sessionID = (string) $dataOrRequest['OrderSessionID'];
             } elseif (isset($_POST['OrderID'], $_POST['OrderSessionID'])) {
                 $id = (int) $_POST['OrderID'];
-                $sessionID = Convert::raw2sql($_POST['OrderSessionID']);
+                $sessionID = (string) $_POST['OrderSessionID'];
             } elseif (isset($_GET['OrderID'], $_GET['OrderSessionID'])) {
                 $id = (int) $_GET['OrderID'];
-                $sessionID = Convert::raw2sql($_GET['OrderSessionID']);
+                $sessionID = (string) $_GET['OrderSessionID'];
             } elseif ($dataOrRequest instanceof HTTPRequest) {
                 $id = (int) $dataOrRequest->param('ID');
-                $sessionID = Convert::raw2sql($dataOrRequest->param('OtherID'));
+                $sessionID = (string) $dataOrRequest->param('OtherID');
             } else {
                 $id = (int) $this->request->param('ID');
-                $sessionID = Convert::raw2sql($this->request->param('OtherID'));
+                $sessionID = (string) $this->request->param('OtherID');
             }
-
+            $sessionID = preg_replace('/[^A-Za-z0-9]/', '', (string) $sessionID);
             self::$_order = Order::get_order_cached($id);
             if (self::$_order instanceof \Sunnysideup\Ecommerce\Model\Order && $this->secureHash(self::$_order) !== $sessionID) {
                 self::$_order = null;

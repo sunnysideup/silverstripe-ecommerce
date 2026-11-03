@@ -8,7 +8,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\ORM\DataObject;
@@ -251,6 +250,8 @@ class ShoppingCartController extends Controller
      */
     public static function remove_address_link($addressID, $addressClassName, array $parameters = [])
     {
+        $addressClassName = ClassHelpers::sanitise_class_name($addressClassName);
+
         return self::create_link('removeaddress/' . $addressID . '/' . $addressClassName . '/' . self::params_to_get_string($parameters));
     }
 
@@ -523,7 +524,7 @@ class ShoppingCartController extends Controller
      */
     public function setcountry(HTTPRequest $request)
     {
-        $countryCode = Convert::raw2sql($request->param('ID'));
+        $countryCode = (string) $request->param('ID');
         //set_country will check if the country code is actually allowed....
         $this->cart->setCountry($countryCode);
 
@@ -548,7 +549,7 @@ class ShoppingCartController extends Controller
      */
     public function setcurrency(HTTPRequest $request)
     {
-        $currencyCode = Convert::raw2sql($request->param('ID'));
+        $currencyCode = (string) $request->param('ID');
         $this->cart->setCurrency($currencyCode);
 
         return $this->cart->setMessageAndReturn();
@@ -566,7 +567,9 @@ class ShoppingCartController extends Controller
             $id = (int) $request->param('OtherID');
             if ($id && EcommerceDBConfig::is_buyable($className)) {
                 $obj = $className::get_by_id($id);
-                if ($obj && $obj->hasField('AllowPurchase')) {
+                // a shop assistant is not necessarily allowed to edit (or publish) pages / products in the CMS
+                $canChange = $obj && $obj->canEdit() && (! ($obj instanceof SiteTree) || $obj->canPublish());
+                if ($obj && $canChange && $obj->hasField('AllowPurchase')) {
                     if (! ConfirmAction::isConfirmed($request)) {
                         return ConfirmAction::form(
                             $request,
@@ -627,7 +630,9 @@ class ShoppingCartController extends Controller
         $this->cart->clear();
         $member = Security::getCurrentUser();
         if ($member) {
-            $this->redirect(Security::logout_url());
+            // Always go to the home page after logging out. Without a BackURL, the log out sends people back to the
+            // page they came from, and if that page needs a log in (e.g. the account page) they land on the login page.
+            $this->redirect(Security::logout_url() . '&BackURL=' . urlencode(Director::baseURL()));
         } else {
             $this->redirect(Director::baseURL());
         }
@@ -743,8 +748,9 @@ class ShoppingCartController extends Controller
      */
     public function submittedbuyable(HTTPRequest $request)
     {
-        $buyableClassName = Convert::raw2sql($this->getRequest()->param('ID'));
-        $buyableClassName = ClassHelpers::unsanitise_class_name($buyableClassName);
+        // The class name is never used in SQL: is_buyable() checks that it is a real class that implements BuyableModel.
+        // (NB: in this action ID is the class name and OtherID the ID. In buyable() it is the other way around.)
+        $buyableClassName = ClassHelpers::unsanitise_class_name((string) $this->getRequest()->param('ID'));
 
         $buyableID = (int) $this->getRequest()->param('OtherID');
         $version = (int) $this->getRequest()->param('Version');
@@ -970,8 +976,8 @@ class ShoppingCartController extends Controller
      */
     protected function buyable()
     {
-        $buyableClassName = Convert::raw2sql($this->getRequest()->param('OtherID'));
-        $buyableClassName = ClassHelpers::unsanitise_class_name($buyableClassName);
+        // The class name is never used in SQL: is_buyable() checks that it is a real class that implements BuyableModel.
+        $buyableClassName = ClassHelpers::unsanitise_class_name((string) $this->getRequest()->param('OtherID'));
 
         $buyableID = (int) $this->getRequest()->param('ID');
         if ($buyableClassName && $buyableID) {

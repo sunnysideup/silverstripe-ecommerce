@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Convert;
 
 class GetVariables
 {
@@ -88,6 +87,9 @@ class GetVariables
                         Config::inst()->get(static::class, 'equal_alternative'),
                         $value
                     );
+                    // no raw2sql: this only parses the string. Whoever uses the values must escape them
+                    // for the place where they are used (the ORM and prepared queries do this by themselves).
+                    //@TODO: check if raw2sql is needed
                     $newArray[$key] = Convert::raw2sql($value);
                 } elseif (count($items) === 1) {
                     list($key) = $items;

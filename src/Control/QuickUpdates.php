@@ -204,7 +204,7 @@ class QuickUpdates extends Controller
                 ->filter(['AllowPurchase' => true])
                 ->sort(['InternalItemID' => 'ASC']);
             if ($query) {
-                $query = Convert::raw2sql($query);
+                // no raw2sql: the ORM escapes the values (doing it twice would change them)
                 $filter = [
                     'Title:PartialMatch' => $query,
                     'InternalItemID:PartialMatch' => $query,

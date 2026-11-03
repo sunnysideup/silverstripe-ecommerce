@@ -419,7 +419,7 @@ class OrderFormAddress extends Form
 
         // the password must be taken from the data as it was typed (before any escaping).
         $enteredPassword = $this->validPasswordHasBeenEntered($data);
-        $data = Convert::raw2sql($data);
+        // no need to escape for SQL: the ORM does that, and escaping twice would store altered values (e.g. o\'brien@...)
         //check for cart items
         if (! $this->order) {
             $form->sessionMessage(_t('OrderForm.ORDERNOTFOUND', 'Your order could not be found.'), 'bad');
@@ -636,7 +636,7 @@ class OrderFormAddress extends Form
                         $this->debugArray[] = 'A4. No other member found - creating new one';
                     }
                     $this->orderMember = Member::create();
-                    $this->orderMember->Email = Convert::raw2sql($newEmail);
+                    $this->orderMember->Email = $newEmail;
                     $this->newlyCreatedMemberID = $this->orderMember->write();
                 }
             }
@@ -804,7 +804,7 @@ class OrderFormAddress extends Form
         if (isset($data[$uniqueFieldName])) {
             $currentUserID = $this->loggedInMember ? $this->loggedInMember->ID : 0;
             $uniqueFieldValue = $data[$uniqueFieldName];
-            //no need to convert raw2sql as this has already been done.
+            // no need to convert raw2sql: the ORM filter takes care of that.
             return Member::get()
                 ->filter(
                     [
