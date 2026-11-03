@@ -21,6 +21,7 @@ class Sanitizer
             $data['LoggedInAsNote'],
             $data['PasswordCheck1'],
             $data['PasswordCheck2'],
+            $data['CurrentPassword'],
             $data['Password'],
         );
 

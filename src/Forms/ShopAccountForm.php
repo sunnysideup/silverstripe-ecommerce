@@ -17,9 +17,11 @@ use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use Sunnysideup\Ecommerce\Forms\Fields\CurrentPasswordField;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
@@ -57,11 +59,20 @@ class ShopAccountForm extends Form
             if ($member->Password) {
                 // needed to change email or password (checked in processForm)
                 $fields->push(
-                    PasswordField::create(
+                    CurrentPasswordField::create(
                         'CurrentPassword',
                         _t('Account.CURRENT_PASSWORD', 'Current password')
-                    )->setDescription(_t('Account.CURRENT_PASSWORD_DESCRIPTION', 'Only needed if you want to change your email or password.'))
+                    )
+                        ->setDescription(_t('Account.CURRENT_PASSWORD_DESCRIPTION', 'Only needed if you want to change your email or password.'))
+                        ->setAttribute('autocomplete', 'current-password')
                 );
+                // the email address as it is now: the current password is only asked for when it is changed.
+                $emailField = $fields->dataFieldByName('Email');
+                if ($emailField) {
+                    $emailField->setAttribute('data-original-value', (string) $member->Email);
+                    // without javascript the field is simply always shown.
+                    Requirements::customScript(self::getCurrentPasswordScript(), 'ShopAccountFormCurrentPassword');
+                }
             }
             $actions = new FieldList();
             $order = ShoppingCart::current_order();
@@ -128,6 +139,79 @@ class ShopAccountForm extends Form
     }
 
     /**
+     * Shows the "current password" field only when it is needed:
+     * - the email address has been changed (compared with data-original-value), or
+     * - a new password is being entered / the password fields are open, or
+     * - the field has an error message (e.g. after a failed save).
+     *
+     * Plain javascript on purpose (no build step, no dependency on the order in which jQuery is loaded).
+     */
+    protected static function getCurrentPasswordScript(): string
+    {
+        return <<<'JS'
+(function () {
+  function init() {
+    var current = document.querySelector('input[name="CurrentPassword"]');
+    var email = document.querySelector('input[name="Email"][data-original-value]');
+    if (!current || !email || !current.form) {
+      return;
+    }
+    var form = current.form;
+    var holder = current.closest('.field');
+    var newPassword = form.querySelector('input[name="PasswordCheck1"]');
+    var newPasswordHolder = newPassword ? newPassword.closest('.field') : null;
+    // EcomPasswordField.js hides the password fields straight after load (and shows them again with the link)
+    var passwordsToggled = !!form.querySelector('.passwordToggleLink');
+    var started = false;
+    if (!holder) {
+      return;
+    }
+    function clean(value) {
+      return (value || '').trim().toLowerCase();
+    }
+    function visible(el) {
+      return !!el && el.getClientRects().length > 0;
+    }
+    function update() {
+      var needed =
+        clean(email.value) !== clean(email.getAttribute('data-original-value')) ||
+        (!!newPassword && newPassword.value !== '') ||
+        (visible(newPasswordHolder) && (started || !passwordsToggled)) ||
+        !!holder.querySelector('.message');
+      holder.style.display = needed ? '' : 'none';
+    }
+    ['input', 'change', 'keyup'].forEach(function (eventName) {
+      email.addEventListener(eventName, update);
+      if (newPassword) {
+        newPassword.addEventListener(eventName, update);
+      }
+    });
+    if (newPasswordHolder && window.MutationObserver) {
+      new MutationObserver(update).observe(newPasswordHolder, { attributes: true, attributeFilter: ['style', 'class'] });
+    }
+    form.addEventListener('click', function (event) {
+      if (event.target.closest && event.target.closest('.passwordToggleLink')) {
+        started = true;
+        window.setTimeout(update, 500);
+      }
+    });
+    update();
+    // the password fields are closed by EcomPasswordField.js when the page has loaded
+    window.setTimeout(function () {
+      started = true;
+      update();
+    }, 700);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+JS;
+    }
+
+    /**
      * Save the changes to the form, and go back to the account page.
      *
      * @param mixed $data
@@ -174,7 +258,15 @@ class ShopAccountForm extends Form
                 if (! $passwordResult->isValid()) {
                     $this->sessionMessage(_t('Account.NO_VALID_PASSWORD', 'You need to enter a valid password.') . ' ' . ShopAccountFormPasswordValidator::messages_as_string($passwordResult), 'bad');
                 } elseif ($member->validate()->isValid()) {
-                    $member->write();
+                    try {
+                        $member->write();
+                    } catch (ValidationException $exception) {
+                        // e.g. the email address is already used by another member.
+                        $this->sessionMessage(_t('ShopAccountForm.COULD_NOT_VALIDATE_MEMBER', 'Could not save your details.'), 'bad');
+                        $this->controller->redirectBack();
+
+                        return;
+                    }
                     if ($member->exists()) {
                         if (! $order->MemberID) {
                             $order->MemberID = $member->ID;
@@ -258,7 +350,8 @@ class ShopAccountForm extends Form
         if (($password || $emailChanged) && ! ShopAccountFormPasswordValidator::can_set_password_without_current_password($member)) {
             $currentPassword = isset($data['CurrentPassword']) && is_string($data['CurrentPassword']) ? $data['CurrentPassword'] : '';
             if (! ShopAccountFormPasswordValidator::is_current_password($member, $currentPassword)) {
-                $form->sessionMessage(_t('Account.CURRENT_PASSWORD_REQUIRED', 'Please enter your current password to change your email or password.'), 'bad');
+                // as a field error, so that the (otherwise hidden) current password field is shown again.
+                $form->sessionFieldError(_t('Account.CURRENT_PASSWORD_REQUIRED', 'Please enter your current password to change your email or password.'), 'CurrentPassword', 'bad');
 
                 return $this->controller->redirectBack();
             }

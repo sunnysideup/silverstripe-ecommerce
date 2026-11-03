@@ -59,7 +59,10 @@ class ShopAccountFormValidator extends RequiredFields
             if ($isShopAdmin || $allowExistingEmail) {
                 //do nothing
             } else {
-                $uniqueFieldValue = preg_replace('/[^A-Za-z0-9]/', '', (string) $data[$uniqueFieldName]);
+                // NB: do not strip characters from the value (e.g. "@" and "." in an email address):
+                // the lookup below must find exactly what Member::onBeforeWrite() will look for (it trims, nothing else).
+                // The ORM parameterises the value, so there is no need to escape it.
+                $uniqueFieldValue = trim((string) $data[$uniqueFieldName]);
                 // This check tells people if an email address already has an account.
                 // To stop people from using it to find out which email addresses have accounts,
                 // we limit how often someone can run into an email address that is taken.
