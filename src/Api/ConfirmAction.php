@@ -50,7 +50,9 @@ class ConfirmAction
     public static function form(HTTPRequest $request, string $message, string $buttonLabel): string
     {
         // This page has a security token in it, so it must never be cached (not by the browser, not by a CDN).
-        HTTPCacheControlMiddleware::singleton()->disableCache();
+        // NB: it has to be forced (true), otherwise caching that is forced on anonymous pages by other code
+        // (see simple-template-caching) wins over it.
+        HTTPCacheControlMiddleware::singleton()->disableCache(true);
 
         $formHtml = self::formHtml($request, $message, $buttonLabel);
         try {

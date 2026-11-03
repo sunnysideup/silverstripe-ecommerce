@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Pages;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
@@ -399,6 +400,8 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function sendemail(HTTPRequest $request)
     {
+        // The page that this action echoes has a security token in it (the "send" form): it must never be cached.
+        HTTPCacheControlMiddleware::singleton()->disableCache(true);
         if ($this->currentOrder) {
             $subject = '';
             $message = '';
