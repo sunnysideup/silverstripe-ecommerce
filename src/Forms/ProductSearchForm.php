@@ -215,8 +215,9 @@ class ProductSearchForm extends Form
     public function doProductSearchForm($data, $form)
     {
         $this->rawData = $data;
-        $this->rawData['Keyword'] = $data['Keyword'] ?? $data['keyword'] ?? '';
-        $this->rawData['Keyword'] = ProductSearchFilter::keyword_sanitised($this->rawData['Keyword']);
+        $keyword = $data['Keyword'] ?? $data['keyword'] ?? '';
+        // an array (e.g. ?Keyword[]=x) is not a valid keyword
+        $this->rawData['Keyword'] = ProductSearchFilter::keyword_sanitised(is_string($keyword) ? $keyword : '');
         SearchHistory::add_entry($this->rawData['Keyword']);
         $this->runFullProcessInner($data);
         $this->doProcessResults();
