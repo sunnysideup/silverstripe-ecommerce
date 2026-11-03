@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
@@ -41,7 +40,7 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
     protected function applyOne(DataQuery $query)
     {
         //$this->model = $query->applyRelation($this->relation);
-        $value = Convert::raw2sql($this->getValue());
+        $value = (string) $this->getValue();
         $date = new DBDate();
         $date->setValue($value);
 

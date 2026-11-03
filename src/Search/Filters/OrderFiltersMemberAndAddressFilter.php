@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Security\Member;
@@ -26,7 +25,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
-        $value = Convert::raw2sql($this->getValue());
+        $value = (string) $this->getValue();
         $billingAddressesIDs = [];
         $billingAddresses = BillingAddress::get()->filterAny([
             'FirstName:PartialMatch' => $value,
