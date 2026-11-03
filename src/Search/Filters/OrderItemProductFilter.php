@@ -29,7 +29,7 @@ class OrderItemProductFilter extends ExactMatchFilter
         $value = is_scalar($this->getValue()) ? (string) $this->getValue() : '';
         $product = Product::get()->filter(['InternalItemID' => $value])->first();
         if ($product) {
-            $query->where("BuyableClassName = '" . addslashes($product->ClassName) . '\' AND "BuyableID" = ' . $product->ID);
+            $query->where(['BuyableClassName = ? AND "BuyableID" = ?' => [$product->ClassName, (int) $product->ID]]);
         } else {
             $done = false;
             $rows = DB::prepared_query(
@@ -42,7 +42,7 @@ class OrderItemProductFilter extends ExactMatchFilter
                 [$value]
             );
             foreach ($rows as $row) {
-                $query->where("BuyableClassName = '" . addslashes($row['ClassName']) . '\' AND "BuyableID" = ' . $row['RecordID']);
+                $query->where(['BuyableClassName = ? AND "BuyableID" = ?' => [$row['ClassName'], (int) $row['RecordID']]]);
                 $done = true;
             }
             if (! $done) {
@@ -53,7 +53,7 @@ class OrderItemProductFilter extends ExactMatchFilter
                 if ($logs->exists()) {
                     $orderIds = $logs->column('OrderID');
                 }
-                $query->where('OrderID IN (' . implode(',', $orderIds) . ')');
+                $query->where('OrderID IN (' . implode(',', array_map('intval', $orderIds)) . ')');
             }
         }
 
