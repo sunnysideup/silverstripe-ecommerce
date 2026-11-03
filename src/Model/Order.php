@@ -2523,12 +2523,26 @@ class Order extends DataObject implements EditableEcommerceObject
             return true;
         }
 
-        $tsOrder = strtotime((string) $this->LastEdited);
-        $tsNow = time();
-        $minutes = EcommerceConfig::get(Order::class, 'minutes_an_order_can_be_viewed_without_logging_in');
-        if ($minutes && ((($tsNow - $tsOrder) / 60) < $minutes)) {
-            //has the order been edited recently?
-            return true;
+        $minutes = (int) Config::inst()->get(Order::class, 'minutes_an_order_can_be_viewed_without_logging_in');
+        if ($minutes > 0) {
+            if ($this->IsSubmitted()) {
+                // for orders that have been placed, the time that the order has been placed counts.
+                // (LastEdited is no good: it changes every time the order is processed or edited by staff,
+                // and that would keep the window open for ever.)
+                $withinTimeWindow = ! $this->RetrieveLinkHasExpired();
+            } else {
+                $tsOrder = strtotime((string) $this->LastEdited);
+                $withinTimeWindow = ((time() - $tsOrder) / 60) < $minutes;
+            }
+            if ($withinTimeWindow) {
+                return true;
+            }
+            // The time window has passed.
+            // The only order that can still be viewed without logging in
+            // is the order that is in the visitor's own session.
+            if (! $this->IsInSession()) {
+                return false;
+            }
         }
 
         $orderStep = $this->MyStep();
