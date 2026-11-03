@@ -13,6 +13,7 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -232,6 +233,28 @@ class ShopAccountForm extends Form
         // NB: this has to be checked BEFORE saving anything into the member.
         $newEmail = isset($data['Email']) && is_string($data['Email']) ? trim($data['Email']) : '';
         $emailChanged = '' !== $newEmail && 0 !== strcasecmp($newEmail, (string) $member->Email);
+        // The validator skips the "email is taken" check for shop admins (so they can place orders for other people).
+        // That is not right here: this form saves INTO the logged-in member, so the email must never belong to somebody else.
+        if ($emailChanged) {
+            $uniqueFieldName = Member::config()->get('unique_identifier_field');
+            $taken = Member::get()
+                ->filter([$uniqueFieldName => $newEmail])
+                ->exclude(['ID' => $member->ID])
+                ->exists()
+            ;
+            if ($taken) {
+                $form->sessionMessage(
+                    _t(
+                        'Account.ALREADYTAKEN',
+                        'This {uniqueFieldName} can not be used. If you already have an account, please log in. Otherwise, please use another {uniqueFieldName}.',
+                        ['uniqueFieldName' => strtolower($uniqueFieldName)]
+                    ),
+                    'bad'
+                );
+
+                return $this->controller->redirectBack();
+            }
+        }
         if (($password || $emailChanged) && ! ShopAccountFormPasswordValidator::can_set_password_without_current_password($member)) {
             $currentPassword = isset($data['CurrentPassword']) && is_string($data['CurrentPassword']) ? $data['CurrentPassword'] : '';
             if (! ShopAccountFormPasswordValidator::is_current_password($member, $currentPassword)) {
@@ -251,7 +274,13 @@ class ShopAccountForm extends Form
             }
         }
         if ($member->validate()->isValid()) {
-            $member->write();
+            try {
+                $member->write();
+            } catch (ValidationException $exception) {
+                $form->sessionMessage(_t('Account.NO_VALID_DATA', 'Your details can not be updated.'), 'bad');
+
+                return $this->controller->redirectBack();
+            }
             if ($link) {
                 return $this->controller->redirect($link);
             }
