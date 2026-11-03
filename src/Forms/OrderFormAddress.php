@@ -159,7 +159,7 @@ class OrderFormAddress extends Form
                             '<p class="message good guest-account-info">' .
                             _t(
                                 'OrderForm.GUESTACCOUNTINFO',
-                                'We will create an account for you with this email address. To see your orders next time, log in with the one-time code that we email you or use our password reset functionality.'
+                                'Please double-check your email address so we can keep you updated.'
                             ) .
                             '</p>'
                         )
