@@ -48,8 +48,12 @@ class ShopAccountFormPasswordValidator
     }
 
     /**
-     * Checks if the password provided is the current password for the member
-     * (same method as used by the core change password form).
+     * Checks if the password provided is the current password for the member.
+     *
+     * The password is accepted if ANY authenticator that can check passwords accepts it.
+     * (The core change password form requires ALL of them to accept it, which
+     * means that one extra authenticator, e.g. MFA or one-time-code, could refuse a perfectly good
+     * password.)  If there are no authenticators that can check passwords, the password is refused.
      */
     public static function is_current_password(Member $member, ?string $password): bool
     {
@@ -58,12 +62,12 @@ class ShopAccountFormPasswordValidator
         }
         $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::CHECK_PASSWORD);
         foreach ($authenticators as $authenticator) {
-            if (! $authenticator->checkPassword($member, $password)->isValid()) {
-                return false;
+            if ($authenticator->checkPassword($member, $password)->isValid()) {
+                return true;
             }
         }
 
-        return $authenticators !== [];
+        return false;
     }
 
     /**
