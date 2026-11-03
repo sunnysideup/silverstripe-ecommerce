@@ -6,7 +6,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extension;
 use SilverStripe\ErrorPage\ErrorPage;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -68,7 +67,7 @@ class ErrorPageExtension extends Extension
         }
         if ($path !== '' && $path !== '0') {
             return Product::get()
-                ->filter(['InternalItemID' => Convert::raw2sql($path)])
+                ->filter(['InternalItemID' => $path])
                 ->first()
             ;
         }
