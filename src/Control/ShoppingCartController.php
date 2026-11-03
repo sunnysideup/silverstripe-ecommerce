@@ -628,16 +628,15 @@ class ShoppingCartController extends Controller
             );
         }
         $this->cart->clear();
-        $member = Security::getCurrentUser();
-        if ($member) {
-            // Always go to the home page after logging out. Without a BackURL, the log out sends people back to the
-            // page they came from, and if that page needs a log in (e.g. the account page) they land on the login page.
-            $this->redirect(Security::logout_url() . '&BackURL=' . urlencode(Director::baseURL()));
-        } else {
-            $this->redirect(Director::baseURL());
+        if (Security::getCurrentUser()) {
+            // We log out here (this is a POST with a valid security token, see ConfirmAction) rather than sending
+            // people to the Security/logout page: after that page, people are sent back to the page they came from,
+            // and if that page needs a log in (e.g. the account page) they would land on the login page.
+            Injector::inst()->get(IdentityStore::class)->logOut($request);
         }
 
-        return [];
+        // always go to the home page.
+        return $this->redirect(Director::baseURL());
     }
 
     /**
