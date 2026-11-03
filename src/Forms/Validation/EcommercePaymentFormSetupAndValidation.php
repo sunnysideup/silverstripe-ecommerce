@@ -185,12 +185,9 @@ class EcommercePaymentFormSetupAndValidation
                     if (isset($dbFieldMap[$paymentClassName]['CardNumber'])) {
                         $dbFieldName = $dbFieldMap[$paymentClassName]['CardNumber'];
                     }
-                    $this->paymentObject->{$dbFieldName} = trim(
-                        $data[$formFieldName][0] .
-                        $data[$formFieldName][1] .
-                        $data[$formFieldName][2] .
-                        $data[$formFieldName][3]
-                    );
+                    $cardNumberParts = is_array($data[$formFieldName]) ? array_slice(array_values($data[$formFieldName]), 0, 4) : [];
+                    $cardNumberParts = array_filter($cardNumberParts, 'is_scalar');
+                    $this->paymentObject->{$dbFieldName} = trim(implode('', $cardNumberParts));
                     $cardNumber = $this->paymentObject->{$dbFieldName};
                     if (! $this->validateCardNumber($this->paymentObject->{$dbFieldName})) {
                         $form->sessionError(
@@ -203,9 +200,9 @@ class EcommercePaymentFormSetupAndValidation
 
                     break;
                 case 'ExpiryDate':
-                    $this->paymentObject->{$dbFieldName} =
-                        $data[$formFieldName]['month'] .
-                        $data[$formFieldName]['year'];
+                    $expiryMonth = is_array($data[$formFieldName]) && isset($data[$formFieldName]['month']) && is_scalar($data[$formFieldName]['month']) ? $data[$formFieldName]['month'] : '';
+                    $expiryYear = is_array($data[$formFieldName]) && isset($data[$formFieldName]['year']) && is_scalar($data[$formFieldName]['year']) ? $data[$formFieldName]['year'] : '';
+                    $this->paymentObject->{$dbFieldName} = $expiryMonth . $expiryYear;
                     if (! $this->validateExpiryMonth($this->paymentObject->{$dbFieldName})) {
                         $form->sessionError(
                             $formFieldName,
@@ -217,8 +214,9 @@ class EcommercePaymentFormSetupAndValidation
 
                     break;
                 case 'CVVNumber':
-                    $cardNumber = $this->paymentObject->{$dbFieldName};
-                    $this->paymentObject->{$dbFieldName} = trim((string) $data[$formFieldName]);
+                    // $cardNumber has been set in the CardNumber step (above) and is used to find out how long the CVV should be.
+                    $cardNumber ??= '';
+                    $this->paymentObject->{$dbFieldName} = is_scalar($data[$formFieldName]) ? trim((string) $data[$formFieldName]) : '';
                     if (! $this->validateCVV($cardNumber, $this->paymentObject->{$dbFieldName})) {
                         $form->sessionError(
                             $formFieldName,
@@ -230,7 +228,7 @@ class EcommercePaymentFormSetupAndValidation
 
                     break;
                 case 'NameOnCard':
-                    $this->paymentObject->{$dbFieldName} = trim((string) $data[$formFieldName]);
+                    $this->paymentObject->{$dbFieldName} = is_scalar($data[$formFieldName]) ? trim((string) $data[$formFieldName]) : '';
                     if (strlen((string) $this->paymentObject->{$dbFieldName}) < 3) {
                         $form->sessionError(
                             $formFieldName,
@@ -250,9 +248,48 @@ class EcommercePaymentFormSetupAndValidation
 
             return false;
         }
-        $this->paymentObject->write();
+        // the card details stay in memory (for the payment gateway), they are never saved to the database.
+        $this->writePaymentWithoutCardData();
 
         return true;
+    }
+
+    /**
+     * The names of the fields (of the payment object) that hold the card number and the card security number.
+     *
+     * @return string[] - [cardNumberField, cvvField]
+     */
+    protected function cardFieldNames(EcommercePayment $payment): array
+    {
+        $dbFieldMap = Config::inst()->get(EcommercePaymentFormSetupAndValidation::class, 'db_field_map');
+        $map = $dbFieldMap[$payment->ClassName] ?? [];
+
+        return [$map['CardNumber'] ?? 'CardNumber', $map['CVVNumber'] ?? 'CVVNumber'];
+    }
+
+    /**
+     * Writes the payment object to the database WITHOUT the card number and the card security number.
+     * The values are put back on the object afterwards so that they can still be used to process the payment.
+     */
+    protected function writePaymentWithoutCardData(): void
+    {
+        $payment = $this->paymentObject;
+        [$cardNumberField, $cvvField] = $this->cardFieldNames($payment);
+        $kept = [];
+        foreach ([$cardNumberField, $cvvField] as $field) {
+            if ($payment->hasDatabaseField($field)) {
+                $kept[$field] = $payment->{$field};
+                $payment->{$field} = '';
+            }
+        }
+
+        try {
+            $payment->write();
+        } finally {
+            foreach ($kept as $field => $value) {
+                $payment->{$field} = $value;
+            }
+        }
     }
 
     /**
@@ -266,10 +303,7 @@ class EcommercePaymentFormSetupAndValidation
         if (! $payment || ! $payment->exists()) {
             return;
         }
-        $dbFieldMap = Config::inst()->get(EcommercePaymentFormSetupAndValidation::class, 'db_field_map');
-        $map = $dbFieldMap[$payment->ClassName] ?? [];
-        $cvvField = $map['CVVNumber'] ?? 'CVVNumber';
-        $cardNumberField = $map['CardNumber'] ?? 'CardNumber';
+        [$cardNumberField, $cvvField] = $this->cardFieldNames($payment);
         $changed = false;
         if ($payment->hasDatabaseField($cvvField) && '' !== (string) $payment->{$cvvField}) {
             $payment->{$cvvField} = '';
@@ -346,11 +380,16 @@ class EcommercePaymentFormSetupAndValidation
         $this->paymentObject->OrderID = $order->ID;
         //important to set the amount and currency (WE SET THEM BOTH AT THE SAME TIME!)
         $this->paymentObject->Amount = $order->getTotalOutstandingAsMoney();
-        $this->paymentObject->write();
+        // $form->saveInto may have put the card details on the payment object: they must not be saved.
+        $this->writePaymentWithoutCardData();
         // Process payment, get the result back
-        $result = $this->paymentObject->processPayment($data, $form);
-        // the card security number must never be kept and the card number is masked
-        $this->scrubCardData();
+        try {
+            $result = $this->paymentObject->processPayment($data, $form);
+        } finally {
+            // the card security number must never be kept and the card number is masked
+            // (also when processing the payment throws an error)
+            $this->scrubCardData();
+        }
 
         if (! is_a($result, EcommerceConfigClassNames::getName(EcommercePaymentResult::class))) {
             $form->getController()->redirectBack();
