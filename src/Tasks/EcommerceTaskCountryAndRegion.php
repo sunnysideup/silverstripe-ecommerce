@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -30,7 +29,7 @@ class EcommerceTaskCountryAndRegion extends BuildTask
         foreach ($array as $code => $name) {
             $ecommerceCountry = DataObject::get_one(
                 EcommerceCountry::class,
-                ['Code' => Convert::raw2sql($code)],
+                ['Code' => $code],
                 $cacheDataObjectGetOne = false
             );
             if ($ecommerceCountry) {
