@@ -678,7 +678,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $ordersField = $fields->dataFieldByName('Orders');
         if ($ordersField) {
             $config = $ordersField->setConfig(GridFieldConfig_RecordViewer::create());
-            $config->addComponent($exportButton);
+            $ordersField->getConfig()->addComponent($exportButton);
         }
 
         return $fields;
