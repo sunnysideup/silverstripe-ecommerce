@@ -56,9 +56,14 @@ class DestructiveTaskGuard
      * Returns true if the task is allowed to run now. If not, then it has already
      * shown the reason or the confirmation form, and the task has to stop.
      */
-    public static function mayRun(HTTPRequest $request, BuildTask $task, string $whatItDoes, string $restriction = self::ANYWHERE): bool
+    public static function mayRun(HTTPRequest|null $request, BuildTask $task, string $whatItDoes, string $restriction = self::ANYWHERE): bool
     {
         $title = (string) $task->getTitle();
+
+        // the command line is not reachable from a web page.
+        if (Director::is_cli()) {
+            return true;
+        }
 
         if (self::DEV_ONLY === $restriction && ! Director::isDev()) {
             DB::alteration_message('"' . Convert::raw2xml($title) . '" can only be run in dev mode.', 'error');
@@ -72,12 +77,8 @@ class DestructiveTaskGuard
             return false;
         }
 
-        // the command line is not reachable from a web page.
-        if (Director::is_cli()) {
-            return true;
-        }
 
-        if ($request->isPOST() && SecurityToken::inst()->checkRequest($request)) {
+        if ($request && $request->isPOST() && SecurityToken::inst()->checkRequest($request)) {
             return true;
         }
 
