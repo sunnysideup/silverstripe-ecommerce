@@ -503,7 +503,7 @@ class OrderConfirmationPageController extends CartPageController
                         }
                     } else {
                         // GET: never send, only show a preview and a form to send it.
-                        $message = $this->sendEmailConfirmationForm($request, $isTest ? 'test' : 'send', $stepID, (string) $to, (string) $email, (string) $subject);
+                        $message = $this->sendEmailConfirmationForm($request, $isTest ? 'test' : 'send', $stepID, (string) $to, (string) $email);
                     }
                 } else {
                     $message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
@@ -555,7 +555,7 @@ class OrderConfirmationPageController extends CartPageController
     /**
      * returns the HTML for a small form that sends the email (POST + security token).
      */
-    protected function sendEmailConfirmationForm(HTTPRequest $request, string $stepVarName, int $stepID, string $to, string $email, string $subject): string
+    protected function sendEmailConfirmationForm(HTTPRequest $request, string $stepVarName, int $stepID, string $to, string $email): string
     {
         $action = Controller::join_links(Director::baseURL(), $request->getURL());
         $token = SecurityToken::inst();
@@ -567,7 +567,7 @@ class OrderConfirmationPageController extends CartPageController
         }
         $html .= '<p>' . _t('OrderConfirmationPage.PREVIEWONLY', 'Preview only - nothing has been sent yet.')
             . '<br />' . _t('OrderConfirmationPage.SENDTO', 'Send to:') . ' <strong>' . Convert::raw2xml($email) . '</strong>'
-            . '<br />' . _t('OrderConfirmationPage.WITHSUBJECT', 'Subject:') . ' <strong>' . Convert::raw2xml($subject) . '</strong></p>'
+            . '</p>'
             . '<button type="submit">' . _t('OrderConfirmationPage.SENDEMAILNOW', 'Send this email now') . '</button>'
             . '</form>';
 
