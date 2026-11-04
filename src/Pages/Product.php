@@ -1322,13 +1322,15 @@ class Product extends Page implements BuyableModel
             return $extended;
         }
 
-        if (! EcommerceCountry::allow_sales()) {
-            return false;
-        }
+        // NOTE: there is deliberately NO visitor country check here (EcommerceCountry::allow_sales()).
+        // canPurchase() decides if a product is LISTED, and lists are cached for all visitors
+        // (see BaseProductList::removeExcludedProducts). A visitor / bot from a country with
+        // DoNotAllowSales = 1 that built the cache would hide every product for everybody.
+        // If you need to block sales to certain countries, do it when adding to the cart / at checkout.
 
         if ($checkPrice) {
             $price = $this->getCalculatedPrice();
-            if (0 === $price && ! $config->AllowFreeProductPurchase) {
+            if ((float) 0 === (float) $price && ! $config->AllowFreeProductPurchase) {
                 return false;
             }
         }
@@ -1439,7 +1441,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><b>Can Purchase (overal calculation):</b> ' . ($this->canPurchase() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Shop Open:</b> ' . $config->ShopClosed !== '' ? 'NO' : 'YES </li>';
         $html .= '<li><b>Extended Country Can Purchase:</b> ' . (null === $this->extendedCan('canPurchaseByCountry', null) ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
-        $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . '):</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
+        $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . ') - information only, not used in canPurchase:</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Class Name for OrderItem:</b> ' . $this->classNameForOrderItem() . ' </li>';
         $html .= '<li><b>Quantity Decimals:</b> ' . $this->QuantityDecimals() . ' </li>';
         $html .= '<li><b>Is In Cart:</b> ' . ($this->IsInCart() ? 'YES' : 'NO') . ' </li>';
