@@ -727,6 +727,26 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         return Order::get()->filter(['MemberID' => $this->getOwner()->ID]);
     }
 
+    /**
+     * Orders linked to this member by member ID, plus any orders that share the
+     * member's email address (through the order's member or through the order's
+     * billing address) without being linked by member ID.
+     *
+     * @return \SilverStripe\ORM\DataList|Order[]
+     */
+    public function getOrdersIncludingEmailMatches()
+    {
+        $owner = $this->getOwner();
+        $filters = ['MemberID' => (int) $owner->ID];
+        $email = trim((string) $owner->Email);
+        if ($email !== '') {
+            $filters['Member.Email'] = $email;
+            $filters['BillingAddress.Email'] = $email;
+        }
+
+        return Order::get()->filterAny($filters)->sort(['ID' => 'DESC']);
+    }
+
     public function getCompletedOrders()
     {
         $orderSteps = OrderStep::get()->filter(['ShowAsCompletedOrder' => true])->columnUnique();
@@ -790,11 +810,12 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 $owner->EmailVerifiedAt ?: _t('Member.EMAIL_NOT_VERIFIED', 'not verified')
             )
         );
-        if ($owner->ID && $this->getOrders()->exists()) {
+        $orders = $owner->ID ? $this->getOrdersIncludingEmailMatches() : null;
+        if ($orders && $orders->exists()) {
             $orderField = GridField::create(
                 'OrdersNice',
-                'Orders',
-                $this->getOrders(),
+                'Orders (linked by member or by email address)',
+                $orders,
                 GridFieldConfig_RecordViewer::create()
             );
         } else {
