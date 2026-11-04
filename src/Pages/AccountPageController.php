@@ -47,15 +47,15 @@ class AccountPageController extends PageController
     protected function init()
     {
         parent::init();
-        if (! $this->AccountMember() && 1 === 2) {
-            $messages = [
-                'default' => '<p class="message good">' . _t('Account.LOGINFIRST', 'You will need to log in before you can access the account page. ') . '</p>',
-                'logInAgain' => _t('Account.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.'),
-            ];
-            Security::permissionFailure($this, $messages);
+        // if (! $this->AccountMember() && 1 === 2) {
+        //     $messages = [
+        //         'default' => '<p class="message good">' . _t('Account.LOGINFIRST', 'You will need to log in before you can access the account page. ') . '</p>',
+        //         'logInAgain' => _t('Account.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.'),
+        //     ];
+        //     Security::permissionFailure($this, $messages);
 
-            return false;
-        }
+        //     return false;
+        // }
         Requirements::themedCSS('client/css/AccountPage');
         return null;
     }
