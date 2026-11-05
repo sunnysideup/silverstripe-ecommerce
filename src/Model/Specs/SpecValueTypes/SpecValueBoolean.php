@@ -16,12 +16,12 @@ class SpecValueBoolean extends SpecValue
         'Value' => true,
     ];
 
-    public function getValue(): bool
+    public function getValueForType(): bool
     {
         return (bool) $this->Value;
     }
 
-    public function setValue($value): static
+    public function setValueForType($value): static
     {
         $this->Value = (bool) $value;
         return $this;

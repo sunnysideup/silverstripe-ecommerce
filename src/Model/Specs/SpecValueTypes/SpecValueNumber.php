@@ -16,12 +16,12 @@ class SpecValueNumber extends SpecValue
         'Value' => true,
     ];
 
-    public function getValue(): float
+    public function getValueForType(): float
     {
         return (float) $this->Value;
     }
 
-    public function setValue($value): static
+    public function setValueForType($value): static
     {
         $this->Value = (float) $value;
         return $this;

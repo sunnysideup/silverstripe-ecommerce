@@ -185,12 +185,12 @@ class SpecValue extends DataObject
     }
 
 
-    public function getValue()
+    public function getValueForType()
     {
         return $this->Value;
     }
 
-    public function setValue($value): static
+    public function setValueForType($value): static
     {
         $this->Value = $value;
         return $this;

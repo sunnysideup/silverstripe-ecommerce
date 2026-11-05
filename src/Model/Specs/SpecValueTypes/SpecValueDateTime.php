@@ -16,12 +16,12 @@ class SpecValueDateTime extends SpecValue
         'Value' => true,
     ];
 
-    public function getValue(): ?string
+    public function getValueForType(): ?string
     {
         return $this->Value;
     }
 
-    public function setValue($value): static
+    public function setValueForType($value): static
     {
         $this->Value = $value;
         return $this;
