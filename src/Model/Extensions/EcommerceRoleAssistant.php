@@ -69,9 +69,6 @@ class EcommerceRoleAssistant implements PermissionProviderFactoryProvider
     {
         return PermissionProviderFactory::inst()
             ->setParentGroup(EcommerceRole::get_category())
-            ->setEmail(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_user_email'))
-            ->setFirstName(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_user_first_name'))
-            ->setSurname(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_user_surname'))
             ->setCode(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_code'))
             ->setGroupName(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_name'))
             ->setPermissionCode(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_permission_code'))
@@ -84,7 +81,7 @@ class EcommerceRoleAssistant implements PermissionProviderFactoryProvider
                 )
             )
             ->setSort(100)
-            ->CreateGroupAndMember()
+            ->CreateGroup()
         ;
     }
 }

@@ -205,9 +205,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     {
         return PermissionProviderFactory::inst()
             ->setParentGroup(EcommerceRole::get_category())
-            ->setEmail(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_email'))
-            ->setFirstName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_first_name'))
-            ->setSurname(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_surname'))
             ->setCode(EcommerceConfig::get(EcommerceRole::class, 'admin_group_code'))
             ->setGroupName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_name'))
             ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'))
@@ -220,7 +217,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 )
             )
             ->setSort(99)
-            ->CreateGroupAndMember();
+            ->CreateGroup();
     }
 
     public function getCustomerDetails(): string
