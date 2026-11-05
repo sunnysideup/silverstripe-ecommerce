@@ -744,6 +744,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 'Root.Next',
                 [
                     ReadonlyField::create('StatusIDNotice', 'Info', $text),
+                ]
+            );
+            $fields->addFieldsToTab(
+                'Root.Process',
+                [
                     DropdownField::create(
                         'StatusID',
                         'Select Status - NOT RECOMMENDED',
