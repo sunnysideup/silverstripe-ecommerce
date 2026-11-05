@@ -6,17 +6,21 @@ use SilverStripe\Forms\RequiredFields;
 
 class OrderFormPaymentValidator extends RequiredFields
 {
+    use ExtendedValidationTrait;
+
     public function php($data)
     {
         $this->form->saveDataToSession();
-        $validExtended = $this->extend('updatePHP', $data, $this);
-        if (false === $validExtended) {
+        $extensionsAreFine = $this->extensionsAcceptTheData($data, 'We could not process your payment.');
+        if (! $extensionsAreFine) {
             $this->form->sessionError(
                 _t('OrderForm.OrderFormPayment', 'We could not process your payment.'),
                 'error'
             );
         }
 
-        return parent::php($data);
+        $valid = parent::php($data);
+
+        return $extensionsAreFine && $valid;
     }
 }

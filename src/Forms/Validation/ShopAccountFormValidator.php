@@ -12,6 +12,8 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 class ShopAccountFormValidator extends RequiredFields
 {
+    use ExtendedValidationTrait;
+
     /**
      * @var int
      */
@@ -156,8 +158,8 @@ class ShopAccountFormValidator extends RequiredFields
             );
             $valid = false;
         }
-        $validExtended = $this->extend('updatePHP', $data, $this);
-        if (false === $validExtended) {
+        // see ExtendedValidationTrait for how extensions work with validators in SilverStripe 5
+        if (! $this->extensionsAcceptTheData($data, _t('Account.ERRORINFORM', 'We could not save your details, please check your errors below.'))) {
             $valid = false;
         }
         if (! $valid) {

@@ -18,6 +18,8 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
  */
 class OrderFormValidator extends RequiredFields
 {
+    use ExtendedValidationTrait;
+
     /**
      * Ensures member unique id stays unique and other basic stuff...
      *
@@ -46,7 +48,7 @@ class OrderFormValidator extends RequiredFields
             );
             $valid = false;
         }
-        $billingAddress = BillingAddress::get_by_id($order->BillingAddressID);
+        $billingAddress = $order ? BillingAddress::get_by_id($order->BillingAddressID) : null;
         if (! $billingAddress) {
             $this->validationError(
                 BillingAddress::class,
@@ -55,8 +57,8 @@ class OrderFormValidator extends RequiredFields
             );
             $valid = false;
         }
-        $validExtended = $this->extend('updatePHP', $data, $this);
-        if (false === $validExtended) {
+        // see ExtendedValidationTrait for how extensions work with validators in SilverStripe 5
+        if (! $this->extensionsAcceptTheData($data, _t('OrderForm.ERRORINFORM', 'We could not process with your order, please check your errors below.'))) {
             $valid = false;
         }
         if (! $valid) {

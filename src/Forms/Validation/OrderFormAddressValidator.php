@@ -47,10 +47,9 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
             );
             $valid = false;
         }
-        $validExtended = $this->extend('updatePHP', $data, $this);
-        if (false === $validExtended) {
-            $valid = false;
-        }
+        // NOTE: the 'updatePHP' extension is run by ShopAccountFormValidator::php() (parent::php above),
+        // and its answer is part of $valid. Do not run it again here: that runs every extension twice
+        // (and shows every error message twice).
         if (! $valid) {
             $this->form->sessionError(
                 _t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'),

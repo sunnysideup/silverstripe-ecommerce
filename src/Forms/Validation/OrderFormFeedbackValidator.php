@@ -6,17 +6,21 @@ use SilverStripe\Forms\RequiredFields;
 
 class OrderFormFeedbackValidator extends RequiredFields
 {
+    use ExtendedValidationTrait;
+
     public function php($data)
     {
         $this->form->saveDataToSession();
-        $validExtended = $this->extend('updatePHP', $data, $this);
-        if (false === $validExtended) {
+        $extensionsAreFine = $this->extensionsAcceptTheData($data, 'We could not process your feedback.');
+        if (! $extensionsAreFine) {
             $this->form->sessionError(
                 _t('OrderForm.OrderFormFeedback', 'We could not process your feedback.'),
                 'error'
             );
         }
 
-        return parent::php($data);
+        $valid = parent::php($data);
+
+        return $extensionsAreFine && $valid;
     }
 }
