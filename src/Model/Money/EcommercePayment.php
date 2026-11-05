@@ -35,7 +35,9 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
+use Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentAmountFilter;
 use Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentFiltersAroundDateFilter;
+use Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentPayerFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
 
@@ -158,6 +160,18 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'IP' => [
             'title' => 'IP Address',
             'filter' => 'PartialMatchFilter',
+        ],
+        'Amount' => [
+            'title' => 'Amount (e.g. 129.50)',
+            'field' => TextField::class,
+            'filter' => EcommercePaymentAmountFilter::class,
+        ],
+        // the name is only there because a search field needs a real field or relation to hang on to;
+        // the filter looks at the payer in all the places that we know (see EcommercePaymentPayerFilter).
+        'PaidBy.Email' => [
+            'title' => 'Payer name or email',
+            'field' => TextField::class,
+            'filter' => EcommercePaymentPayerFilter::class,
         ],
         'Status',
         'ClassName' => [
