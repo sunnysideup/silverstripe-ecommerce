@@ -5,11 +5,13 @@ namespace Sunnysideup\Ecommerce\Model\Money;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\ReadonlyField;
@@ -17,6 +19,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBMoney;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -25,6 +28,7 @@ use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommercePaymentTypeDropdownField;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
@@ -156,6 +160,11 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             'filter' => 'PartialMatchFilter',
         ],
         'Status',
+        'ClassName' => [
+            'title' => 'Payment type',
+            'field' => EcommercePaymentTypeDropdownField::class,
+            'filter' => ExactMatchFilter::class,
+        ],
     ];
 
     /**
@@ -232,10 +241,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         );
         $fields->replaceField(
             'PaidByID',
-            new ReadonlyField(
+            HTMLReadonlyField::create(
                 'PaidByIDNice',
                 'Payment made by',
-                DBField::create_field('HTMLText', '<a href="' . $this->PaidBy()->CMSEditLink() . '">' . $this->PaidBy()->getTitle() . '</a>')
+                $this->getPaidByHTML()
             )
         );
         $fields->removeByName('AlternativeEndPoint');
@@ -250,6 +259,89 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         }
 
         return $fields;
+    }
+
+    /**
+     * Who made this payment?  We try, in this order:
+     *  1. the member that is recorded on the payment (PaidBy),
+     *  2. the member of the order,
+     *  3. the member with the email address of the order (billing email first),
+     *  4. no member: just the email address of the order.
+     *
+     * @return array{member: ?Member, email: string, source: string, orderMember: ?Member}
+     */
+    public function getPayerDetails(): array
+    {
+        $order = $this->getOrderCached();
+
+        $orderMember = null;
+        if ($order && $order->exists() && $order->MemberID) {
+            $member = $order->Member();
+            if ($member && $member->exists()) {
+                $orderMember = $member;
+            }
+        }
+
+        $paidBy = $this->PaidByID ? $this->PaidBy() : null;
+        if ($paidBy && $paidBy->exists()) {
+            return ['member' => $paidBy, 'email' => (string) $paidBy->Email, 'source' => 'recorded on the payment', 'orderMember' => $orderMember];
+        }
+
+        if ($orderMember) {
+            return ['member' => $orderMember, 'email' => (string) $orderMember->Email, 'source' => 'member of the order', 'orderMember' => $orderMember];
+        }
+
+        $emails = [];
+        if ($order && $order->exists()) {
+            // the order can give us more than one address (separated by a semicolon)
+            $emails = array_values(array_filter(array_map('trim', explode(';', (string) $order->getOrderEmail()))));
+        }
+
+        foreach ($emails as $email) {
+            $member = Member::get()->filter(['Email' => $email])->first();
+            if ($member && $member->exists()) {
+                return ['member' => $member, 'email' => $email, 'source' => 'found by the email address of the order', 'orderMember' => null];
+            }
+        }
+
+        if ([] !== $emails) {
+            return ['member' => null, 'email' => $emails[0], 'source' => 'email address of the order - there is no member with this email address', 'orderMember' => null];
+        }
+
+        return ['member' => null, 'email' => '', 'source' => 'unknown - the order has no member and no email address', 'orderMember' => null];
+    }
+
+    /**
+     * the answer of getPayerDetails as HTML (everything is escaped), for the CMS.
+     */
+    public function getPaidByHTML(): string
+    {
+        $details = $this->getPayerDetails();
+        $member = $details['member'];
+        $email = $details['email'];
+        if ($member) {
+            $title = trim((string) $member->getTitle());
+            $title = '' !== $title ? $title : ($email ?: 'Member #' . $member->ID);
+            $html = '<a href="' . Convert::raw2att(CMSEditLinkAPI::find_edit_link_for_object($member)) . '" target="_blank">' . Convert::raw2xml($title) . '</a>';
+            if ($email && $email !== $title) {
+                $html .= ' &lt;' . Convert::raw2xml($email) . '&gt;';
+            }
+        } elseif ('' !== $email) {
+            $html = '<a href="mailto:' . Convert::raw2att($email) . '">' . Convert::raw2xml($email) . '</a>';
+        } else {
+            $html = '<strong>unknown</strong>';
+        }
+
+        $html .= ' <span style="opacity: 0.7;">(' . Convert::raw2xml($details['source']) . ')</span>';
+
+        // the person that paid is not always the person that placed the order (e.g. staff taking a payment).
+        $orderMember = $details['orderMember'];
+        if ($orderMember && (! $member || $orderMember->ID !== $member->ID)) {
+            $html .= '<br />Order placed by: <a href="' . Convert::raw2att(CMSEditLinkAPI::find_edit_link_for_object($orderMember)) . '" target="_blank">'
+                . Convert::raw2xml(trim((string) $orderMember->getTitle()) ?: (string) $orderMember->Email) . '</a>';
+        }
+
+        return $html;
     }
 
     /**
@@ -699,7 +791,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        $this->PaidByID = Security::getCurrentUser()?->ID;
+        // only record who paid ONCE.  This used to be set on every write, so a payment that was updated
+        // by someone else (staff in the CMS, a payment provider callback without a user) lost its payer.
+        if (! $this->PaidByID) {
+            $currentUserID = Security::getCurrentUser()?->ID;
+            if ($currentUserID) {
+                $this->PaidByID = $currentUserID;
+            }
+        }
     }
 
     /**
