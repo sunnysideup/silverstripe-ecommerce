@@ -220,7 +220,14 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
             ->CreateGroup();
     }
 
-    public function getCustomerDetails(): string
+    /**
+     * Line 1: who (name and email address).  Line 2: everything we know about them:
+     * the type of customer, and the number of orders with a successful payment (also if that is zero).
+     * E.g. "First Surname, email" + "verified account, paid: 3".
+     *
+     * @param string $separator what goes between line 1 and line 2: use "\n" for a new line
+     */
+    public function getCustomerDetails(?string $separator = ' - '): string
     {
         $owner = $this->getOwner();
         if ($owner->exists()) {
@@ -229,10 +236,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
             $countHeld = $owner->getHeldOrdersCount();
             $name = $owner->IsGuestCustomer() ? '' : $owner->FirstName . ' ' . $owner->Surname . ', ';
 
-            return $name . $owner->Email .
-                ' (' . _t('Member.MEMBER_ORDER_COUNT_PAID', 'paid') . ': ' . $countPaid .
-                ($countHeld ? ', ' . _t('Member.MEMBER_ORDER_COUNT_HELD', 'held') . ': ' . $countHeld : '') .
-                ') - ' . $owner->getCustomerType();
+            return $name . $owner->Email . $separator .
+                $owner->getCustomerType() .
+                ', ' . _t('Member.MEMBER_ORDER_COUNT_PAID', 'paid') . ': ' . $countPaid .
+                ($countHeld ? ', ' . _t('Member.MEMBER_ORDER_COUNT_HELD', 'held') . ': ' . $countHeld : '');
         }
 
         return 'no customer';

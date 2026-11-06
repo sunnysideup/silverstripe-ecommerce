@@ -6,6 +6,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ErrorPage\ErrorPage;
@@ -30,6 +31,7 @@ use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
@@ -410,7 +412,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'FullNameCountry' => 'Varchar',
         'IsSubmitted' => 'Boolean',
         'CustomerStatus' => 'Varchar',
-        'CustomerSummary' => 'Varchar',
+        'CustomerSummaryOneLine' => 'Varchar',
         'CanHaveShippingAddress' => 'Boolean',
     ];
 
@@ -452,7 +454,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'Title' => 'Title',
         'OrderItemsSummaryNice' => 'Order Items',
         'Status.Title' => 'Next Step',
-        'CustomerSummary' => 'Customer',
+        'CustomerSummaryOneLine' => 'Customer',
         'TotalAsMoney.Nice' => 'Total',
         'IsPaidNice' => 'Paid',
         'CustomerOrderNote' => 'Note',
@@ -460,7 +462,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
     private static $csv_export_fields = [
         'Title' => 'Title',
-        'Member.CustomerDetails' => 'Customer',
+        'CustomerSummaryOneLine' => 'Customer',
         'TotalItemsTimesQuantity' => 'Number of Items',
         'OrderItemsSummaryNice' => 'Order Items',
         'DeliveryAddress.FullAddress' => 'Delivery Address',
@@ -907,7 +909,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $summaryFields[] = ReadonlyField::create('OrderItemsSummaryNice', 'Items');
         $summaryFields[] = ReadonlyField::create('TotalNice', 'Total', $this->TotalAsMoney()->Nice());
         $summaryFields[] = ReadonlyField::create('IsPaidNice', 'Paid?');
-        $summaryFields[] = ReadonlyField::create('MyCustomerNice', 'Customer', $this->getCustomerSummary());
+        $summaryFields[] = HTMLReadonlyField::create('MyCustomerNice', 'Customer', $this->getCustomerSummaryHTML());
         $summaryFields[] = ReadonlyField::create('NextStep', 'Next Step', $this->Status()->getTitle());
         $summaryFields[] = ReadonlyField::create('CustomerOrderNote', 'Note');
         $nextFieldArray = array_merge(
@@ -4141,14 +4143,17 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * A one-line description of the customer for staff (CMS summaries and logs), e.g.:
+     * A short description of the customer for staff (CMS summaries and logs), on two lines:
+     * the details, and then the type of customer. E.g.
      * (where the email is the real email address of the customer, and "paid" is the number of orders with a successful payment)
-     * - "First Surname, email (paid: 3) - verified account" (or "unverified account")
-     * - "email (paid: 1) - guest"
-     * - "email - guest" (no customer record)
-     * - "email (held, matches First Surname) - guest" (see EmailNotVerified).
+     * - "First Surname, email" + "verified account, paid: 3" (or "unverified account")
+     * - "email" + "guest, paid: 0"
+     * - "email" + "guest, paid: 0" (no customer record: counted by the email address of the order)
+     * - "email" + "guest, held (matches First Surname)" (see EmailNotVerified).
+     *
+     * @param string $separator between line 1 and line 2. Use ' - ' to get one line.
      */
-    public function getCustomerSummary(): string
+    public function getCustomerSummary(?string $separator = "\n"): string
     {
         $email = $this->getValidCustomerEmail();
         if ('' === $email && $this->BillingAddressID) {
@@ -4161,18 +4166,53 @@ class Order extends DataObject implements EditableEcommerceObject
         $guest = _t('Member.TYPE_GUEST', 'guest');
         $member = $this->MemberID ? $this->Member() : null;
         if (! $member || ! $member->exists()) {
-            return $email . ' - ' . $guest;
+            return $email . $separator . $guest . ', ' . _t('Member.MEMBER_ORDER_COUNT_PAID', 'paid') . ': ' . $this->countPaidOrdersWithoutMemberByEmail($email);
         }
         if ($this->EmailNotVerified) {
-            return $email . ' (' .
+            return $email . $separator . $guest . ', ' .
                 sprintf(
-                    _t('Order.CUSTOMER_HELD', 'held, matches %s'),
-                    trim($member->FirstName . ' ' . $member->Surname)
-                ) .
-                ') - ' . $guest;
+                    _t('Order.CUSTOMER_HELD', 'held (matches %s)'),
+                    trim($member->FirstName . ' ' . $member->Surname) ?: $member->Email
+                );
         }
 
-        return $member->getCustomerDetails();
+        return $member->getCustomerDetails($separator);
+    }
+
+    /**
+     * Orders that have no member (older guest orders) can only be counted by email address:
+     * the number of those orders with a successful payment.
+     */
+    protected function countPaidOrdersWithoutMemberByEmail(string $email): int
+    {
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return 0;
+        }
+        $ids = Order::get()
+            ->filter([
+                'MemberID' => 0,
+                'BillingAddress.Email:nocase' => $email,
+                'Payments.Status' => EcommercePayment::SUCCESS_STATUS,
+            ])
+            ->column('ID');
+
+        return count(array_unique($ids));
+    }
+
+    /**
+     * The same on one line: for lists (grids) and exports.
+     */
+    public function getCustomerSummaryOneLine(): string
+    {
+        return $this->getCustomerSummary(' - ');
+    }
+
+    /**
+     * The same, as HTML (a line break between the lines): for the CMS.
+     */
+    public function getCustomerSummaryHTML(): string
+    {
+        return nl2br(Convert::raw2xml($this->getCustomerSummary("\n")), false);
     }
 
     protected function onBeforeWrite()

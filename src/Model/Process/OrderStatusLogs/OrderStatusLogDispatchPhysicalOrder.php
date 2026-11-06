@@ -6,6 +6,7 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBDate;
@@ -132,7 +133,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $fields = FieldList::create(
                 [
-                    ReadonlyField::create('CustomerInfo', 'Customer', $order->getCustomerSummary()),
+                    HTMLReadonlyField::create('CustomerInfo', 'Customer', $order->getCustomerSummaryHTML()),
                     ReadonlyField::create('OrderInfo', 'Order', $order->getTitle()),
                     ReadonlyField::create('OrderItemInfo', 'Items', $this->renderWith('Sunnysideup\\Ecommerce\\Includes\\OrderItemsTiny')),
                     TextField::create('DispatchedBy'),
