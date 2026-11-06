@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
@@ -52,7 +51,10 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      */
     public function initStep(Order $order): bool
     {
-        return true;
+        // An order can only leave this step if it can be linked to a customer
+        // (a valid email address, and - for staff - a customer that is not the staff member).
+        // If we did not stop it here, the order would end up in the next step without being submitted.
+        return [] === $order->submissionProblems();
     }
 
     /**
@@ -87,47 +89,15 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     {
         $fields = parent::addOrderStepFields($fields, $order);
         if (! $order->IsSubmitted()) {
-            //LINE BELOW IS NOT REQUIRED
+            // Orders can NOT be submitted from the CMS: this makes sure that the customer,
+            // their email address and all the checks are in place for every order.
             $header = _t('OrderStep.SUBMITORDER', 'Submit Order');
-            $label = _t('OrderStep.SUBMITNOW', 'Submit Now');
-            $msg = _t('OrderStep.MUSTDOSUBMITRECORD', '<p>Tick the box below to submit this order.</p>');
-            $problems = [];
-            if ($order->getTotalItems() === 0) {
-                $problems[] = 'There are no --- Order Items (products) --- associated with this order.';
-            }
-
-            if (! $order->MemberID) {
-                $billingAddress = null;
-                $problems[] = 'There is no --- Customer --- associated with this order.';
-            }
-
-            $billingAddress = null;
-            if ($order->BillingAddressID) {
-                $billingAddress = $order->BillingAddress();
-            } else {
-                $problems[] = 'There is no --- Billing Address --- associated with this order.';
-            }
-
-            if ($billingAddress) {
-                $requiredBillingFields = $billingAddress->getRequiredFields();
-                if ($requiredBillingFields && is_array($requiredBillingFields) && count($requiredBillingFields)) {
-                    foreach ($requiredBillingFields as $requiredBillingField) {
-                        if (! $billingAddress->{$requiredBillingField}) {
-                            $problems[] = "There is no --- {$requiredBillingField} --- recorded in the billing address.";
-                        }
-                    }
-                }
-            }
-
-            if ([] !== $problems) {
-                $msg = '<p>You can not submit this order because:</p> <ul><li>' . implode('</li><li>', $problems) . '</li></ul>';
-            }
-
+            $msg = _t(
+                'OrderStep.CAN_NOT_SUBMIT_IN_CMS',
+                '<p>Orders can not be submitted in the CMS. To place an order for a customer, open the customer (Security) and click "Place order for customer". The order is then placed on the website, as the customer would.</p>'
+            );
             $fields->addFieldToTab('Root.Next', new HeaderField('CreateSubmitRecordHeader', $header, 3));
             $fields->addFieldToTab('Root.Next', new LiteralField('CreateSubmitRecordMessage', $msg));
-            if ($problems === []) {
-                $fields->addFieldToTab('Root.Next', new CheckboxField('SubmitOrderViaCMS', $label));
-            }
         }
 
         return $fields;
