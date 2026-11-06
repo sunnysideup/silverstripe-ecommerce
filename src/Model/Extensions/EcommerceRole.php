@@ -224,13 +224,16 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     {
         $owner = $this->getOwner();
         if ($owner->exists()) {
-            $count = $owner->getOrders()->count();
+            // for staff: so we count ALL orders, including the ones held until the email address is verified.
+            $count = $owner->getOrdersIncludingUnverified()->count();
+            $countHeld = $owner->getHeldOrdersCount();
             $countCompleted = $owner->getCompletedOrders()->count();
 
             return $owner->FirstName . ' ' . $owner->Surname .
                 ', ' . $this->getOwner()->Email .
                 ' (' . _t('Member.MEMBER_ORDER_COUNT', 'orders') . ': ' . $count .
                 ', ' . _t('Member.MEMBER_ORDER_COUNT_COMPLETED', 'completed') . ': ' . $countCompleted .
+                ($countHeld ? ', ' . _t('Member.MEMBER_ORDER_COUNT_HELD', 'held until the email address is verified') . ': ' . $countHeld : '') .
                 ')';
         }
 
@@ -487,7 +490,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      */
     public function canDelete($member = null)
     {
-        if ($this->getOrders()->exists()) {
+        // including the orders that are held until the email address is verified
+        if ($this->getOrdersIncludingUnverified()->exists()) {
             return false;
         }
 
@@ -505,6 +509,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     {
         $this->markEmailAsVerified();
         $this->claimGuestOrdersForVerifiedEmail();
+        // the code that was just used proves that the member controls the email address,
+        // so orders that were placed with their email address by someone else can now be shown to them.
+        // (a password login can not do this: see afterMemberLoggedIn).
+        $this->releaseOrdersHeldUntilEmailIsVerified();
     }
 
     /**
@@ -513,6 +521,12 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      * get the guest orders that were placed with their email address, whatever way they log in.
      * Members who have not verified their email address do NOT get any orders linked:
      * a password only proves that someone chose it, not that they own the email address.
+     *
+     * Orders that are held until the email address is verified (Order.EmailNotVerified)
+     * are NEVER released here, even if the email address was verified some time ago:
+     * a password does not prove that the member controls the email address NOW, and
+     * these orders were placed by someone else.  Only a one-time code does
+     * (see onAfterOneTimeCodeLogin).
      */
     public function afterMemberLoggedIn(): void
     {
@@ -538,7 +552,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         $clearPassword = $owner->Password && Config::inst()->get(EcommerceRole::class, 'clear_password_when_email_is_first_verified');
         // direct updates: we do not want any of the side effects of writing a member.
         if ($clearPassword) {
-            // NB: the encryption algorithm must stay a valid one (see find_or_create_guest_member_for_order).
+            // NB: the encryption algorithm must stay a valid one (see create_guest_member).
             DB::prepared_query(
                 'UPDATE "Member" SET "EmailVerifiedAt" = ?, "Password" = NULL, "Salt" = NULL, "PasswordEncryption" = ?, "AutoLoginHash" = NULL, "AutoLoginExpired" = NULL WHERE "ID" = ?',
                 [$now, self::default_password_encryption(), (int) $owner->ID]
@@ -618,7 +632,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         // in batches, so that we get all of them without loading too many at once.
         for ($i = 0; $i < 100; ++$i) {
             $orderIDs = Order::get_datalist_of_orders_with_submit_record(true, true)
-                ->filter(['MemberID' => 0, 'BillingAddress.Email' => $email])
+                // NB: email addresses are not case sensitive (:nocase)
+                ->filter(['MemberID' => 0, 'BillingAddress.Email:nocase' => $email])
                 ->limit($batchSize)
                 ->column('ID');
             if ([] === $orderIDs) {
@@ -639,6 +654,54 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     }
 
     /**
+     * Orders that were placed by someone who entered the email address of this member (Order.EmailNotVerified)
+     * are held: the member can not see them.  Once the member has proven (with a one-time code)
+     * that they control the email address, they are released.
+     *
+     * ONLY call this straight after a login that proves that the member controls their email address NOW.
+     *
+     * @return int number of orders released
+     */
+    public function releaseOrdersHeldUntilEmailIsVerified(): int
+    {
+        $owner = $this->getOwner();
+        if (! $owner->exists() || ! $owner->EmailVerifiedAt) {
+            return 0;
+        }
+        $count = (int) $this->getOrdersIncludingUnverified()->filter(['EmailNotVerified' => 1])->count();
+        if (0 === $count) {
+            return 0;
+        }
+        // direct update: we do not want to change anything else about the (submitted) order,
+        // not even the LastEdited date.
+        DB::prepared_query(
+            'UPDATE "Order" SET "EmailNotVerified" = 0 WHERE "MemberID" = ? AND "EmailNotVerified" = 1',
+            [(int) $owner->ID]
+        );
+
+        return $count;
+    }
+
+    /**
+     * Finds a member by email address.  Email addresses are NOT case sensitive,
+     * so we do not rely on the collation of the database.
+     */
+    public static function find_member_by_email(string $email): ?Member
+    {
+        $email = trim($email);
+        if ('' === $email) {
+            return null;
+        }
+        $uniqueField = (string) (Member::config()->get('unique_identifier_field') ?: 'Email');
+        $uniqueField = preg_replace('/[^A-Za-z0-9_]/', '', $uniqueField);
+
+        return Member::get()
+            ->where(['LOWER("Member"."' . $uniqueField . '") = ?' => mb_strtolower($email)])
+            ->sort(['ID' => 'ASC'])
+            ->first();
+    }
+
+    /**
      * The password encryption algorithm that new members get (e.g. blowfish).
      */
     protected static function default_password_encryption(): string
@@ -647,30 +710,52 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     }
 
     /**
-     * Every customer gets a member, even if they check out as a guest.
+     * Every order has a member, even if the customer checks out as a guest.
+     * (the email address is the unique identifier of a member).
      *
-     * Creates a member (with the email address and name of the billing address) for a guest order,
-     * but ONLY if no member with that email address exists yet.
+     * This links a guest order (an order without a member) to a member. It sets
+     * MemberID and EmailNotVerified on the order, but it does NOT write the order.
      *
-     * The new member has NO password and the visitor is NOT logged in:
-     * nobody has proven that they own the email address.  The customer can log in
-     * with a one-time code (which proves that they own the email address) and then set a password.
+     * 1. Someone is logged in (and is not staff): the order goes to that member.
+     * 2. There is no member with the email address of the billing address:
+     *    a member is created (with the name of the billing address).
+     *    The new member has NO password and the visitor is NOT logged in:
+     *    nobody has proven that they own the email address.  The customer can log in
+     *    with a one-time code (which proves that they own the email address) and then set a password.
+     * 3. There IS a member with this email address: the order is linked to that member
+     *    but it is marked as EmailNotVerified, because the visitor has not proven that they own the email address.
+     *    The member will not see the order until they verify their email address, and nothing
+     *    about the member (data, trust) is available to the order or the visitor.
      *
-     * If a member with that email address already exists, then nothing is done here:
-     * the order stays a guest order and is linked to the member when they log in with a verified email address
-     * (see claimGuestOrdersForVerifiedEmail).
+     * @param bool $isBackfill if TRUE then it is an existing order (not the visitor who placed it), so that
+     *                         we trust an email address that the member has verified already (EmailVerifiedAt).
+     *
+     * @return null|Member the member that the order is linked to (null if the order can not be linked to a member)
      */
-    public static function find_or_create_guest_member_for_order(Order $order): ?Member
+    public static function attach_member_to_guest_order(Order $order, ?bool $isBackfill = false): ?Member
     {
         if ($order->MemberID) {
-            return null;
+            $member = $order->Member();
+
+            return $member && $member->exists() ? $member : null;
         }
-        $currentUser = Security::getCurrentUser();
-        if ($currentUser && $currentUser->exists()) {
-            // someone is logged in (e.g. the shop admin placing an order on behalf of a customer)
-            return null;
+
+        if (! $isBackfill) {
+            $currentUser = Security::getCurrentUser();
+            if ($currentUser && $currentUser->exists()) {
+                if ($currentUser->IsShopAdmin() || $currentUser->IsShopAssistant()) {
+                    // staff place orders for a customer: the order must already be linked to the customer
+                    // (see Order::submissionProblems)
+                    return null;
+                }
+                $order->MemberID = $currentUser->ID;
+                $order->EmailNotVerified = false;
+
+                return $currentUser;
+            }
         }
-        $billingAddress = $order->BillingAddress();
+
+        $billingAddress = $order->BillingAddressID ? $order->BillingAddress() : null;
         if (! $billingAddress || ! $billingAddress->exists()) {
             return null;
         }
@@ -678,14 +763,41 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return null;
         }
-        $uniqueField = Member::config()->get('unique_identifier_field') ?: 'Email';
-        if (Member::get()->filter([$uniqueField => $email])->exists()) {
-            return null;
+
+        $member = self::find_member_by_email($email);
+        if (! $member instanceof Member) {
+            $member = self::create_guest_member($email, (string) $billingAddress->FirstName, (string) $billingAddress->Surname);
+            if ($member instanceof Member) {
+                $order->MemberID = $member->ID;
+                $order->EmailNotVerified = false;
+
+                return $member;
+            }
+            // could not create one: has someone else just created one with this email address?
+            $member = self::find_member_by_email($email);
+            if (! $member instanceof Member) {
+                return null;
+            }
         }
+
+        // there is already a member with this email address:
+        // the order is linked to them, but it is held until they have verified their email address.
+        $order->MemberID = $member->ID;
+        $order->EmailNotVerified = ! ($isBackfill && $member->EmailVerifiedAt);
+
+        return $member;
+    }
+
+    /**
+     * Creates a member that has no password (see attach_member_to_guest_order).
+     */
+    protected static function create_guest_member(string $email, string $firstName, string $surname): ?Member
+    {
+        $uniqueField = Member::config()->get('unique_identifier_field') ?: 'Email';
         $member = Member::create();
-        $member->{$uniqueField} = $email;
-        $member->FirstName = mb_substr(trim((string) $billingAddress->FirstName), 0, 100);
-        $member->Surname = mb_substr(trim((string) $billingAddress->Surname), 0, 100);
+        $member->{$uniqueField} = trim($email);
+        $member->FirstName = mb_substr(trim($firstName), 0, 100);
+        $member->Surname = mb_substr(trim($surname), 0, 100);
         try {
             $member->write();
         } catch (ValidationException) {
@@ -719,9 +831,42 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         return $this->getOrders();
     }
 
+    /**
+     * The orders of this member that the member is allowed to see.
+     *
+     * This does NOT include orders that were placed by someone who entered the email address of this member
+     * without proving that they own it (Order.EmailNotVerified).  Use getOrdersIncludingUnverified for staff.
+     * Every customer-facing list of orders (and everything derived from it) should use this method.
+     *
+     * @return \SilverStripe\ORM\DataList|Order[]
+     */
     public function getOrders()
     {
+        return $this->getOrdersIncludingUnverified()->filter(['EmailNotVerified' => 0]);
+    }
+
+    /**
+     * ALL the orders that are linked to this member, including the ones that are held until
+     * the member has verified their email address.  For staff, NOT for customers.
+     *
+     * @return \SilverStripe\ORM\DataList|Order[]
+     */
+    public function getOrdersIncludingUnverified()
+    {
         return Order::get()->filter(['MemberID' => $this->getOwner()->ID]);
+    }
+
+    /**
+     * Number of orders that are waiting for this member to verify their email address.
+     */
+    public function getHeldOrdersCount(): int
+    {
+        $owner = $this->getOwner();
+        if (! $owner->exists()) {
+            return 0;
+        }
+
+        return $this->getOrdersIncludingUnverified()->filter(['EmailNotVerified' => 1])->count();
     }
 
     /**
@@ -1100,7 +1245,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
 
         return $orders
             ->sort(['OrderStatusLog.ID' => 'DESC'])
-            ->filter(['MemberID' => $this->getOwner()->ID])
+            // not the orders that are held until the email address is verified: they were not placed by this member.
+            ->filter(['MemberID' => $this->getOwner()->ID, 'EmailNotVerified' => 0])
             ->first();
     }
 
@@ -1181,7 +1327,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
             }
             $addresses = $type::get()
                 ->where(
-                    '"Obsolete" = 0 AND "Order"."MemberID" = ' . $this->getOwner()->ID
+                    // NB: not the addresses of orders that are held until the email address is verified:
+                    // someone else entered those, they must never show up as addresses of this member.
+                    '"Obsolete" = 0 AND "Order"."EmailNotVerified" = 0 AND "Order"."MemberID" = ' . (int) $this->getOwner()->ID
                 )
                 ->sort(['LastEdited' => 'DESC'])
                 ->exclude(['ID' => $excludeID])
