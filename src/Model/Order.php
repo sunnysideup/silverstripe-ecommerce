@@ -101,6 +101,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  * @property string $SalesRep
  * @property string $SessionID
  * @property bool $UseShippingAddress
+ * @property bool $EmailNotVerified
  * @property string $CustomerOrderNote
  * @property float $ExchangeRate
  * @property int $AssignedAdminID
@@ -191,6 +192,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     protected $fieldsAndTabsToBeRemoved = [
         'MemberID',
+        'EmailNotVerified',
         'Attributes',
         'SessionID',
         'Emails',
@@ -322,6 +324,15 @@ class Order extends DataObject implements EditableEcommerceObject
         'UseShippingAddress' => 'Boolean',
         'CustomerOrderNote' => 'Text',
         'ExchangeRate' => 'Double',
+        // TRUE if the order has been linked to an EXISTING member purely because
+        // the (anonymous) customer entered the email address of that member.
+        // Nobody has proven that they own that email address, so:
+        // - the order is not shown in the account of the member,
+        // - the member can not view the order,
+        // - the member's trust (e.g. whitelisted customer) is not applied to the order,
+        // until the member proves they own the email address (see EcommerceRole::releaseOrdersHeldUntilEmailIsVerified).
+        // NB: default is FALSE so that all existing orders stay visible.
+        'EmailNotVerified' => 'Boolean',
         //'TotalItems_Saved' => 'Double',
         //'TotalItemsTimesQuantity_Saved' => 'Double'
     ];
@@ -868,6 +879,21 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->fieldsAndTabsToBeRemoved[] = $submitted ? 'CustomerOrderNote' : 'Emails';
         foreach ($this->fieldsAndTabsToBeRemoved as $field) {
             $fields->removeByName($field);
+        }
+        if ($this->EmailNotVerified) {
+            $fields->addFieldToTab(
+                'Root.Main',
+                LiteralField::create(
+                    'EmailNotVerifiedMessage',
+                    '<p class="message warning">' .
+                    _t(
+                        'Order.EMAIL_NOT_VERIFIED_MESSAGE',
+                        'HELD: this order was placed by someone who entered the email address of an existing customer without proving that they own it. The customer can not see this order, and their trust (e.g. whitelisted) does not apply to it, until they have verified their email address (by logging in with an emailed code).'
+                    ) .
+                    '</p>'
+                ),
+                'Title'
+            );
         }
 
         $summaryFields = [];
@@ -2483,9 +2509,11 @@ class Order extends DataObject implements EditableEcommerceObject
             return true;
         }
 
-        //if the current member OWNS the order, (s)he can always view it.
+        //if the current member OWNS the order, (s)he can always view it,
+        //unless the order was placed by someone who entered the email address of this member
+        //without proving that they own it (the member must verify their email address first).
         if ($member->exists() && $this->MemberID === $member->ID) {
-            return true;
+            return ! $this->EmailNotVerified;
         }
 
         //it is the current order
@@ -3772,11 +3800,16 @@ class Order extends DataObject implements EditableEcommerceObject
     public function SubmitErrors()
     {
         $al = null;
+        // problems that make it impossible to link the order to a customer (see submissionProblems)
+        $problems = $this->submissionProblems();
         $extendedSubmitErrors = $this->extend('updateSubmitErrors');
-        if (null !== $extendedSubmitErrors && is_array($extendedSubmitErrors) && count($extendedSubmitErrors)) {
+        if ([] !== $problems || (null !== $extendedSubmitErrors && is_array($extendedSubmitErrors) && count($extendedSubmitErrors))) {
             $al = ArrayList::create();
-            foreach ($extendedSubmitErrors as $returnResultArray) {
-                foreach ($returnResultArray as $issue) {
+            foreach ($problems as $problem) {
+                $al->push(ArrayData::create(['Title' => $problem]));
+            }
+            foreach ((array) $extendedSubmitErrors as $returnResultArray) {
+                foreach ((array) $returnResultArray as $issue) {
                     if ($issue) {
                         $al->push(ArrayData::create(['Title' => $issue]));
                     }
@@ -3785,6 +3818,79 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         return $al;
+    }
+
+    /**
+     * The email address we can use to contact the customer: the (valid) email address
+     * of the billing address or, if there is none, the (valid) email address of the member.
+     * Returns an empty string if there is no valid email address.
+     *
+     * NB: unlike getOrderEmail, this ONLY returns one valid address
+     * (getOrderEmail can be changed by extensions to return several addresses).
+     */
+    public function getValidCustomerEmail(): string
+    {
+        $candidates = [];
+        if ($this->BillingAddressID) {
+            $billingAddress = $this->BillingAddress();
+            if ($billingAddress && $billingAddress->exists()) {
+                $candidates[] = $billingAddress->Email;
+            }
+        }
+        if ($this->MemberID) {
+            $member = $this->Member();
+            if ($member && $member->exists()) {
+                $candidates[] = $member->Email;
+            }
+        }
+        foreach ($candidates as $candidate) {
+            $candidate = trim((string) $candidate);
+            if ('' !== $candidate && filter_var($candidate, FILTER_VALIDATE_EMAIL)) {
+                return $candidate;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Every submitted order MUST have a valid email address and a customer (member).
+     * Customers who check out as a guest get their member when the order is submitted
+     * (see OrderStepSubmitted), but only if there is a valid email address to create / find it with.
+     *
+     * This returns the reasons (in plain language, including what to do about it)
+     * why this order can not be linked to a customer.
+     * It is used by SubmitErrors (so the person placing the order sees them) and
+     * by the first order step that submits the order (so it can not be bypassed).
+     *
+     * @return string[]
+     */
+    public function submissionProblems(): array
+    {
+        $problems = [];
+        if ('' === $this->getValidCustomerEmail()) {
+            $problems[] = _t(
+                'Order.SUBMIT_PROBLEM_NO_EMAIL',
+                'We need a valid email address to send your order details to. Please go back to the details step and enter your email address.'
+            );
+        }
+
+        // Staff (shop admins and shop assistants) place orders on behalf of customers.
+        // An order that is linked to the staff member (or to no one) would end up in the wrong account:
+        // the customer would not see it and would not get the emails.
+        $currentUser = Security::getCurrentUser();
+        if ($currentUser && $currentUser->exists() && ($currentUser->IsShopAdmin() || $currentUser->IsShopAssistant())) {
+            if (! $this->MemberID || (int) $this->MemberID === (int) $currentUser->ID) {
+                // NB: deliberately neutral: it does not say why, and it does not mention staff, admins or accounts.
+                // (the details for staff are on the "Place order for customer" link in the CMS).
+                $problems[] = _t(
+                    'Order.SUBMIT_PROBLEM_NO_CUSTOMER',
+                    'This order can not be submitted because it is not linked to a customer. Please log out and place the order again.'
+                );
+            }
+        }
+
+        return $problems;
     }
 
     /**
@@ -4073,11 +4179,9 @@ class Order extends DataObject implements EditableEcommerceObject
         } elseif ($this->StatusID) {
             $this->calculatedOrderAttributesCache = true;
             $this->calculateOrderAttributes($recalculate = false);
-            if (EcommerceRole::current_member_is_shop_admin() && isset($_REQUEST['SubmitOrderViaCMS'])) {
-                $this->tryToFinaliseOrder();
-                //just in case it writes again...
-                unset($_REQUEST['SubmitOrderViaCMS']);
-            }
+            // NB: orders can NOT be submitted from the CMS (there used to be a "SubmitOrderViaCMS" checkbox).
+            // Orders must be placed on the website, for a customer ("Place order for customer"),
+            // so that the customer, their email address and all checks are in place.
         }
     }
 
