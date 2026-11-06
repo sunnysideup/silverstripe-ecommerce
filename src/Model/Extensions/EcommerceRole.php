@@ -224,17 +224,15 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     {
         $owner = $this->getOwner();
         if ($owner->exists()) {
-            // for staff: so we count ALL orders, including the ones held until the email address is verified.
-            $count = $owner->getOrdersIncludingUnverified()->count();
+            // NB: only orders with a successful payment: carts, abandoned checkouts and failed payments are noise.
+            $countPaid = $owner->getOrdersWithSuccessfulPaymentCount();
             $countHeld = $owner->getHeldOrdersCount();
-            $countCompleted = $owner->getCompletedOrders()->count();
+            $name = $owner->IsGuestCustomer() ? '' : $owner->FirstName . ' ' . $owner->Surname . ', ';
 
-            return $owner->FirstName . ' ' . $owner->Surname .
-                ', ' . $this->getOwner()->Email .
-                ' (' . _t('Member.MEMBER_ORDER_COUNT', 'orders') . ': ' . $count .
-                ', ' . _t('Member.MEMBER_ORDER_COUNT_COMPLETED', 'completed') . ': ' . $countCompleted .
-                ($countHeld ? ', ' . _t('Member.MEMBER_ORDER_COUNT_HELD', 'held until the email address is verified') . ': ' . $countHeld : '') .
-                ')';
+            return $name . $owner->Email .
+                ' (' . _t('Member.MEMBER_ORDER_COUNT_PAID', 'paid') . ': ' . $countPaid .
+                ($countHeld ? ', ' . _t('Member.MEMBER_ORDER_COUNT_HELD', 'held') . ': ' . $countHeld : '') .
+                ') - ' . $owner->getCustomerType();
         }
 
         return 'no customer';
@@ -854,6 +852,58 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     public function getOrdersIncludingUnverified()
     {
         return Order::get()->filter(['MemberID' => $this->getOwner()->ID]);
+    }
+
+    /**
+     * The number of orders of this member that have at least one successful payment.
+     * (an order with several successful payments is counted once).
+     * Orders that are held until the email address is verified are not the member's orders, so they are not counted.
+     */
+    public function getOrdersWithSuccessfulPaymentCount(): int
+    {
+        $owner = $this->getOwner();
+        if (! $owner->exists()) {
+            return 0;
+        }
+        $orderTable = Order::getSchema()->tableName(Order::class);
+        $paymentTable = Order::getSchema()->tableName(EcommercePayment::class);
+
+        return (int) DB::prepared_query(
+            'SELECT COUNT(DISTINCT "' . $orderTable . '"."ID") FROM "' . $orderTable . '"
+            INNER JOIN "' . $paymentTable . '" ON "' . $paymentTable . '"."OrderID" = "' . $orderTable . '"."ID"
+            WHERE "' . $orderTable . '"."MemberID" = ? AND "' . $orderTable . '"."EmailNotVerified" = 0 AND "' . $paymentTable . '"."Status" = ?',
+            [(int) $owner->ID, EcommercePayment::SUCCESS_STATUS]
+        )->value();
+    }
+
+    /**
+     * A guest is someone who has checked out without creating an account:
+     * a member without a password, who has never proven that they own their email address (by logging in with a code).
+     * (a customer who logs in with a code has proven it, so they are no longer a guest.)
+     */
+    public function IsGuestCustomer(): bool
+    {
+        $owner = $this->getOwner();
+        if (! $owner->exists()) {
+            return true;
+        }
+
+        return ! $owner->Password && ! $owner->EmailVerifiedAt;
+    }
+
+    /**
+     * "guest", "unverified account" or "verified account" (verified = they have logged in with a code that was emailed to them).
+     */
+    public function getCustomerType(): string
+    {
+        $owner = $this->getOwner();
+        if ($owner->IsGuestCustomer()) {
+            return _t('Member.TYPE_GUEST', 'guest');
+        }
+
+        return $owner->EmailVerifiedAt
+            ? _t('Member.TYPE_VERIFIED', 'verified account')
+            : _t('Member.TYPE_UNVERIFIED', 'unverified account');
     }
 
     /**
