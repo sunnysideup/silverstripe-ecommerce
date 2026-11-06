@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use Psr\Log\LoggerInterface;
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -86,11 +88,20 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      */
     public function initStep(Order $order): bool
     {
-        return (bool) $order->TotalItems();
+        // every submitted order needs a valid email address and a customer
+        // (this is the one step that every route to submitting an order goes through).
+        return (bool) $order->TotalItems() && [] === $order->submissionProblems();
     }
 
     /**
-     * Add a member to the order - in case he / she is not a shop admin.
+     * Links the order to a customer (member) and submits the order.
+     *
+     * Every submitted order has a member, because so much code relies on this.
+     * The email address is the unique identifier of a member:
+     * - there is no member with the email address of the order: we create one (no password).
+     * - there is a member with that email address: the order is linked to that member,
+     *   but it is held (Order.EmailNotVerified) until that member verifies their email address.
+     * If we can not link the order to a member, then the order is NOT submitted.
      *
      * @param Order $order object
      *
@@ -99,6 +110,15 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
     public function doStep(Order $order): bool
     {
         if (! $this->IsSubmitted($order)) {
+            // first make sure that there is a customer: without one, we do not submit.
+            if (! $this->linkOrderToCustomer($order)) {
+                Injector::inst()->get(LoggerInterface::class)->error(
+                    'Order #' . (int) $order->ID . ' could not be submitted: it could not be linked to a customer (member) - email address: "' . $order->getValidCustomerEmail() . '".'
+                );
+
+                return false;
+            }
+            $order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
             $className = $this->getRelevantLogEntryClassName();
             if (class_exists($className)) {
                 //add currency if needed.
@@ -131,32 +151,49 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
             }
             $order->LastEdited = DBDatetime::now()->Rfc2822();
 
-            //add member if needed...
-            if (! $order->MemberID) {
-                //lets see if we can find a member
-                $request = Controller::curr()->getRequest();
-                $session = $request->getSession();
-                $memberOrderID = $session->get('Ecommerce_Member_For_Order');
-                $session->clear('Ecommerce_Member_For_Order');
-                $session->set('Ecommerce_Member_For_Order', 0);
-                $session->save($request);
-                if ($memberOrderID) {
-                    $order->MemberID = $memberOrderID;
-                }
-            }
-            // Every customer gets a member, even if they checked out as a guest.
-            // (only if there is no member with the email address of the order yet,
-            // see EcommerceRole::find_or_create_guest_member_for_order)
-            if (! $order->MemberID) {
-                $guestMember = EcommerceRole::find_or_create_guest_member_for_order($order);
-                if ($guestMember) {
-                    $order->MemberID = $guestMember->ID;
-                }
-            }
             $order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
         }
 
         return true;
+    }
+
+    /**
+     * Makes sure the order has a member, and a valid email address in the billing address.
+     * Writes the member and EmailNotVerified to the order (the caller writes the order).
+     */
+    protected function linkOrderToCustomer(Order $order): bool
+    {
+        if (! $order->MemberID) {
+            //lets see if the checkout has recorded a member (e.g. one that has just been created for this order)
+            $request = Controller::curr()->getRequest();
+            $session = $request->getSession();
+            $memberOrderID = (int) $session->get('Ecommerce_Member_For_Order');
+            $session->clear('Ecommerce_Member_For_Order');
+            $session->set('Ecommerce_Member_For_Order', 0);
+            $session->save($request);
+            if ($memberOrderID) {
+                $order->MemberID = $memberOrderID;
+            }
+        }
+        if (! $order->MemberID) {
+            EcommerceRole::attach_member_to_guest_order($order);
+        }
+        if (! $order->MemberID) {
+            return false;
+        }
+
+        // the billing address should have the email address that we send the order to
+        // (e.g. staff place an order for a customer: the email address is the one of the customer).
+        $billingAddress = $order->BillingAddressID ? $order->BillingAddress() : null;
+        if ($billingAddress && $billingAddress->exists() && ! filter_var(trim((string) $billingAddress->Email), FILTER_VALIDATE_EMAIL)) {
+            $email = $order->getValidCustomerEmail();
+            if ('' !== $email) {
+                $billingAddress->Email = $email;
+                $billingAddress->write();
+            }
+        }
+
+        return '' !== $order->getValidCustomerEmail();
     }
 
     /**
