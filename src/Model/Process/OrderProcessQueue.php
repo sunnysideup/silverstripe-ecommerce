@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Model\Process;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -57,6 +58,14 @@ class OrderProcessQueue extends DataObject
         'ToBeProcessedAt' => 'DBDatetime',
         'HasBeenInQueueSince' => 'DBDatetime',
     ];
+
+    /**
+     * An entry still flagged InProcess after this many seconds is assumed to belong
+     * to a run that died (fatal error, timeout, killed cron) and is picked up again.
+     *
+     * @var int
+     */
+    private static $in_process_timeout_in_seconds = 600;
 
     private static $default_sort = [
         'ID' => 'DESC',
@@ -191,6 +200,14 @@ class OrderProcessQueue extends DataObject
         if (! $order || ! $order->ID) {
             user_error('No real order provided.');
         }
+        // an order is only ever at one step: entries for other steps are stale
+        // and would otherwise keep taking up slots in every run
+        $staleEntries = OrderProcessQueue::get()
+            ->filter(['OrderID' => $order->ID])
+            ->exclude(['OrderStepID' => (int) $order->StatusID]);
+        foreach ($staleEntries as $staleEntry) {
+            $staleEntry->delete();
+        }
         $filter = [
             'OrderID' => $order->ID,
             'OrderStepID' => $order->StatusID,
@@ -238,33 +255,44 @@ class OrderProcessQueue extends DataObject
                 $order->IsCancelled() ||
                 $order->IsArchived()
             ) {
-                $myQueueObject->delete();
+                $myQueueObject?->delete();
                 $message = 'Order is archived already and/or cancelled.';
             } elseif (
-                $this->OrderStepID > 0
+                // was $this->OrderStepID, which is 0 when called on a singleton,
+                // so stale entries were never cleaned up
+                $myQueueObject
+                && $myQueueObject->OrderStepID > 0
                 && (int) $order->StatusID !== (int) $myQueueObject->OrderStepID
             ) {
                 $message = 'Order has already moved on.';
                 $myQueueObject->delete();
             } elseif ($myQueueObject instanceof \Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue) {
                 if ($myQueueObject->isReadyToGo()) {
-                    $oldOrderStatusID = $order->StatusID;
+                    $oldOrderStatusID = (int) $order->StatusID;
                     $myQueueObject->InProcess = true;
                     ++$myQueueObject->ProcessAttempts;
                     $myQueueObject->write();
-                    $order->tryToFinaliseOrder(
-                        false,
-                        true
-                    );
-                    $newOrderStatusID = $order->StatusID;
-                    if ($oldOrderStatusID !== $newOrderStatusID) {
-                        $myQueueObject->delete();
-
+                    $hasMoved = false;
+                    try {
+                        $order->tryToFinaliseOrder(
+                            false,
+                            true
+                        );
+                        $hasMoved = $oldOrderStatusID !== (int) $order->StatusID;
+                    } finally {
+                        // always release the entry, even if finalising throws,
+                        // otherwise it is excluded from every future run
+                        if ($hasMoved) {
+                            $myQueueObject->delete();
+                        } else {
+                            $myQueueObject->InProcess = false;
+                            $myQueueObject->write();
+                        }
+                    }
+                    if ($hasMoved) {
                         return true;
                     }
                     $message = 'Attempt to move order was not successful.';
-                    $myQueueObject->InProcess = false;
-                    $myQueueObject->write();
                 } else {
                     $message = 'Minimum order queue time has not been passed.';
                 }
@@ -314,26 +342,26 @@ class OrderProcessQueue extends DataObject
      */
     public function OrdersToBeProcessed($id = 0, $limit = 9999)
     {
-        //we sort the order randomly so that we get a nice mixture
-        //not always the same ones holding up the process
-        $sql = '
-            SELECT "OrderID"
-            FROM "OrderProcessQueue"
-            WHERE
-                "InProcess" = 0
-                AND
-                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < UNIX_TIMESTAMP()
-            ORDER BY ' . $this->sortPhrase() . '
-            LIMIT ' . $limit . ';
-        ';
-        $rows = DB::query($sql);
+        // round robin: whatever was tried least recently goes first,
+        // so every due entry gets a turn within ceil(due entries / $limit) runs
         $orderIDs = [-1 => -1];
         if ($id) {
             $orderIDs = [$id => $id];
         } else {
-            foreach ($rows as $row) {
-                $orderIDs[$row['OrderID']] = $row['OrderID'];
-            }
+            $staleBefore = date(
+                'Y-m-d H:i:s',
+                DBDatetime::now()->getTimestamp() - (int) $this->config()->get('in_process_timeout_in_seconds')
+            );
+            $ids = $this->queueEntriesByReadiness(true)
+                ->filterAny([
+                    'InProcess' => 0,
+                    'LastEdited:LessThan' => $staleBefore,
+                ])
+                ->orderBy($this->sortPhrase())
+                ->limit((int) $limit)
+                ->column('OrderID');
+            // keep -1 so that the ID filter and FIELD() sort below never get an empty list
+            $orderIDs += array_combine($ids, $ids);
         }
 
         return Order::get()
@@ -368,22 +396,11 @@ class OrderProcessQueue extends DataObject
      */
     public function OrdersInQueueThatAreNotReady($limit = 9999)
     {
-        //we sort the order randomly so that we get a nice mixture
-        //not always the same ones holding up the process
-        $sql = '
-            SELECT "OrderID"
-            FROM "OrderProcessQueue"
-            WHERE
-                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") >= UNIX_TIMESTAMP()
-            ORDER BY ' . $this->sortPhrase() . '
-            LIMIT ' . $limit . ';
-        ';
-        $rows = DB::query($sql);
-        $orderIDs = [];
-        foreach ($rows as $row) {
-            $orderIDs[$row['OrderID']] = $row['OrderID'];
-        }
-        $orderIDs = ArrayMethods::filter_array($orderIDs);
+        $ids = $this->queueEntriesByReadiness(false)
+            ->orderBy($this->dueAtSql() . ' ASC')
+            ->limit((int) $limit)
+            ->column('OrderID');
+        $orderIDs = ArrayMethods::filter_array(array_combine($ids, $ids));
 
         return Order::get()
             ->filter(['ID' => $orderIDs])
@@ -398,7 +415,7 @@ class OrderProcessQueue extends DataObject
      */
     public function isReadyToGo()
     {
-        return (strtotime((string) $this->Created) + $this->DeferTimeInSeconds) < time();
+        return (strtotime((string) $this->Created) + $this->DeferTimeInSeconds) < DBDatetime::now()->getTimestamp();
     }
 
     /**
@@ -499,12 +516,43 @@ class OrderProcessQueue extends DataObject
         }
     }
 
+    /**
+     * Queue entries that are (or are not yet) past their defer time.
+     *
+     * The comparison uses DBDatetime::now(), i.e. the same PHP clock / timezone
+     * that wrote "Created", rather than the MySQL server clock. This also makes
+     * it respect DBDatetime::set_mock_now() in tests.
+     */
+    protected function queueEntriesByReadiness(bool $ready): DataList
+    {
+        $operator = $ready ? '<' : '>=';
+
+        return OrderProcessQueue::get()
+            ->where([
+                $this->dueAtSql() . ' ' . $operator . ' ?' => DBDatetime::now()->getValue(),
+            ]);
+    }
+
+    /**
+     * SQL expression for when an entry becomes due.
+     */
+    protected function dueAtSql(): string
+    {
+        return '("OrderProcessQueue"."Created" + INTERVAL "OrderProcessQueue"."DeferTimeInSeconds" SECOND)';
+    }
+
+    /**
+     * Round-robin order for processing.
+     *
+     * LastEdited is bumped on every attempt (InProcess / ProcessAttempts change),
+     * so an entry that was just tried moves to the back of the line, and one that
+     * has never been tried sorts by when it was added.
+     * Previously this sorted on ProcessAttempts first, which meant that entries that
+     * had failed a few times were never reached while the backlog was bigger than $limit.
+     */
     protected function sortPhrase()
     {
-        return '
-            "ProcessAttempts" ASC,
-            (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") ASC
-        ';
+        return '"OrderProcessQueue"."LastEdited" ASC, "OrderProcessQueue"."ID" ASC';
     }
 
     /**
