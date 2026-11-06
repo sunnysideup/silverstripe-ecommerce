@@ -40,7 +40,7 @@ class EcommerceTaskLinkOrdersToMembers extends BuildTask
         Add ?fix=1 (and optionally &limit=500) to link orders without a member to a member (using the email address of the order).
         Without fix=1 nothing is changed.';
 
-    private static $segment = 'EcommerceTaskLinkOrdersToMembers';
+    private static $segment = 'ecommercetasklinkorderstomembers';
 
     private static int $default_limit = 500;
 
