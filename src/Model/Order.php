@@ -410,6 +410,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'FullNameCountry' => 'Varchar',
         'IsSubmitted' => 'Boolean',
         'CustomerStatus' => 'Varchar',
+        'CustomerSummary' => 'Varchar',
         'CanHaveShippingAddress' => 'Boolean',
     ];
 
@@ -451,7 +452,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'Title' => 'Title',
         'OrderItemsSummaryNice' => 'Order Items',
         'Status.Title' => 'Next Step',
-        'Member.CustomerDetails' => 'Customer',
+        'CustomerSummary' => 'Customer',
         'TotalAsMoney.Nice' => 'Total',
         'IsPaidNice' => 'Paid',
         'CustomerOrderNote' => 'Note',
@@ -906,7 +907,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $summaryFields[] = ReadonlyField::create('OrderItemsSummaryNice', 'Items');
         $summaryFields[] = ReadonlyField::create('TotalNice', 'Total', $this->TotalAsMoney()->Nice());
         $summaryFields[] = ReadonlyField::create('IsPaidNice', 'Paid?');
-        $summaryFields[] = ReadonlyField::create('MyCustomerNice', 'Customer', $this->Member()->getCustomerDetails());
+        $summaryFields[] = ReadonlyField::create('MyCustomerNice', 'Customer', $this->getCustomerSummary());
         $summaryFields[] = ReadonlyField::create('NextStep', 'Next Step', $this->Status()->getTitle());
         $summaryFields[] = ReadonlyField::create('CustomerOrderNote', 'Note');
         $nextFieldArray = array_merge(
@@ -4137,6 +4138,41 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getCustomer(): ?Member
     {
         return $this->Member();
+    }
+
+    /**
+     * A one-line description of the customer for staff (CMS summaries and logs), e.g.:
+     * (where the email is the real email address of the customer, and "paid" is the number of orders with a successful payment)
+     * - "First Surname, email (paid: 3) - verified account" (or "unverified account")
+     * - "email (paid: 1) - guest"
+     * - "email - guest" (no customer record)
+     * - "email (held, matches First Surname) - guest" (see EmailNotVerified).
+     */
+    public function getCustomerSummary(): string
+    {
+        $email = $this->getValidCustomerEmail();
+        if ('' === $email && $this->BillingAddressID) {
+            $billingAddress = $this->BillingAddress();
+            $email = $billingAddress && $billingAddress->exists() ? trim((string) $billingAddress->Email) : '';
+        }
+        if ('' === $email) {
+            $email = _t('Order.CUSTOMER_NO_EMAIL', 'no email');
+        }
+        $guest = _t('Member.TYPE_GUEST', 'guest');
+        $member = $this->MemberID ? $this->Member() : null;
+        if (! $member || ! $member->exists()) {
+            return $email . ' - ' . $guest;
+        }
+        if ($this->EmailNotVerified) {
+            return $email . ' (' .
+                sprintf(
+                    _t('Order.CUSTOMER_HELD', 'held, matches %s'),
+                    trim($member->FirstName . ' ' . $member->Surname)
+                ) .
+                ') - ' . $guest;
+        }
+
+        return $member->getCustomerDetails();
     }
 
     protected function onBeforeWrite()
