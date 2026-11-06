@@ -1,3 +1,6 @@
+<% if $CurrentMember.HeldOrdersCount %>
+    <p class="message warning heldOrdersMessage"><% _t("Account.HELD_ORDERS","Someone has placed an order using your email address. For your privacy, we do not show it here until you have verified your email address. To verify it, log out and log in again using the code we email to you.") %> ($CurrentMember.HeldOrdersCount)</p>
+<% end_if %>
 <% if PastOrders %>
     <table>
         <thead>

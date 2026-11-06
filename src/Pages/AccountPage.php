@@ -272,7 +272,10 @@ class AccountPage extends Page
         if ($memberID !== 0) {
             return Order::get()
                 ->where(
+                    // NB: orders that were placed by someone who entered the email address of this member
+                    // (without proving they own it) are not shown until the member has verified their email address.
                     '"Order"."MemberID" = ' . $memberID . '
+                    AND "Order"."EmailNotVerified" = 0
                     AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)'
                 )
                 ->innerJoin('OrderStep', '"Order"."StatusID" = "OrderStep"."ID"')
