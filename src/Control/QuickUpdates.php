@@ -200,17 +200,27 @@ class QuickUpdates extends Controller
         }
         $callBackFx = function ($query, $request) {
 
+            // the AjaxSelectField asks for a single product by ID (idOnlyMode)
+            $idRequested = (int) $request->getVar('id');
+            if ($idRequested > 0) {
+                $obj = Product::get_by_id($idRequested);
+
+                return $obj ? ['id' => $obj->ID, 'title' => $obj->FullName] : [];
+            }
+            // the query comes from the browser: it must be a plain string, and long enough to be a useful search
+            $query = is_string($query) ? trim($query) : '';
+            if (mb_strlen($query) < 3) {
+                return [];
+            }
+            // no raw2sql: the ORM escapes the values (doing it twice would change them)
             $list = Product::get()
                 ->filter(['AllowPurchase' => true])
-                ->sort(['InternalItemID' => 'ASC']);
-            if ($query) {
-                // no raw2sql: the ORM escapes the values (doing it twice would change them)
-                $filter = [
+                ->filterAny([
                     'Title:PartialMatch' => $query,
                     'InternalItemID:PartialMatch' => $query,
-                ];
-                $list = $list->filterAny($filter);
-            }
+                ])
+                ->sort(['InternalItemID' => 'ASC'])
+                ->limit(50);
             $results = [];
             foreach ($list as $obj) {
                 $results[] = [
