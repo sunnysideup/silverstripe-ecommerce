@@ -41,7 +41,7 @@ class SalesAdminByDay extends SalesAdmin
      *
      * @var int
      */
-    private static $days_back = 14;
+    private static $days_back = 5;
 
     /**
      * standard SS variable.
