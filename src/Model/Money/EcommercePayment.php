@@ -198,6 +198,11 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     private static $indexes = [
         'Status' => true,
         'LastEdited' => true,
+        // looking up the payments of an IP address (in a period), e.g. for security checks.
+        'IPAndCreated' => [
+            'type' => 'index',
+            'columns' => ['IP', 'Created'],
+        ],
     ];
 
     /**
