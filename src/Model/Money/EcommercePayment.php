@@ -12,6 +12,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HTMLReadonlyField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\ReadonlyField;
@@ -23,9 +24,11 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\Versioned\Versioned;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Ecommerce\Api\EcommercePaymentHistory;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommercePaymentTypeDropdownField;
@@ -60,6 +63,7 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property int $OrderID
  * @method \SilverStripe\Security\Member PaidBy()
  * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @mixin \SilverStripe\Versioned\Versioned
  */
 class EcommercePayment extends DataObject implements EditableEcommerceObject
 {
@@ -113,6 +117,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * Pending: Payment awaiting receipt/bank transfer etc.
      */
     private static $table_name = 'EcommercePayment';
+
+    /**
+     * Keeps a version every time a payment is saved, so we can see if (and how) it was ever changed:
+     * see the History tab and EcommercePaymentHistory.
+     * Versioned only: there is no draft and live, a payment is always "live".
+     */
+    private static $extensions = [
+        Versioned::class . '.versioned',
+    ];
 
     private static $method_disabled = false;
 
@@ -275,6 +288,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
                     $field->performReadonlyTransformation()
                 );
             }
+        }
+
+        // who changed what, and when
+        if ($this->exists()) {
+            $fields->addFieldToTab(
+                'Root.History',
+                LiteralField::create('PaymentHistory', EcommercePaymentHistory::html($this))
+            );
         }
 
         return $fields;
