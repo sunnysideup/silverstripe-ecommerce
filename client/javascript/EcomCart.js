@@ -421,6 +421,19 @@ const EcomCart = {
   initialGroupFilterTokens: [],
 
   /**
+   * The group filter selection as it is right now.
+   *
+   * A combination of group filters (more than one) is never put in the
+   * address bar and it is sent to the server as a POST variable. This is to
+   * stop robots from crawling every possible combination of filters.
+   * That is why, the address bar can not be used to find out what the
+   * current selection is.
+   *
+   * @var array
+   */
+  liveGroupFilterTokens: [],
+
+  /**
    * Hidden page title, used when products are updated using the
    * @var String
    */
@@ -498,6 +511,12 @@ const EcomCart = {
     EcomCart.initialGroupFilterTokens = EcomCart.getGroupFilterTokens(
       window.location.href
     )
+    EcomCart.liveGroupFilterTokens = EcomCart.initialGroupFilterTokens.slice()
+    // a combination of group filters is not in the url (it is POSTed),
+    // after a reload we get it back from the history entry.
+    if (EcomCart.ajaxifyProductList) {
+      EcomCart.restoreGroupFilterFromHistoryState(window.history.state)
+    }
     // ajaxify product list
     EcomCart.addAjaxificationOfProductList()
     EcomCart.addSelectForSmallerSpaces()
@@ -717,6 +736,9 @@ const EcomCart = {
     // always do the popstate
     window.onpopstate = function (e) {
       if (EcomCart.hasAjaxProductLoad) {
+        if (EcomCart.restoreGroupFilterFromHistoryState(e.state)) {
+          return
+        }
         const newUrl = window.location.href
         window.location.href = newUrl
       }
@@ -749,11 +771,35 @@ const EcomCart = {
       })
   },
 
-  ajaxLoadProductList: function (myUrl, dataResetFor, myCallBack) {
+  /**
+   * Loads a product list using ajax.
+   *
+   * @param {String}   myUrl         the (path and query of) url to load
+   * @param {String}   dataResetFor  the get variable that is reset by this load, if any
+   * @param {Function} myCallBack    called when the list has been loaded
+   * @param {Object}   options       optional:
+   *                                 - skipMerge: use myUrl as it is (do not merge the get variables of the current url)
+   *                                 - skipHistory: do not create a history entry (or scroll)
+   */
+  ajaxLoadProductList: function (myUrl, dataResetFor, myCallBack, options) {
+    options = options || {}
     EcomCart.hasAjaxProductLoad = true
     // console.log('AJAX Load Product List:', myUrl) // Debug: Check if URL is correct
-    myUrl = EcomCart.mergeUrlParamsForAjax(myUrl, dataResetFor)
+    if (!options.skipMerge) {
+      myUrl = EcomCart.mergeUrlParamsForAjax(myUrl, dataResetFor)
+    }
+    // A combination of group filters is POSTed rather than being part of the
+    // url, so that robots can not crawl every combination.
+    const groupFilterTokens = EcomCart.getGroupFilterTokens(myUrl)
+    const postGroupFilter = groupFilterTokens.length > 1
+    const requestUrl = postGroupFilter
+      ? EcomCart.removeGroupFilterParam(myUrl)
+      : myUrl
     window.jQuery.ajax({
+      type: postGroupFilter ? 'POST' : 'GET',
+      data: postGroupFilter
+        ? { groupfilter: groupFilterTokens.join(',') }
+        : undefined,
       beforeSend: function () {
         EcomCart.setGroupFilterFormsDisabled(true)
         window
@@ -776,9 +822,10 @@ const EcomCart = {
             errorThrown +
             ')! I will try reloading the page now.'
         )
-        window.location.href = myUrl
+        window.location.href = EcomCart.removeAjaxParam(requestUrl)
       },
       success: function (data, textStatus, jqXHR) {
+        EcomCart.liveGroupFilterTokens = groupFilterTokens
         EcomCart.applyAjaxProductListResponse(data, myUrl)
 
         const holderEl = document.querySelector(
@@ -795,15 +842,17 @@ const EcomCart = {
 
         // create history
         var pageTitle = window.jQuery(EcomCart.hiddenPageTitleID).text()
-        // create history
-        var pageTitle = window.jQuery(EcomCart.hiddenPageTitleID).text()
-        window.history.pushState(
-          {
-            pageTitle: pageTitle
-          },
-          pageTitle,
-          EcomCart.removeAjaxParam(myUrl)
-        )
+        if (!options.skipHistory) {
+          // the group filters are in the history state, as they are not in the url
+          window.history.pushState(
+            {
+              pageTitle: pageTitle,
+              groupFilter: groupFilterTokens.join(',')
+            },
+            pageTitle,
+            EcomCart.removeAjaxParam(requestUrl)
+          )
+        }
 
         document.title = pageTitle
         // update changes
@@ -817,20 +866,22 @@ const EcomCart = {
           EcomCart.ajaxifiedProductsCallBack()
         }
         // scroll to the top of the product list.
-        window.jQuery('html, body').animate(
-          {
-            scrollTop:
-              window.jQuery(EcomCart.ajaxifiedListHolderSelector).offset().top -
-              160
-          },
-          500
-        )
+        if (!options.skipHistory) {
+          window.jQuery('html, body').animate(
+            {
+              scrollTop:
+                window.jQuery(EcomCart.ajaxifiedListHolderSelector).offset()
+                  .top - 160
+            },
+            500
+          )
+        }
         myCallBack()
         //fire an event to inform that data on the page has changed
         const event = new Event('paginationchange')
         window.dispatchEvent(event)
       },
-      url: myUrl
+      url: requestUrl
     })
   },
 
@@ -910,6 +961,11 @@ const EcomCart = {
   mergeUrlParamsForAjax: function (newUrl, dataResetFor) {
     const base = new URL(newUrl, window.location.origin)
     const oldParams = new URL(window.location.href).searchParams
+    // the group filters are not (always) in the address bar, see liveGroupFilterTokens
+    oldParams.delete('groupfilter')
+    if (EcomCart.liveGroupFilterTokens.length) {
+      oldParams.set('groupfilter', EcomCart.liveGroupFilterTokens.join(','))
+    }
 
     // Combine all keys from both old and new params, excluding dataResetFor
     const allKeys = new Set([
@@ -955,6 +1011,41 @@ const EcomCart = {
     const urlObj = new URL(url, window.location.origin)
     urlObj.searchParams.delete('ajax')
     return urlObj.toString()
+  },
+
+  removeGroupFilterParam: function (url) {
+    const urlObj = new URL(url, window.location.origin)
+    urlObj.searchParams.delete('groupfilter')
+    return urlObj.pathname + urlObj.search
+  },
+
+  /**
+   * A combination of group filters is not in the url (it is POSTed), but it
+   * is saved in the history state. This loads the list for that
+   * combination again (e.g. after the back button or a reload).
+   *
+   * @param {Object} state the history state
+   * @return {Boolean} true if a combination of group filters is being loaded
+   */
+  restoreGroupFilterFromHistoryState: function (state) {
+    const tokens =
+      state && 'string' === typeof state.groupFilter
+        ? state.groupFilter.split(',').filter(Boolean)
+        : []
+    if (tokens.length < 2) {
+      return false
+    }
+    const urlObj = new URL(window.location.href)
+    urlObj.searchParams.set('groupfilter', tokens.join(','))
+    urlObj.searchParams.set('ajax', 1)
+    EcomCart.ajaxLoadProductList(
+      urlObj.pathname + urlObj.search,
+      null,
+      function () {},
+      { skipMerge: true, skipHistory: true }
+    )
+
+    return true
   },
 
   /**
@@ -1124,7 +1215,7 @@ const EcomCart = {
     }
 
     const ownToken = changedTokens[0]
-    const currentTokens = EcomCart.getGroupFilterTokens(window.location.href)
+    const currentTokens = EcomCart.liveGroupFilterTokens.slice()
     const position = currentTokens.indexOf(ownToken)
     let newTokens
     if (-1 === position) {

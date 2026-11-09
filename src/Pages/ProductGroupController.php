@@ -78,6 +78,16 @@ class ProductGroupController extends PageController
 
     private static $minimum_number_of_pages_to_show_filters_and_sort = 3;
 
+    /**
+     * Combinations of group filters (e.g. ?groupfilter=a.1,b.2) can be POSTed, but
+     * if they are requested using GET, then redirect to the page without group filter.
+     * This stops robots from crawling every possible combination.
+     * A single group filter (e.g. ?groupfilter=a.1) can always be requested using GET.
+     *
+     * @var bool
+     */
+    private static $redirect_group_filter_combinations_requested_via_get = false;
+
     private static $allowed_actions = [
         'debug' => 'ADMIN',
         'ProductSearchForm' => true,
@@ -866,6 +876,41 @@ class ProductGroupController extends PageController
         return $this->getUserPreferencesClass()->saveUserPreferences($data);
     }
 
+    /**
+     * Is more than one group filter being requested using GET variables?
+     * Combinations of group filters are meant to be POSTed (see
+     * UserPreference::saveUserPreferences), a single group filter can still be linked to.
+     */
+    protected function isGroupFilterCombinationRequestedViaGet(): bool
+    {
+        $getVar = $this->getSortFilterDisplayValues('GROUPFILTER', 'getVariable');
+        $value = $this->request->getVar($getVar);
+        if (is_array($value)) {
+            return true;
+        }
+
+        if (! is_string($value)) {
+            return false;
+        }
+
+        $tokens = array_filter(array_map('trim', explode(',', $value)));
+
+        return count($tokens) > 1;
+    }
+
+    /**
+     * the current page, without the group filter and page number
+     * (the page number makes no sense for a different list), but with any other GET variables.
+     */
+    protected function getLinkWithoutGroupFilter(): string
+    {
+        $getVars = $this->request->getVars();
+        unset($getVars[$this->getSortFilterDisplayValues('GROUPFILTER', 'getVariable')], $getVars['start']);
+        $link = $this->Link();
+
+        return count($getVars) ? $link . '?' . http_build_query($getVars) : $link;
+    }
+
     protected function setSearchString()
     {
         //do nothing here, but on ProductGroupSearchPage, we set it as the baselist....
@@ -923,6 +968,10 @@ class ProductGroupController extends PageController
         parent::init();
         if ($this->request->getVar('reload')) {
             return $this->redirect($this->Link());
+        }
+
+        if ($this->Config()->get('redirect_group_filter_combinations_requested_via_get') && $this->isGroupFilterCombinationRequestedViaGet()) {
+            return $this->redirect($this->getLinkWithoutGroupFilter(), 301);
         }
         $this->originalTitle = $this->MenuTitle;
         Requirements::themedCSS('client/css/ProductGroup');

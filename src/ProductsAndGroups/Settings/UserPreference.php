@@ -228,6 +228,18 @@ class UserPreference
             } elseif (! isset($this->userPreferences[$type])) {
                 $newPreference = $this->request->getVar($getVariableName);
                 if ('GROUPFILTER' === $type) {
+                    // group filters are sent as a POST variable so that robots can not
+                    // crawl every combination (see ProductGroupController::init).
+                    // A (single) GET variable is still supported.
+                    $postedPreference = $this->request->postVar($getVariableName);
+                    if ($postedPreference) {
+                        $newPreference = $postedPreference;
+                    }
+
+                    if (! is_string($newPreference)) {
+                        $newPreference = null;
+                    }
+
                     if ($newPreference) {
                         // supports a single group token (my-group.123) or a comma
                         // separated list of group tokens (my-group.123,other-group.456)
