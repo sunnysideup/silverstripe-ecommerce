@@ -88,6 +88,28 @@ class ProductGroupController extends PageController
      */
     private static $redirect_group_filter_combinations_requested_via_get = false;
 
+    /**
+     * Lists with this number of products (or less) are sent to the browser in one go
+     * (every product with data attributes for the group filter, filter and sort options)
+     * and the browser does the group filtering, filtering, sorting and paging.
+     * This means that there are no filter / sort URLs for robots to crawl.
+     * Lists with more products (and search results) are still filtered, sorted and paged by the server.
+     * Set to zero to turn this off. This only works if clientSideListIsSupported returns true.
+     *
+     * @var int
+     */
+    private static $client_side_list_max_products = 0;
+
+    /**
+     * @var null|bool
+     */
+    protected $clientSideListModeCache;
+
+    /**
+     * @var null|array
+     */
+    protected $clientListGroupMap;
+
     private static $allowed_actions = [
         'debug' => 'ADMIN',
         'ProductSearchForm' => true,
@@ -248,7 +270,82 @@ class ProductGroupController extends PageController
      */
     public function ProductGroupListAreAjaxified(): bool
     {
+        if ($this->ClientSideListMode()) {
+            // the browser does it all, see ClientSideListMode
+            return false;
+        }
+
         return (bool) Config::inst()->get(ProductGroup::class, 'ajaxify_product_list');
+    }
+
+    /**
+     * Does the browser (rather than the server) filter, sort and page this list?
+     */
+    public function ClientSideListMode(): bool
+    {
+        if (null === $this->clientSideListModeCache) {
+            $this->clientSideListModeCache = $this->calculateClientSideListMode();
+        }
+
+        return $this->clientSideListModeCache;
+    }
+
+    public function ClientSideListPageSize(): int
+    {
+        return $this->getProductsPerPageCalculated();
+    }
+
+    public function ClientSideListDefaultSort(): string
+    {
+        return $this->dataRecord->getListConfigCalculated('SORT');
+    }
+
+    /**
+     * The group filter options (as used in the group filter form) that the
+     * product is part of, space separated. Used as data attribute on the product in the list.
+     *
+     * @param int|string $productId
+     */
+    public function ClientListGroupSegmentsForProduct($productId): string
+    {
+        if (null === $this->clientListGroupMap) {
+            $cacheKey = 'ClientListGroupMap_' . $this->dataRecord->ID;
+            $map = EcommerceCache::inst()->retrieve($cacheKey);
+            if (! is_array($map)) {
+                $map = $this->calculateClientListGroupMap();
+                EcommerceCache::inst()->save($cacheKey, $map);
+            }
+
+            $this->clientListGroupMap = $map;
+        }
+
+        return implode(' ', $this->clientListGroupMap[(int) $productId] ?? []);
+    }
+
+    /**
+     * @return array product ID => group filter options (segments) the product is part of
+     */
+    protected function calculateClientListGroupMap(): array
+    {
+        $map = [];
+        foreach ($this->GroupFilterLinks() as $link) {
+            $segment = (string) $link->Segment;
+            $groupId = (int) $link->ID;
+            if ('' === $segment || 0 === $groupId) {
+                continue;
+            }
+
+            $group = ProductGroup::get_by_id($groupId);
+            if (! $group || ! $group->exists()) {
+                continue;
+            }
+
+            foreach ($group->getBaseProductList()->getProductIds() as $id) {
+                $map[(int) $id][] = $segment;
+            }
+        }
+
+        return $map;
     }
 
     /**
@@ -877,6 +974,80 @@ class ProductGroupController extends PageController
     }
 
     /**
+     * Override this method to make a (type of) page work with the client side list mode.
+     * The products need to provide the data attributes that are used
+     * for filtering and sorting in the browser, see ClientSideListMode.
+     */
+    protected function clientSideListIsSupported(): bool
+    {
+        return false;
+    }
+
+    protected function calculateClientSideListMode(): bool
+    {
+        $max = (int) $this->Config()->get('client_side_list_max_products');
+        if ($max < 1 || ! $this->clientSideListIsSupported()) {
+            return false;
+        }
+
+        // search results are always done on the server
+        if ($this->isSearchResults || $this->request->getVar($this->getSortFilterDisplayValues('SEARCHFILTER', 'getVariable'))) {
+            return false;
+        }
+
+        // a default filter other than "all" can not be undone in the browser
+        if (BaseApplyer::DEFAULT_NAME !== $this->dataRecord->getListConfigCalculated('FILTER')) {
+            return false;
+        }
+
+        return count($this->getBaseProductList()->getProductIds()) <= $max;
+    }
+
+    /**
+     * Group filter, filter, sort and page are kept in the "hash" of the URL
+     * (the part after the #, which is not sent to the server) for the client side list mode.
+     * If any of these are requested using GET variables, then this returns the
+     * link to redirect to (with those variables in the hash instead).
+     */
+    protected function getClientSideListLinkIfRequestedViaGet(): string
+    {
+        $getVars = $this->request->getVars();
+        $hashVars = [];
+        foreach (['GROUPFILTER', 'FILTER', 'SORT'] as $type) {
+            $name = $this->getSortFilterDisplayValues($type, 'getVariable');
+            if (isset($getVars[$name])) {
+                if (is_string($getVars[$name]) && '' !== $getVars[$name]) {
+                    $hashVars[$name] = $getVars[$name];
+                }
+
+                unset($getVars[$name]);
+            }
+        }
+
+        if (isset($getVars['start'])) {
+            $start = (int) $getVars['start'];
+            $perPage = max(1, $this->getProductsPerPageCalculated());
+            $page = (int) ($start / $perPage) + 1;
+            if ($page > 1) {
+                $hashVars['page'] = $page;
+            }
+
+            unset($getVars['start']);
+        }
+
+        if ($hashVars === [] && ! isset($this->request->getVars()['start'])) {
+            return '';
+        }
+
+        $link = $this->Link();
+        if (count($getVars)) {
+            $link .= '?' . http_build_query($getVars);
+        }
+
+        return $hashVars === [] ? $link : $link . '#' . http_build_query($hashVars);
+    }
+
+    /**
      * Is more than one group filter being requested using GET variables?
      * Combinations of group filters are meant to be POSTed (see
      * UserPreference::saveUserPreferences), a single group filter can still be linked to.
@@ -970,7 +1141,12 @@ class ProductGroupController extends PageController
             return $this->redirect($this->Link());
         }
 
-        if ($this->Config()->get('redirect_group_filter_combinations_requested_via_get') && $this->isGroupFilterCombinationRequestedViaGet()) {
+        if ($this->ClientSideListMode()) {
+            $link = $this->getClientSideListLinkIfRequestedViaGet();
+            if ($link) {
+                return $this->redirect($link, 301);
+            }
+        } elseif ($this->Config()->get('redirect_group_filter_combinations_requested_via_get') && $this->isGroupFilterCombinationRequestedViaGet()) {
             return $this->redirect($this->getLinkWithoutGroupFilter(), 301);
         }
         $this->originalTitle = $this->MenuTitle;
@@ -1015,7 +1191,13 @@ class ProductGroupController extends PageController
         $obj = null;
         if ($list->exists()) {
             $obj = PaginatedList::create($list, $this->request);
-            $obj->setPageLength($this->getProductsPerPageCalculated());
+            if ($this->ClientSideListMode()) {
+                // everything on one page, the browser does the paging
+                $obj->setPageStart(0);
+                $obj->setPageLength(max(1, $list->count()));
+            } else {
+                $obj->setPageLength($this->getProductsPerPageCalculated());
+            }
         }
 
         return $obj;
