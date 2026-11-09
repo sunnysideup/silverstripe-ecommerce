@@ -18,7 +18,6 @@ use Sunnysideup\Ecommerce\Api\SendLoginToken;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Order;
 
 /**
@@ -181,8 +180,7 @@ class CartPageController extends PageController
                 $details = explode(',', $buyable);
                 if (3 === count($details)) {
                     // only buyables can be added to the cart (the class name comes from the URL!)
-                    $className = ClassHelpers::unsanitise_class_name($details[0]);
-                    $className = EcommerceDBConfig::is_buyable($className) ? $className : null;
+                    $className = ClassHelpers::decode_buyable_class_name($details[0]);
                     $id = (int) $details[1];
                     $quantity = floatval($details[2]);
                     if ($className && $id && $quantity) {

@@ -102,7 +102,7 @@ class SalesAdminByDay extends SalesAdmin
                 $title = $i . ' days ago';
             }
 
-            $brackets[$this->dayKey($i)] = $title . ' (' . $date . ')';
+            $brackets[$this->dayKey($i)] = $title . ': ' . $date;
         }
 
         $brackets['older'] = 'Older than ' . $maxDays . ' days';

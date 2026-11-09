@@ -2963,7 +2963,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $array[] = implode(
                 ',',
                 [
-                    ClassHelpers::sanitise_class_name($orderItem->BuyableClassName),
+                    ClassHelpers::encode_buyable_class_name((string) $orderItem->BuyableClassName),
                     $orderItem->BuyableID,
                     $orderItem->Quantity,
                 ]
