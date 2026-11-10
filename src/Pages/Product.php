@@ -781,6 +781,18 @@ class Product extends Page implements BuyableModel
         return null;
     }
 
+
+
+    public function BestAvailableImageScaled()
+    {
+        $image = $this->BestAvailableImage();
+        if ($image && $image->exists()) {
+            return $image->ScaleMinDimensions();
+        }
+
+        return $this->DefaultImage();
+    }
+
     /**
      * Returns the direct parent group for the product.
      *
