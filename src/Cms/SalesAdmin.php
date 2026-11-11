@@ -3,12 +3,15 @@
 namespace Sunnysideup\Ecommerce\Cms;
 
 use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldArchiveOldOrdersButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
@@ -88,6 +91,23 @@ class SalesAdmin extends ModelAdmin
      * @var string
      */
     private static $menu_icon = 'vendor/sunnysideup/ecommerce/client/images/icons/money-file.gif';
+
+    /**
+     * Forget the (short lived) list of orders so that, for example,
+     * orders that have just been archived disappear straight away.
+     */
+    public static function reset_list_cache(): void
+    {
+        self::$_list_cache_orders = null;
+        EcommerceCache::inst()->save(self::get_time_based_cache_key(), []);
+    }
+
+    protected static function get_time_based_cache_key(): string
+    {
+        $seconds = (int) Config::inst()->get(self::class, 'cache_seconds');
+
+        return 'order_cache_' . round(time() / ($seconds + 1));
+    }
 
     public function urlSegmenter()
     {
@@ -199,9 +219,7 @@ class SalesAdmin extends ModelAdmin
 
     protected function getTimeBasedCacheKey()
     {
-        $seconds = $this->Config()->get('cache_seconds');
-
-        return 'order_cache_' . round(time() / ($seconds + 1));
+        return self::get_time_based_cache_key();
     }
 
     protected function buildTabs(array $brackets, array $arrayOfTabs, $form)
@@ -233,6 +251,21 @@ class SalesAdmin extends ModelAdmin
             $form,
             $this->modelClass
         );
+    }
+
+    /**
+     * Adds a button to the tab that archives (without processing) all the orders
+     * in that tab that were placed before the cut-off date.
+     *
+     * @param string $tabKey     the key used in buildTabs()
+     * @param string $cutoffDate Y-m-d
+     */
+    protected function addArchiveOldOrdersButton(Form $form, string $tabKey, string $cutoffDate): void
+    {
+        $gridField = $form->Fields()->dataFieldByName('tab' . $tabKey);
+        if ($gridField instanceof GridField) {
+            $gridField->getConfig()->addComponent(new GridFieldArchiveOldOrdersButton($cutoffDate));
+        }
     }
 
     protected function getCurrentRecordId(): int
