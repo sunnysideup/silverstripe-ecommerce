@@ -36,6 +36,7 @@
     "sunnysideup/google_address_field": "5.x-dev",
     "sunnysideup/phone_field": "5.x-dev",
     "sunnysideup/cms_edit_link_field": "5.x-dev",
+    "sunnysideup/perfect_cms_images": "5.x-dev",
     "sunnysideup/permission_provider": "5.x-dev",
     "sunnysideup/vardump": "5.x-dev",
     "sunnysideup/model-admin-many-tabs": "5.x-dev",

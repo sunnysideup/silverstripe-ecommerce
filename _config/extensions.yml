@@ -1,7 +1,0 @@
-SilverStripe\Assets\Image:
-  extensions:
-    - Sunnysideup\Ecommerce\Model\Extensions\ImageMinDimensionsExtension
-
-SilverStripe\Assets\Storage\DBFile:
-  extensions:
-    - Sunnysideup\Ecommerce\Model\Extensions\ImageMinDimensionsExtension
