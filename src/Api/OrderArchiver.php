@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -22,6 +23,28 @@ use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
 class OrderArchiver
 {
     private const CHUNK_SIZE = 500;
+
+    /**
+     * THE definition of an "old" order: orders placed before this
+     * (strtotime format, relative to now) can be archived from the sales admin screens.
+     *
+     * Change it in one place, e.g. in a yml file:
+     *   Sunnysideup\Ecommerce\Api\OrderArchiver:
+     *     archive_orders_older_than: '-30 days'
+     *
+     * @var string
+     */
+    private static $archive_orders_older_than = '-3 months';
+
+    /**
+     * @return string Y-m-d - orders placed before this day count as "old"
+     */
+    public static function get_cutoff_date(): string
+    {
+        $when = (string) Config::inst()->get(self::class, 'archive_orders_older_than');
+
+        return date('Y-m-d', strtotime($when) ?: strtotime('-3 months'));
+    }
 
     /**
      * The placement date is the creation date of the order submission log

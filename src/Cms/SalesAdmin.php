@@ -262,10 +262,14 @@ class SalesAdmin extends ModelAdmin
      */
     protected function addArchiveOldOrdersButton(Form $form, string $tabKey, string $cutoffDate): void
     {
-        $gridField = $form->Fields()->dataFieldByName('tab' . $tabKey);
-        if ($gridField instanceof GridField) {
-            $gridField->getConfig()->addComponent(new GridFieldArchiveOldOrdersButton($cutoffDate));
-        }
+        $name = 'tab' . $tabKey;
+        // walk the fields (rather than dataFieldByName) as that one uses a cache
+        // that may have been built before the tabs were added.
+        $form->Fields()->recursiveWalk(function ($field) use ($name, $cutoffDate) {
+            if ($field instanceof GridField && $field->getName() === $name) {
+                $field->getConfig()->addComponent(new GridFieldArchiveOldOrdersButton($cutoffDate));
+            }
+        });
     }
 
     protected function getCurrentRecordId(): int

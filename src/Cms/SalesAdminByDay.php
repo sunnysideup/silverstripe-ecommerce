@@ -8,10 +8,12 @@ use Sunnysideup\Ecommerce\Model\Order;
 /**
  * Sales to action, split into tabs by the day the order was placed:
  * one tab per day (today, yesterday, 2 days ago, ... up to `days_back` days ago),
- * then up to 2 weeks ago, 2 to 4 weeks ago (neither includes days already shown)
- * and finally everything older than that.
+ * then up to 2 weeks ago, 2 to 4 weeks ago (neither includes days already shown),
+ * then older than 4 weeks, and finally a tab with all the "old" orders
+ * (placed before OrderArchiver::get_cutoff_date()), which is what the archive button
+ * on that tab archives (without processing them).
  *
- * The "older" tab has a button to archive all of its orders (without processing them).
+ * An order is only ever in one tab: the archivable tab takes priority over the others.
  *
  * Class \Sunnysideup\Ecommerce\Cms\SalesAdminByDay
  */
@@ -55,7 +57,8 @@ class SalesAdminByDay extends SalesAdmin
 
     /**
      * Days ago (inclusive) for the "2 to 4 weeks ago" tab.
-     * Anything older than this goes into the "older" tab, which can be archived.
+     * Anything older than this goes into the "older" tab - unless it is old enough
+     * to be archived, in which case it is in the "archivable" tab.
      *
      * @var int
      */
@@ -75,7 +78,8 @@ class SalesAdminByDay extends SalesAdmin
         $form = parent::getEditForm($id, $fields);
         $form->Fields();
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
-            $brackets = $this->getBrackets();
+            $cutoffDate = OrderArchiver::get_cutoff_date();
+            $brackets = $this->getBrackets($cutoffDate);
             $arrayOfTabs = array_fill_keys(array_keys($brackets), ['IDs' => []]);
             $baseList = $this->getList();
             $placedPerOrder = OrderArchiver::get_placed_dates($baseList->columnUnique());
@@ -87,17 +91,13 @@ class SalesAdminByDay extends SalesAdmin
                     $daysAgo = 0;
                 }
 
-                $key = $this->getBucketKey($daysAgo);
+                $key = date('Y-m-d', strtotime((string) $placed)) < $cutoffDate ? 'archivable' : $this->getBucketKey($daysAgo);
                 $arrayOfTabs[$key]['IDs'][$order->ID] = $order->ID;
             }
 
             $this->buildTabs($brackets, $arrayOfTabs, $form);
-            // Orders placed before this day are in the 'older' tab.
-            $this->addArchiveOldOrdersButton(
-                $form,
-                'older',
-                date('Y-m-d', strtotime('-' . $this->getFourWeeksDays() . ' days'))
-            );
+            // only the 'archivable' tab has the button.
+            $this->addArchiveOldOrdersButton($form, 'archivable', $cutoffDate);
         }
 
         return $form;
@@ -143,7 +143,7 @@ class SalesAdminByDay extends SalesAdmin
         return 'older';
     }
 
-    protected function getBrackets(): array
+    protected function getBrackets(string $cutoffDate): array
     {
         $brackets = [];
         for ($i = 0; $i <= $this->getMaxDays(); ++$i) {
@@ -161,7 +161,8 @@ class SalesAdminByDay extends SalesAdmin
 
         $brackets['twoweeks'] = 'Up to 2 weeks ago';
         $brackets['fourweeks'] = '2 to 4 weeks ago';
-        $brackets['older'] = 'Older than 4 weeks';
+        $brackets['older'] = 'Older than 4 weeks to ' . date('j M Y', strtotime($cutoffDate));
+        $brackets['archivable'] = 'To archive: before ' . date('j M Y', strtotime($cutoffDate));
 
         return $brackets;
     }
