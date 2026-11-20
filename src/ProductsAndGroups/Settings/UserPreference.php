@@ -360,7 +360,8 @@ class UserPreference
     {
         $pageStart = '';
         if ($withPageNumber) {
-            $pageStart = $this->rootGroupController->getCurrentPageNumber();
+            // the exact start (not the page number): start=32 and start=40 show different products
+            $pageStart = (int) $this->request->getVar('start');
         }
 
         $pageId = $this->rootGroup->ID;

@@ -236,7 +236,9 @@ class ProductGroupController extends PageController
     public function ProductGroupListCachingKey(?bool $withPageNumber = false): string
     {
         if ($this->ProductGroupListAreCacheable()) {
-            return $this->getUserPreferencesClass()->ProductGroupListCachingKey($withPageNumber);
+            // Another page of the same list is different html, so the start is always part of the key
+            // (the template call without arguments used to leave it out, which served page 1 for every page).
+            return $this->getUserPreferencesClass()->ProductGroupListCachingKey(true);
         }
 
         return '';
