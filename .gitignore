@@ -11,3 +11,4 @@ coverage/
 /**/*.js.map
 
 /vendor
+.agents/
