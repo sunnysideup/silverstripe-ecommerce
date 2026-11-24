@@ -64,6 +64,7 @@ class ProductController extends PageController
             if ($record && ! $this->versionCanBeViewed($record)) {
                 $record = null;
             }
+
             if ($record) {
                 //we check again, because we may actually get the same version back...
                 if ($record->Version !== $this->Version) {
@@ -91,10 +92,12 @@ class ProductController extends PageController
         if ($this->dataRecord->canEdit()) {
             return true;
         }
+
         // the current version is always fine.
         if ((int) $record->Version === (int) $this->Version) {
             return true;
         }
+
         $baseTable = DataObject::getSchema()->baseDataTable($record);
         $wasPublished = DB::prepared_query(
             'SELECT "WasPublished" FROM "' . $baseTable . '_Versions" WHERE "RecordID" = ? AND "Version" = ? LIMIT 1',

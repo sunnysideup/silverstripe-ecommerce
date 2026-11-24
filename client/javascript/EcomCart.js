@@ -404,6 +404,36 @@ const EcomCart = {
   },
 
   /**
+   * The group filter sidebar (groupfilter links) is NOT part of the
+   * ajaxified product list holder, so its link hrefs are never refreshed
+   * when a product list is loaded via ajax - only the product grid is
+   * swapped. This means every groupfilter link's href always reflects the
+   * groupfilter selection as it was at the last full page load.
+   *
+   * We capture that initial selection once (in `init`), so that later
+   * clicks can work out what a single, possibly-stale link is actually
+   * meant to toggle, and apply that toggle against the live/current
+   * selection instead - allowing more than one group filter to be
+   * selected at once without one click replacing the previous one.
+   *
+   * @var array
+   */
+  initialGroupFilterTokens: [],
+
+  /**
+   * The group filter selection as it is right now.
+   *
+   * A combination of group filters (more than one) is never put in the
+   * address bar and it is sent to the server as a POST variable. This is to
+   * stop robots from crawling every possible combination of filters.
+   * That is why, the address bar can not be used to find out what the
+   * current selection is.
+   *
+   * @var array
+   */
+  liveGroupFilterTokens: [],
+
+  /**
    * Hidden page title, used when products are updated using the
    * @var String
    */
@@ -476,6 +506,17 @@ const EcomCart = {
     EcomCart.countryAndRegionUpdates()
     // setup an area where the user can change their country / region
     EcomCart.changeCountryFieldSwap()
+    // capture the groupfilter selection baked into the page at full load time
+    // (see initialGroupFilterTokens for why this is needed)
+    EcomCart.initialGroupFilterTokens = EcomCart.getGroupFilterTokens(
+      window.location.href
+    )
+    EcomCart.liveGroupFilterTokens = EcomCart.initialGroupFilterTokens.slice()
+    // a combination of group filters is not in the url (it is POSTed),
+    // after a reload we get it back from the history entry.
+    if (EcomCart.ajaxifyProductList) {
+      EcomCart.restoreGroupFilterFromHistoryState(window.history.state)
+    }
     // ajaxify product list
     EcomCart.addAjaxificationOfProductList()
     EcomCart.addSelectForSmallerSpaces()
@@ -571,8 +612,9 @@ const EcomCart = {
             event.preventDefault()
 
             const currentEl = target // already a native DOM element
-            const url = currentEl.getAttribute('href')
             const dataResetFor = currentEl.getAttribute('data-reset-for')
+            const rawUrl = currentEl.getAttribute('href')
+            const url = EcomCart.applyGroupFilterToggle(rawUrl, dataResetFor)
 
             EcomCart.ajaxLoadProductList(url, dataResetFor, () => {
               // Step 1: Find the closest ancestor matching the selector
@@ -597,10 +639,10 @@ const EcomCart = {
                 if (select) {
                   // Check if the select has an option with the given value
                   const optionExists = Array.from(select.options).some(
-                    option => option.value === url
+                    option => option.value === rawUrl
                   )
                   if (optionExists) {
-                    select.value = url
+                    select.value = rawUrl
                     // console.log('Select value set to:', select.value) // Verify the value is set
                   }
                 } else {
@@ -625,9 +667,17 @@ const EcomCart = {
           event.preventDefault()
 
           const currentEl = target // already a native DOM element
-          const url = currentEl.value
+          const rawUrl = currentEl.value
           const selectedOption = currentEl.options[currentEl.selectedIndex]
           const dataResetFor = selectedOption.getAttribute('data-reset-for')
+          // unlike the plain filter links (which can be combined), the
+          // select dropdown only ever allows a single group to be picked
+          // at a time - managing several selections through one <select>
+          // is not practical
+          const url = EcomCart.applyGroupFilterSingleSelection(
+            rawUrl,
+            dataResetFor
+          )
           EcomCart.ajaxLoadProductList(url, dataResetFor, () => {
             const holder = currentEl.closest(
               EcomCart.ajaxifiedListAdjusterSelectors
@@ -635,8 +685,48 @@ const EcomCart = {
             holder.querySelectorAll('a.current').forEach(link => {
               link.classList.remove('current')
             })
-            holder.querySelector(`a[href='${url}']`).classList.add('current')
+            const matchingLink = holder.querySelector(`a[href='${rawUrl}']`)
+            if (matchingLink) {
+              matchingLink.classList.add('current')
+            }
           })
+        }
+      })
+
+      // group filter form (checkboxes on desktop, select on small screens).
+      // This is a form rather than links so that robots do not follow it.
+      document.body.addEventListener('change', function (event) {
+        const form = event.target.closest('form[data-group-filter-form]')
+        if (!form) {
+          return
+        }
+        let tokens = []
+        if (event.target.tagName === 'SELECT') {
+          if (event.target.value) {
+            tokens = [event.target.value]
+          }
+        } else {
+          form
+            .querySelectorAll('input.group-filter-checkbox:checked')
+            .forEach(function (cb) {
+              tokens.push(cb.value)
+            })
+        }
+        const url =
+          window.location.pathname +
+          (tokens.length
+            ? '?groupfilter=' + encodeURIComponent(tokens.join(','))
+            : '')
+        // the refreshed filter markup replaces this form, no callback needed
+        EcomCart.ajaxLoadProductList(
+          url,
+          tokens.length ? null : 'groupfilter',
+          function () {}
+        )
+      })
+      document.body.addEventListener('submit', function (event) {
+        if (event.target.closest('form[data-group-filter-form]')) {
+          event.preventDefault()
         }
       })
 
@@ -646,6 +736,9 @@ const EcomCart = {
     // always do the popstate
     window.onpopstate = function (e) {
       if (EcomCart.hasAjaxProductLoad) {
+        if (EcomCart.restoreGroupFilterFromHistoryState(e.state)) {
+          return
+        }
         const newUrl = window.location.href
         window.location.href = newUrl
       }
@@ -663,18 +756,59 @@ const EcomCart = {
 
   hasAjaxProductLoad: false,
 
-  ajaxLoadProductList: function (myUrl, dataResetFor, myCallBack) {
+  /**
+   * disables / enables the group filter form inputs, so they can not be
+   * clicked while a product list is being reloaded.
+   */
+  setGroupFilterFormsDisabled: function (disabled) {
+    document
+      .querySelectorAll('form[data-group-filter-form]')
+      .forEach(function (form) {
+        form.classList.toggle('is-loading', disabled)
+        form.querySelectorAll('input, select').forEach(function (el) {
+          el.disabled = disabled
+        })
+      })
+  },
+
+  /**
+   * Loads a product list using ajax.
+   *
+   * @param {String}   myUrl         the (path and query of) url to load
+   * @param {String}   dataResetFor  the get variable that is reset by this load, if any
+   * @param {Function} myCallBack    called when the list has been loaded
+   * @param {Object}   options       optional:
+   *                                 - skipMerge: use myUrl as it is (do not merge the get variables of the current url)
+   *                                 - skipHistory: do not create a history entry (or scroll)
+   */
+  ajaxLoadProductList: function (myUrl, dataResetFor, myCallBack, options) {
+    options = options || {}
     EcomCart.hasAjaxProductLoad = true
     // console.log('AJAX Load Product List:', myUrl) // Debug: Check if URL is correct
-    myUrl = EcomCart.mergeUrlParamsForAjax(myUrl, dataResetFor)
+    if (!options.skipMerge) {
+      myUrl = EcomCart.mergeUrlParamsForAjax(myUrl, dataResetFor)
+    }
+    // A combination of group filters is POSTed rather than being part of the
+    // url, so that robots can not crawl every combination.
+    const groupFilterTokens = EcomCart.getGroupFilterTokens(myUrl)
+    const postGroupFilter = groupFilterTokens.length > 1
+    const requestUrl = postGroupFilter
+      ? EcomCart.removeGroupFilterParam(myUrl)
+      : myUrl
     window.jQuery.ajax({
+      type: postGroupFilter ? 'POST' : 'GET',
+      data: postGroupFilter
+        ? { groupfilter: groupFilterTokens.join(',') }
+        : undefined,
       beforeSend: function () {
+        EcomCart.setGroupFilterFormsDisabled(true)
         window
           .jQuery(EcomCart.ajaxifiedListHolderSelector)
           .addClass(EcomCart.classToShowLoading)
       },
       // cache: false,
       complete: function () {
+        EcomCart.setGroupFilterFormsDisabled(false)
         window
           .jQuery(EcomCart.ajaxifiedListHolderSelector)
           .removeClass(EcomCart.classToShowLoading)
@@ -688,27 +822,37 @@ const EcomCart = {
             errorThrown +
             ')! I will try reloading the page now.'
         )
-        window.location.href = myUrl
+        window.location.href = EcomCart.removeAjaxParam(requestUrl)
       },
       success: function (data, textStatus, jqXHR) {
-        window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(data)
+        EcomCart.liveGroupFilterTokens = groupFilterTokens
+        EcomCart.applyAjaxProductListResponse(data, myUrl)
 
-        const holderEl = document.querySelector(EcomCart.ajaxifiedListHolderSelector)
+        const holderEl = document.querySelector(
+          EcomCart.ajaxifiedListHolderSelector
+        )
         if (holderEl) {
-          holderEl.dispatchEvent(new CustomEvent('SSU:DOMContentUpdated', { bubbles: true, detail: { updatedElement: holderEl } }))
+          holderEl.dispatchEvent(
+            new CustomEvent('SSU:DOMContentUpdated', {
+              bubbles: true,
+              detail: { updatedElement: holderEl }
+            })
+          )
         }
 
         // create history
         var pageTitle = window.jQuery(EcomCart.hiddenPageTitleID).text()
-        // create history
-        var pageTitle = window.jQuery(EcomCart.hiddenPageTitleID).text()
-        window.history.pushState(
-          {
-            pageTitle: pageTitle
-          },
-          pageTitle,
-          EcomCart.removeAjaxParam(myUrl)
-        )
+        if (!options.skipHistory) {
+          // the group filters are in the history state, as they are not in the url
+          window.history.pushState(
+            {
+              pageTitle: pageTitle,
+              groupFilter: groupFilterTokens.join(',')
+            },
+            pageTitle,
+            EcomCart.removeAjaxParam(requestUrl)
+          )
+        }
 
         document.title = pageTitle
         // update changes
@@ -722,25 +866,38 @@ const EcomCart = {
           EcomCart.ajaxifiedProductsCallBack()
         }
         // scroll to the top of the product list.
-        window.jQuery('html, body').animate(
-          {
-            scrollTop:
-              window.jQuery(EcomCart.ajaxifiedListHolderSelector).offset().top -
-              160
-          },
-          500
-        )
+        if (!options.skipHistory) {
+          window.jQuery('html, body').animate(
+            {
+              scrollTop:
+                window.jQuery(EcomCart.ajaxifiedListHolderSelector).offset()
+                  .top - 160
+            },
+            500
+          )
+        }
         myCallBack()
         //fire an event to inform that data on the page has changed
         const event = new Event('paginationchange')
         window.dispatchEvent(event)
       },
-      url: myUrl
+      url: requestUrl
     })
   },
 
-  addSelectForSmallerSpaces: function () {
-    const filterSortLinks = document.querySelectorAll(
+  /**
+   * builds (or rebuilds) the "select" dropdown version of a filter/sort
+   * list, used on smaller screens when there are too many options to show
+   * as a plain list of links.
+   *
+   * @param {ParentNode} root optional - scope the search for filter/sort
+   *                          groups to within this element only (e.g. a
+   *                          container that was just refreshed via ajax).
+   *                          Defaults to the whole document.
+   */
+  addSelectForSmallerSpaces: function (root) {
+    const searchRoot = root || document
+    const filterSortLinks = searchRoot.querySelectorAll(
       EcomCart.ajaxifiedListAdjusterSelectors
     )
     filterSortLinks.forEach(group => {
@@ -760,25 +917,35 @@ const EcomCart = {
         return
       }
       const dropdown = dropdownContainer.querySelector('.dropdown')
+      if (!dropdown) {
+        return
+      }
+
+      // clear out any options from a previous run - this function may be
+      // called again (e.g. after an ajax refresh of this group's markup),
+      // and the select element itself is not replaced, so without this
+      // options would be duplicated every time
+      dropdown.innerHTML = ''
 
       // Add list items to the select dropdown
       Array.from(listItems).forEach(item => {
         const link = item.querySelector('a')
+        if (!link) {
+          return
+        }
         const url = new URL(link.href)
         const pathAndQuery = url.pathname + url.search
         const dataResetFor = link.getAttribute('data-reset-for')
-        if (link) {
-          const option = document.createElement('option')
-          option.textContent = link.textContent
-          option.value = pathAndQuery
-          if (dataResetFor) {
-            option.setAttribute('data-reset-for', dataResetFor)
-          }
-          if (link.classList.contains('current')) {
-            option.selected = true
-          }
-          dropdown.appendChild(option)
+        const option = document.createElement('option')
+        option.textContent = link.textContent
+        option.value = pathAndQuery
+        if (dataResetFor) {
+          option.setAttribute('data-reset-for', dataResetFor)
         }
+        if (link.classList.contains('current')) {
+          option.selected = true
+        }
+        dropdown.appendChild(option)
       })
 
       // Check if list has more than maxLength items
@@ -794,6 +961,11 @@ const EcomCart = {
   mergeUrlParamsForAjax: function (newUrl, dataResetFor) {
     const base = new URL(newUrl, window.location.origin)
     const oldParams = new URL(window.location.href).searchParams
+    // the group filters are not (always) in the address bar, see liveGroupFilterTokens
+    oldParams.delete('groupfilter')
+    if (EcomCart.liveGroupFilterTokens.length) {
+      oldParams.set('groupfilter', EcomCart.liveGroupFilterTokens.join(','))
+    }
 
     // Combine all keys from both old and new params, excluding dataResetFor
     const allKeys = new Set([
@@ -841,78 +1013,473 @@ const EcomCart = {
     return urlObj.toString()
   },
 
+  removeGroupFilterParam: function (url) {
+    const urlObj = new URL(url, window.location.origin)
+    urlObj.searchParams.delete('groupfilter')
+    return urlObj.pathname + urlObj.search
+  },
+
+  /**
+   * A combination of group filters is not in the url (it is POSTed), but it
+   * is saved in the history state. This loads the list for that
+   * combination again (e.g. after the back button or a reload).
+   *
+   * @param {Object} state the history state
+   * @return {Boolean} true if a combination of group filters is being loaded
+   */
+  restoreGroupFilterFromHistoryState: function (state) {
+    const tokens =
+      state && 'string' === typeof state.groupFilter
+        ? state.groupFilter.split(',').filter(Boolean)
+        : []
+    if (tokens.length < 2) {
+      return false
+    }
+    const urlObj = new URL(window.location.href)
+    urlObj.searchParams.set('groupfilter', tokens.join(','))
+    urlObj.searchParams.set('ajax', 1)
+    EcomCart.ajaxLoadProductList(
+      urlObj.pathname + urlObj.search,
+      null,
+      function () {},
+      { skipMerge: true, skipHistory: true }
+    )
+
+    return true
+  },
+
+  /**
+   * The ajax product list response may contain two named partials (see
+   * AjaxProductList.ss):
+   * - #ProductGroupGroupFiltersHolder: a freshly rendered copy of the
+   *   group filter sidebar, with links/hrefs reflecting the live,
+   *   possibly multi-group, selection
+   * - #ProductGroupProductListPartial: the actual product cards
+   *
+   * When both are present, each is used to update its matching live
+   * element so that, after an ajax product list reload, the group filter
+   * links are no longer stale (fixing more than one group filter being
+   * selectable at once). If the response doesn't contain these partials
+   * (e.g. a different ajaxified list elsewhere on the site), it falls
+   * back to the previous behaviour of setting the whole response as the
+   * product list holder's content.
+   *
+   * @param {String} data   the raw html returned by the ajax product list request
+   * @param {String} newUrl the (merged/toggled) url that was requested
+   */
+  applyAjaxProductListResponse: function (data, newUrl) {
+    let filtersPartial = null
+    let productListPartial = null
+
+    if (typeof window.DOMParser !== 'undefined') {
+      const parsedDoc = new window.DOMParser().parseFromString(
+        data,
+        'text/html'
+      )
+      filtersPartial = parsedDoc.getElementById('ProductGroupGroupFiltersHolder')
+      productListPartial = parsedDoc.getElementById(
+        'ProductGroupProductListPartial'
+      )
+    }
+
+    if (productListPartial) {
+      window
+        .jQuery(EcomCart.ajaxifiedListHolderSelector)
+        .html(productListPartial.innerHTML)
+    } else {
+      window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(data)
+    }
+
+    if (filtersPartial) {
+      const liveFiltersHolder = document.getElementById(
+        'ProductGroupGroupFiltersHolder'
+      )
+      if (liveFiltersHolder) {
+        liveFiltersHolder.innerHTML = filtersPartial.innerHTML
+        // the newly inserted markup has its own (empty) select dropdown
+        // for smaller screens - rebuild it (and re-apply the
+        // show-list/show-dropdown classes) for this holder only, so it
+        // doesn't end up shown empty, and so it doesn't duplicate options
+        // in any other, unrelated, filter/sort dropdown on the page
+        EcomCart.addSelectForSmallerSpaces(liveFiltersHolder)
+        // the selected groupfilter(s) have just changed, so the baseline
+        // snapshot used by applyGroupFilterToggle needs to move forward too
+        // (use the url that was just requested, not window.location, since
+        // the history pushState for it hasn't happened yet at this point)
+        if (newUrl) {
+          EcomCart.initialGroupFilterTokens = EcomCart.getGroupFilterTokens(
+            newUrl
+          )
+        }
+      }
+    }
+  },
+
+  /**
+   * Returns the array of groupfilter tokens (comma separated group
+   * segments, e.g. "my-group.123") present in the given URL, or an empty
+   * array if there is no groupfilter param.
+   *
+   * @param {String} url
+   * @return {Array}
+   */
+  getGroupFilterTokens: function (url) {
+    try {
+      const urlObj = new URL(url, window.location.origin)
+      const raw = urlObj.searchParams.get('groupfilter')
+      if (!raw) {
+        return []
+      }
+
+      return raw
+        .split(',')
+        .map(token => token.trim())
+        .filter(Boolean)
+    } catch (e) {
+      return []
+    }
+  },
+
+  /**
+   * Returns the tokens that are present in only one of the two given
+   * arrays (i.e. the symmetric difference).
+   *
+   * @param {Array} a
+   * @param {Array} b
+   * @return {Array}
+   */
+  symmetricDifferenceOfTokens: function (a, b) {
+    const result = []
+    a.forEach(function (token) {
+      if (b.indexOf(token) === -1) {
+        result.push(token)
+      }
+    })
+    b.forEach(function (token) {
+      if (a.indexOf(token) === -1 && result.indexOf(token) === -1) {
+        result.push(token)
+      }
+    })
+
+    return result
+  },
+
+  /**
+   * The groupfilter sidebar links are not refreshed when the product list
+   * is loaded via ajax (only the product grid is) - see
+   * `initialGroupFilterTokens` above for the full explanation. This means
+   * a link's href always reflects the groupfilter selection as it was at
+   * the last full page load, rather than the live/current selection,
+   * which would otherwise cause one group filter selection to replace
+   * another instead of being added to it.
+   *
+   * This method works out, from a (possibly stale) link's own href, which
+   * single group it is meant to toggle on or off - by comparing it
+   * against the selection that was present at the initial page load -
+   * and then applies that one toggle against the CURRENT, live selection
+   * (taken from the address bar), keeping any other groups already
+   * selected.
+   *
+   * Links that have nothing to do with groupfilter (sort/filter/display
+   * links, or the groupfilter "reset to all" link) are returned
+   * unchanged.
+   *
+   * @param {String} url          the href of the link/option that was activated
+   * @param {String} dataResetFor the type being reset by this link, if any
+   * @return {String} the url to actually load, with the groupfilter
+   *                   selection merged in
+   */
+  applyGroupFilterToggle: function (url, dataResetFor) {
+    if ('groupfilter' === dataResetFor) {
+      // "All" / reset link - always clears the whole selection
+      return url
+    }
+
+    const hrefTokens = EcomCart.getGroupFilterTokens(url)
+    const initialTokens = EcomCart.initialGroupFilterTokens || []
+
+    if (0 === hrefTokens.length && 0 === initialTokens.length) {
+      // this link has nothing to do with groupfilter (e.g. a sort,
+      // filter, or display link)
+      return url
+    }
+
+    const changedTokens = EcomCart.symmetricDifferenceOfTokens(
+      hrefTokens,
+      initialTokens
+    )
+    if (1 !== changedTokens.length) {
+      // can't work out, with confidence, which single group this link is
+      // meant to toggle - fall back to the href exactly as rendered
+      return url
+    }
+
+    const ownToken = changedTokens[0]
+    const currentTokens = EcomCart.liveGroupFilterTokens.slice()
+    const position = currentTokens.indexOf(ownToken)
+    let newTokens
+    if (-1 === position) {
+      newTokens = currentTokens.concat([ownToken])
+    } else {
+      newTokens = currentTokens.slice()
+      newTokens.splice(position, 1)
+    }
+
+    const urlObj = new URL(url, window.location.origin)
+    if (newTokens.length) {
+      urlObj.searchParams.set('groupfilter', newTokens.join(','))
+    } else {
+      urlObj.searchParams.delete('groupfilter')
+    }
+
+    return urlObj.pathname + urlObj.search
+  },
+
+  /**
+   * Unlike the plain filter links (which can be combined - see
+   * applyGroupFilterToggle above), the small-screen "select" dropdown
+   * version of the group filter list only ever allows a single group to
+   * be selected at a time: managing several selections through a single
+   * <select> is not practical from a usability point of view.
+   *
+   * The dropdown's options are built from the same (possibly already
+   * combined) hrefs as the plain links - e.g. an option may have a value
+   * of "groupfilter=a,b" if "a" was already selected when "b"'s option
+   * was built (see combineGroupFilterValue on the server). The group this
+   * particular option represents is always the LAST token in that list,
+   * since the server always appends a newly added group at the end.
+   *
+   * This reduces the option's value down to just that single group,
+   * discarding any others, so that picking an option from the dropdown
+   * always replaces rather than adds to the current groupfilter
+   * selection.
+   *
+   * @param {String} url          the href/value of the option that was selected
+   * @param {String} dataResetFor the type being reset by this option, if any
+   * @return {String} the url to actually load, with only a single group selected
+   */
+  applyGroupFilterSingleSelection: function (url, dataResetFor) {
+    if ('groupfilter' === dataResetFor) {
+      // "All" / reset option - always clears the whole selection
+      return url
+    }
+
+    const hrefTokens = EcomCart.getGroupFilterTokens(url)
+    if (0 === hrefTokens.length) {
+      // this option has nothing to do with groupfilter (e.g. a sort,
+      // filter, or display option)
+      return url
+    }
+
+    const ownToken = hrefTokens[hrefTokens.length - 1]
+
+    const urlObj = new URL(url, window.location.origin)
+    urlObj.searchParams.set('groupfilter', ownToken)
+
+    return urlObj.pathname + urlObj.search
+  },
+
   // #################################
   // SETUP PAGE
   // #################################
 
-  resolveLink(element) {
+  resolveLink (element) {
     var url = element.dataset.link || window.jQuery(element).attr('href')
     return url
   },
 
-  resolveAddRemoveLink(element) {
+  resolveAddRemoveLink (element) {
     var url = EcomCart.resolveLink(element)
     if (EcomCart.productListIsFromCachedSource) {
       url += (url.includes('?') ? '&' : '?') + 'cached=1'
     }
     return url
   },
+  /**
+   * Helper function to handle AJAX form submission for adding/removing items
+   * via fetch (POST), mirroring the logic of getChanges().
+   */
+  postCartUpdate: async function (form, button) {
+    if (!form) return
+
+    // Resolve URL from the form's action attribute
+    const urlStr = form.getAttribute('action')
+    const url = new URL(urlStr, document.baseURI || window.location.href)
+
+    // Serialise the form (includes SecurityID and other hidden fields)
+    const body = new URLSearchParams(new FormData(form))
+    const extras = {}
+
+    if (EcomCart.ajaxButtonsOn) {
+      extras.ajaxButtonsOn = 'true'
+    }
+    if (EcomCart.openAjaxCalls > 1) {
+      extras.manyrequests = '1'
+    }
+
+    const loadingIndex = EcomCart.addLoadingSelector(button)
+    if (loadingIndex !== null) {
+      extras.loadingindex = String(loadingIndex)
+    }
+
+    for (const [key, value] of Object.entries(extras)) {
+      body.set(key, value)
+      url.searchParams.set(key, value)
+    }
+
+    if (typeof EcomCart.onBeforeUpdate === 'function') {
+      EcomCart.onBeforeUpdate.call(url.toString(), body, EcomCart.setChanges)
+    }
+
+    EcomCart.openAjaxCalls++
+    button.setAttribute('aria-busy', 'true')
+
+    try {
+      const response = await fetch(url.toString(), {
+        method: 'POST',
+        body,
+        credentials: 'same-origin',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          Accept: 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`Cart update failed: HTTP ${response.status}`)
+      }
+
+      const changes = await response.json()
+      EcomCart.setChanges(changes, 'success')
+    } catch (error) {
+      EcomCart.openAjaxCalls--
+
+      // Clean up loading states on error
+      if (EcomCart.loadingSelectors[loadingIndex]) {
+        EcomCart.loadingSelectors[loadingIndex].classList.remove(
+          EcomCart.classToShowLoading
+        )
+      }
+      document.body.classList.remove(EcomCart.classToShowPageIsUpdating)
+      console.error(error)
+    } finally {
+      button.setAttribute('aria-busy', 'false')
+    }
+  },
 
   /**
-   * adds the "add to cart" ajax functionality to links.
-   * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+   * adds the "add to cart" ajax functionality to links/buttons.
+   * @param String withinSelector: area where these links can be found
    */
   addAddLinks: function (withinSelector) {
-    window
-      .jQuery(withinSelector)
-      .not(EcomCart.excludedPagesSelector)
-      .on('click', EcomCart.addLinkSelector, function () {
-        var url = EcomCart.resolveAddRemoveLink(this)
-        EcomCart.getChanges(url, null, this)
-        return false
+    const containers = document.querySelectorAll(withinSelector)
+    containers.forEach(container => {
+      container.addEventListener('click', function (event) {
+        const button = event.target.closest(EcomCart.addLinkSelector)
+        const isExcluded = event.target.closest(EcomCart.excludedPagesSelector)
+
+        if (button && !isExcluded) {
+          event.preventDefault()
+          const form = button.closest('form')
+
+          if (form) {
+            EcomCart.postCartUpdate(form, button)
+          } else {
+            // Fallback for legacy <a> links without a form
+            const url = EcomCart.resolveAddRemoveLink(button)
+            EcomCart.getChanges(url, null, button)
+          }
+        }
       })
+    })
   },
 
   /**
-   * add ajax functionality to "remove from cart" links
-   * outside the cart
-   * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+   * add ajax functionality to "remove from cart" links/buttons outside the cart
+   * @param String withinSelector: area where these links can be found
    */
   addRemoveLinks: function (withinSelector) {
-    window
-      .jQuery(withinSelector)
-      .not(EcomCart.excludedPagesSelector)
-      .on('click', EcomCart.removeLinkSelector, function () {
-        if (EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
-          var url = EcomCart.resolveAddRemoveLink(this)
-          EcomCart.getChanges(url, null, this)
+    const containers = document.querySelectorAll(withinSelector)
+    containers.forEach(container => {
+      container.addEventListener('click', function (event) {
+        const button = event.target.closest(EcomCart.removeLinkSelector)
+        const isExcluded = event.target.closest(EcomCart.excludedPagesSelector)
+
+        if (button && !isExcluded) {
+          event.preventDefault()
+          if (
+            EcomCart.unconfirmedDelete ||
+            confirm(EcomCart.confirmDeleteText)
+          ) {
+            const form = button.closest('form')
+
+            if (form) {
+              EcomCart.postCartUpdate(form, button)
+            } else {
+              // Fallback for legacy <a> links without a form
+              const url = EcomCart.resolveAddRemoveLink(button)
+              EcomCart.getChanges(url, null, button)
+            }
+          }
         }
-        return false
       })
+    })
   },
 
   /**
-   * adds the "remove from cart" ajax functionality to links
-   * IN THE CART!
-   * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+   * adds the "remove from cart" ajax functionality to links/buttons IN THE CART!
+   * @param String withinSelector: area where these links can be found
    */
   addCartRemove: function (withinSelector) {
-    window
-      .jQuery(withinSelector)
-      .on('click', EcomCart.removeCartSelector, function (event) {
-        if (
-          !EcomCart.confirmDeleteText ||
-          confirm(EcomCart.confirmDeleteText)
-        ) {
-          var url = EcomCart.resolveLink(this)
-          var el = window.jQuery(this).parents(EcomCart.orderItemHolderSelector)
-          window.jQuery(el).slideUp('slow', function () {
-            window.jQuery(el).remove()
-          })
-          EcomCart.getChanges(url, null, this)
+    const containers = document.querySelectorAll(withinSelector)
+    containers.forEach(container => {
+      container.addEventListener('click', function (event) {
+        const button = event.target.closest(EcomCart.removeCartSelector)
+
+        if (button) {
+          event.preventDefault()
+          if (
+            !EcomCart.confirmDeleteText ||
+            confirm(EcomCart.confirmDeleteText)
+          ) {
+            const orderItemHolder = button.closest(
+              EcomCart.orderItemHolderSelector
+            )
+
+            if (orderItemHolder) {
+              // Vanilla JS equivalent of jQuery slideUp() & remove()
+              orderItemHolder.style.transition = 'all 0.4s ease-out'
+              orderItemHolder.style.overflow = 'hidden'
+              orderItemHolder.style.height = orderItemHolder.offsetHeight + 'px'
+
+              // Force repaint before transitioning to 0
+              orderItemHolder.offsetHeight
+
+              orderItemHolder.style.height = '0px'
+              orderItemHolder.style.paddingTop = '0px'
+              orderItemHolder.style.paddingBottom = '0px'
+              orderItemHolder.style.marginTop = '0px'
+              orderItemHolder.style.marginBottom = '0px'
+              orderItemHolder.style.opacity = '0'
+              orderItemHolder.style.border = 'none'
+
+              setTimeout(() => {
+                orderItemHolder.remove()
+              }, 400) // Wait for transition to finish
+            }
+
+            const form = button.closest('form')
+            if (form) {
+              EcomCart.postCartUpdate(form, button)
+            } else {
+              // Fallback for legacy <a> links without a form
+              const url = EcomCart.resolveLink(button)
+              EcomCart.getChanges(url, null, button)
+            }
+          }
         }
-        return false
       })
+    })
   },
 
   // #################################

@@ -67,11 +67,7 @@ class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterfac
     #[Override]
     public function initStep(Order $order): bool
     {
-        if ($this->canByPassStep($order) || $this->isReadyToSend($order)) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->canByPassStep($order) || $this->isReadyToSend($order);
     }
 
     /**

@@ -29,10 +29,11 @@ class OrderFiltersMultiOptionsetStatusIDFilter extends ExactMatchFilter
         if (! is_array($values)) {
             $values = [$values];
         }
+
         $values = array_values(
             array_unique(
                 array_filter(
-                    array_map('intval', array_filter($values, 'is_scalar'))
+                    array_map(intval(...), array_filter($values, is_scalar(...)))
                 )
             )
         );

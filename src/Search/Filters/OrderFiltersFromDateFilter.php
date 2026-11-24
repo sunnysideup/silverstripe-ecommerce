@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
 use Override;
-use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
@@ -23,7 +22,7 @@ class OrderFiltersFromDateFilter extends ExactMatchFilter
     #[Override]
     public function apply(DataQuery $query)
     {
-        $value = Convert::raw2sql($this->getValue());
+        $value = (string) $this->getValue();
 
         $date = DBDate::create();
         $date->setValue(strtotime((string) $value));

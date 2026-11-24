@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
@@ -31,5 +32,6 @@ class GridFieldConfigForProductGroups extends GridFieldConfig_RelationEditor
         }
 
         $this->removeComponentsByType(GridFieldAddNewButton::class);
+        $this->removeComponentsByType(GridFieldFilterHeader::class);
     }
 }

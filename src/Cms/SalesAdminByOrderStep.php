@@ -3,10 +3,15 @@
 namespace Sunnysideup\Ecommerce\Cms;
 
 use Override;
+use Sunnysideup\Ecommerce\Api\OrderArchiver;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
+ * Sales to action, one tab per order step.
+ * Each tab has a button to archive (without processing) all orders in that step
+ * that are old (see OrderArchiver::get_cutoff_date()).
+ *
  * Class \Sunnysideup\Ecommerce\Cms\SalesAdminByOrderStep
  */
 class SalesAdminByOrderStep extends SalesAdmin
@@ -57,6 +62,10 @@ class SalesAdminByOrderStep extends SalesAdmin
             }
 
             $this->buildTabs($brackets, $arrayOfTabs, $form);
+            $cutoffDate = OrderArchiver::get_cutoff_date();
+            foreach (array_keys($brackets) as $stepID) {
+                $this->addArchiveOldOrdersButton($form, (string) $stepID, $cutoffDate);
+            }
         }
 
         return $form;

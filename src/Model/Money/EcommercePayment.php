@@ -6,11 +6,14 @@ use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\HTMLReadonlyField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\ReadonlyField;
@@ -18,19 +21,26 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBMoney;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\Versioned\Versioned;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Ecommerce\Api\EcommercePaymentHistory;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommercePaymentTypeDropdownField;
 use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
+use Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentAmountFilter;
 use Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentFiltersAroundDateFilter;
+use Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentPayerFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
 
@@ -53,6 +63,7 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property int $OrderID
  * @method Member PaidBy()
  * @method Order Order()
+ * @mixin Versioned
  */
 class EcommercePayment extends DataObject implements EditableEcommerceObject
 {
@@ -107,6 +118,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     private static $table_name = 'EcommercePayment';
 
+    /**
+     * Keeps a version every time a payment is saved, so we can see if (and how) it was ever changed:
+     * see the History tab and EcommercePaymentHistory.
+     * Versioned only: there is no draft and live, a payment is always "live".
+     */
+    private static $extensions = [
+        Versioned::class . '.versioned',
+    ];
+
     private static $method_disabled = false;
 
     private static $db = [
@@ -154,7 +174,24 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             'title' => 'IP Address',
             'filter' => 'PartialMatchFilter',
         ],
+        'Amount' => [
+            'title' => 'Amount (e.g. 129.50)',
+            'field' => TextField::class,
+            'filter' => EcommercePaymentAmountFilter::class,
+        ],
+        // the name is only there because a search field needs a real field or relation to hang on to;
+        // the filter looks at the payer in all the places that we know (see EcommercePaymentPayerFilter).
+        'PaidBy.Email' => [
+            'title' => 'Payer name or email',
+            'field' => TextField::class,
+            'filter' => EcommercePaymentPayerFilter::class,
+        ],
         'Status',
+        'ClassName' => [
+            'title' => 'Payment type',
+            'field' => EcommercePaymentTypeDropdownField::class,
+            'filter' => ExactMatchFilter::class,
+        ],
     ];
 
     /**
@@ -174,6 +211,11 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     private static $indexes = [
         'Status' => true,
         'LastEdited' => true,
+        // looking up the payments of an IP address (in a period), e.g. for security checks.
+        'IPAndCreated' => [
+            'type' => 'index',
+            'columns' => ['IP', 'Created'],
+        ],
     ];
 
     /**
@@ -234,7 +276,11 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         );
         $fields->replaceField(
             'PaidByID',
-            ReadonlyField::create('PaidByIDNice', 'Payment made by', DBField::create_field('HTMLText', '<a href="' . $this->PaidBy()->CMSEditLink() . '">' . $this->PaidBy()->getTitle() . '</a>'))
+            HTMLReadonlyField::create(
+                'PaidByIDNice',
+                'Payment made by',
+                $this->getPaidByHTML()
+            )
         );
         $fields->removeByName('AlternativeEndPoint');
         foreach ($fields->getDataFields() as $field) {
@@ -247,7 +293,98 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             }
         }
 
+        // who changed what, and when
+        if ($this->exists()) {
+            $fields->addFieldToTab(
+                'Root.History',
+                LiteralField::create('PaymentHistory', EcommercePaymentHistory::html($this))
+            );
+        }
+
         return $fields;
+    }
+
+    /**
+     * Who made this payment?  We try, in this order:
+     *  1. the member that is recorded on the payment (PaidBy),
+     *  2. the member of the order,
+     *  3. the member with the email address of the order (billing email first),
+     *  4. no member: just the email address of the order.
+     *
+     * @return array{member: ?Member, email: string, source: string, orderMember: ?Member}
+     */
+    public function getPayerDetails(): array
+    {
+        $order = $this->getOrderCached();
+
+        $orderMember = null;
+        if ($order instanceof Order && $order->exists() && $order->MemberID) {
+            $member = $order->Member();
+            if ($member && $member->exists()) {
+                $orderMember = $member;
+            }
+        }
+
+        $paidBy = $this->PaidByID ? $this->PaidBy() : null;
+        if ($paidBy && $paidBy->exists()) {
+            return ['member' => $paidBy, 'email' => (string) $paidBy->Email, 'source' => 'recorded on the payment', 'orderMember' => $orderMember];
+        }
+
+        if ($orderMember) {
+            return ['member' => $orderMember, 'email' => (string) $orderMember->Email, 'source' => 'member of the order', 'orderMember' => $orderMember];
+        }
+
+        $emails = [];
+        if ($order instanceof Order && $order->exists()) {
+            // the order can give us more than one address (separated by a semicolon)
+            $emails = array_values(array_filter(array_map(trim(...), explode(';', (string) $order->getOrderEmail()))));
+        }
+
+        foreach ($emails as $email) {
+            $member = Member::get()->filter(['Email' => $email])->first();
+            if ($member && $member->exists()) {
+                return ['member' => $member, 'email' => $email, 'source' => 'found by the email address of the order', 'orderMember' => null];
+            }
+        }
+
+        if ([] !== $emails) {
+            return ['member' => null, 'email' => $emails[0], 'source' => 'email address of the order - there is no member with this email address', 'orderMember' => null];
+        }
+
+        return ['member' => null, 'email' => '', 'source' => 'unknown - the order has no member and no email address', 'orderMember' => null];
+    }
+
+    /**
+     * the answer of getPayerDetails as HTML (everything is escaped), for the CMS.
+     */
+    public function getPaidByHTML(): string
+    {
+        $details = $this->getPayerDetails();
+        $member = $details['member'];
+        $email = $details['email'];
+        if ($member) {
+            $title = trim((string) $member->getTitle());
+            $title = '' !== $title ? $title : ($email ?: 'Member #' . $member->ID);
+            $html = '<a href="' . Convert::raw2att(CMSEditLinkAPI::find_edit_link_for_object($member)) . '" target="_blank">' . Convert::raw2xml($title) . '</a>';
+            if ($email && $email !== $title) {
+                $html .= ' &lt;' . Convert::raw2xml($email) . '&gt;';
+            }
+        } elseif ('' !== $email) {
+            $html = '<a href="mailto:' . Convert::raw2att($email) . '">' . Convert::raw2xml($email) . '</a>';
+        } else {
+            $html = '<strong>unknown</strong>';
+        }
+
+        $html .= ' <span style="opacity: 0.7;">(' . Convert::raw2xml($details['source']) . ')</span>';
+
+        // the person that paid is not always the person that placed the order (e.g. staff taking a payment).
+        $orderMember = $details['orderMember'];
+        if ($orderMember && (! $member || $orderMember->ID !== $member->ID)) {
+            $html .= '<br />Order placed by: <a href="' . Convert::raw2att(CMSEditLinkAPI::find_edit_link_for_object($orderMember)) . '" target="_blank">'
+                . Convert::raw2xml(trim((string) $orderMember->getTitle()) ?: (string) $orderMember->Email) . '</a>';
+        }
+
+        return $html;
     }
 
     /**
@@ -303,7 +440,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         }
 
         $order = $this->getOrderCached();
-        if ($order && $order->exists()) {
+        if ($order instanceof Order && $order->exists()) {
             return $order->canView();
         }
 
@@ -584,6 +721,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             if ($methodClass::config()->get('method_disabled')) {
                 $methodFields->addExtraClass('methodDisabled');
             }
+
             // Add those fields to the initial FieldSet we first created
             $fields->push($methodFields);
         }
@@ -708,7 +846,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        $this->PaidByID = Security::getCurrentUser()?->ID;
+        // only record who paid ONCE.  This used to be set on every write, so a payment that was updated
+        // by someone else (staff in the CMS, a payment provider callback without a user) lost its payer.
+        if (! $this->PaidByID) {
+            $currentUserID = Security::getCurrentUser()?->ID;
+            if ($currentUserID) {
+                $this->PaidByID = $currentUserID;
+            }
+        }
     }
 
     /**
@@ -720,7 +865,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         parent::onAfterWrite();
         $order = $this->getOrderCached();
-        if ($order && is_a($order, EcommerceConfigClassNames::getName(Order::class)) && $order->IsSubmitted()) {
+        if ($order instanceof Order && is_a($order, EcommerceConfigClassNames::getName(Order::class)) && $order->IsSubmitted()) {
             $order->tryToFinaliseOrder();
         }
     }
@@ -731,15 +876,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     protected function setClientIP()
     {
-        $proxy = null;
-        $ip = null;
-        if (Controller::curr() instanceof Controller) {
-            $ip = Controller::curr()->getRequest()->getIP();
-        }
+        // the real IP address of the visitor (also behind CloudFlare).
+        $ip = EcommerceCountry::get_ip();
+        $ip = '' !== $ip ? $ip : null;
 
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            //swapsies
-            $proxy = $ip;
+        // the server that connected to us, if that is not the visitor (e.g. CloudFlare).
+        $proxy = null;
+        $peer = isset($_SERVER['REMOTE_ADDR']) && is_string($_SERVER['REMOTE_ADDR']) ? trim($_SERVER['REMOTE_ADDR']) : '';
+        if ('' !== $peer && filter_var($peer, FILTER_VALIDATE_IP) && $peer !== $ip) {
+            $proxy = $peer;
         }
 
         // Only set the IP and ProxyIP if none currently set

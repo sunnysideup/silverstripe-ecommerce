@@ -577,6 +577,15 @@ class ProductGroup extends Page
     }
 
     /**
+     *
+     * @return DataList
+     */
+    public function Products()
+    {
+        return $this->getProducts();
+    }
+
+    /**
      * @EcommerceCache candidate?
      *
      * @return DataList
@@ -608,7 +617,7 @@ class ProductGroup extends Page
             while (self::$parentGroupCache[$this->ID]) {
                 $obj = self::$parentGroupCache[$this->ID];
                 $nextParent = $obj->ParentGroup();
-                if ($nextParent && $nextParent->ClassName === $this->ClassName) {
+                if ($nextParent instanceof \Sunnysideup\Ecommerce\Pages\ProductGroup && $nextParent->ClassName === $this->ClassName) {
                     self::$parentGroupCache[$this->ID] = $nextParent;
                 } else {
                     //important to return here...
@@ -673,7 +682,7 @@ class ProductGroup extends Page
     public function TopParentGroup(): ProductGroup
     {
         $parent = $this->ParentGroup();
-        self::$topParentGroupCache[$this->ID] = $parent && $parent->exists() ? $parent->TopParentGroup() : $this;
+        self::$topParentGroupCache[$this->ID] = $parent instanceof \Sunnysideup\Ecommerce\Pages\ProductGroup && $parent->exists() ? $parent->TopParentGroup() : $this;
 
         return self::$topParentGroupCache[$this->ID];
     }
@@ -832,27 +841,6 @@ class ProductGroup extends Page
         ProductGroupSearchTable::remove_product_group($this);
     }
 
-    /**
-     * returns a URL without the -2 or -3, at the end,
-     * so that the URLSegment can be used as a code.
-     *
-     * @return string [description]
-     */
-    public function CleanURLSegment(): string
-    {
-        $urlSegment = $this->URLSegment;
-        $x = 2;
-        while ($x < 10) {
-            if (substr((string) $urlSegment, -2) === '-' . $x) {
-                return substr((string) $urlSegment, 0, -2);
-            }
-
-            ++$x;
-        }
-
-        return $urlSegment;
-    }
-
     protected function getTemplateForSelectionOfProducts(): string
     {
         return $this->Config()->get('template_for_selection_of_products');
@@ -981,7 +969,7 @@ class ProductGroup extends Page
 
             if (! $value || 'inherit' === $value) {
                 $parent = $this->ParentGroup();
-                if ($parent && $parent->exists() && $parent->ID !== $this->ID) {
+                if ($parent instanceof \Sunnysideup\Ecommerce\Pages\ProductGroup && $parent->exists() && $parent->ID !== $this->ID) {
                     $value = $parent->recursiveValue($fieldNameOrMethod, $default);
                 } else {
                     $value = EcommerceConfig::inst()->recursiveValue($fieldNameOrMethod, $default);

@@ -2,10 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
+use Throwable;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\OneTimeCode\ClientIp;
 
 /**
  * A simple way to limit how many times something can be tried by one visitor,
@@ -24,22 +27,13 @@ class AttemptLimiter
 {
     use Injectable;
 
-    protected string $name;
-
-    protected int $maxAttempts;
-
-    protected int $seconds;
-
     /**
      * @param string $name        - what is being limited (e.g. RegistrationEmailTaken)
      * @param int    $maxAttempts - the number of attempts that are allowed in the time period
      * @param int    $seconds     - the time period
      */
-    public function __construct(string $name, int $maxAttempts = 5, int $seconds = 3600)
+    public function __construct(protected string $name, protected int $maxAttempts = 5, protected int $seconds = 3600)
     {
-        $this->name = $name;
-        $this->maxAttempts = $maxAttempts;
-        $this->seconds = $seconds;
     }
 
     /**
@@ -66,15 +60,16 @@ class AttemptLimiter
             $attempts[] = time();
             $session->set($this->sessionKey(), $attempts);
         }
+
         // ip address
         $cache = $this->getCache();
-        if ($cache) {
+        if ($cache instanceof CacheInterface) {
             $key = $this->ipKey();
             $attempts = $this->ipAttempts();
             $attempts[] = time();
             try {
                 $cache->set($key, $attempts, $this->seconds);
-            } catch (\Throwable) {
+            } catch (Throwable) {
                 // if the cache is not available, then we still have the session.
             }
         }
@@ -107,12 +102,13 @@ class AttemptLimiter
     protected function ipAttempts(): array
     {
         $cache = $this->getCache();
-        if (! $cache) {
+        if (!$cache instanceof CacheInterface) {
             return [];
         }
+
         try {
             $attempts = $cache->get($this->ipKey());
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return [];
         }
 
@@ -124,6 +120,7 @@ class AttemptLimiter
         if (! is_array($attempts)) {
             return [];
         }
+
         $cutoff = time() - $this->seconds;
 
         return array_values(array_filter($attempts, static fn ($ts) => is_int($ts) && $ts > $cutoff));
@@ -142,9 +139,11 @@ class AttemptLimiter
 
     protected function getIp(): string
     {
-        $request = Controller::curr() instanceof Controller ? Controller::curr()->getRequest() : null;
+        // the real IP address of the visitor (also behind CloudFlare).
+        // IPv6 addresses count as their /64: one visitor usually has a whole /64 for themselves.
+        $ip = EcommerceCountry::get_ip();
 
-        return (string) ($request?->getIP() ?? 'unknown');
+        return '' !== $ip ? ClientIp::bucket($ip) : 'unknown';
     }
 
     protected function getSession()
@@ -158,7 +157,7 @@ class AttemptLimiter
     {
         try {
             return Injector::inst()->get(CacheInterface::class . '.Ecommerce');
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return null;
         }
     }

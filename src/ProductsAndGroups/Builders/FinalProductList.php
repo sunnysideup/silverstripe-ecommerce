@@ -338,9 +338,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
 
     public function getRawCountCached(): int
     {
-        if (null === $this->rawCountCachedCache) {
-            $this->rawCountCachedCache = $this->getRawCount();
-        }
+        $this->rawCountCachedCache ??= $this->getRawCount();
 
         return $this->rawCountCachedCache;
     }

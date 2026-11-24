@@ -45,12 +45,14 @@ class InternalItemToTitle extends Controller
         if (! is_string($title)) {
             $title = '';
         }
+
         // values are only ever used in ORM filters (parameterised) or HTML-escaped on output
         $title = str_replace(["\r", "\n", "\t"], ',', $title);
         $array = explode(',', $title);
-        $array = array_map('trim', $array);
+        $array = array_map(trim(...), $array);
         $array = array_filter($array);
         $array = array_unique($array);
+
         $html = '
         <h1>Full Product Names ' . count($array) . '</h1>
         <p><a href="' . Convert::raw2att($this->Link()) . '">Try again</a></p>

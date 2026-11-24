@@ -228,7 +228,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         }
 
         $order = $this->getOrderCached();
-        if ($order && $order->exists()) {
+        if ($order instanceof Order && $order->exists()) {
             return $order->canView();
         }
 

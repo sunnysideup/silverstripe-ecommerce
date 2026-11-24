@@ -236,9 +236,8 @@ abstract class OrderEmail extends Email
         $orderStep = $this->order->Status();
         if ($orderStep) {
             return $orderStep->hasBeenSent($this->order);
-        } else {
-            user_error('Order Step not found for Order ID: ' . $this->order->ID, E_USER_NOTICE);
         }
+        user_error('Order Step not found for Order ID: ' . $this->order->ID, E_USER_NOTICE);
 
         return true;
     }

@@ -256,6 +256,7 @@ abstract class BaseApplyer
                 if (! is_scalar($param)) {
                     continue;
                 }
+
                 // the param ends up in the SQL so it must be a number or a properly quoted and escaped string.
                 $param = is_numeric($param) ? (string) (0 + $param) : DB::get_conn()->quoteString((string) $param);
                 $sql = str_replace(self::SQL_PARAM_PLACEHOLDER, $param, $sql);

@@ -341,19 +341,21 @@ class CheckoutPageController extends CartPageController
 
         $this->steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         $this->currentStep = $this->request->Param('ID');
-        if (! ($this->currentStep && in_array($this->currentStep, $this->steps, true))) {
+        if (!$this->currentStep || !in_array($this->currentStep, $this->steps, true)) {
             $this->currentStep = $this->steps[array_key_first($this->steps)];
         }
 
         //redirect to current order -
         // this is only applicable when people submit order (start to pay)
         // and then return back
-        $checkoutPageCurrentOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID');
-        if ($checkoutPageCurrentOrderID && $this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
-            $this->clearRetrievalOrderID();
-        }
+        // Only for an order that this visitor is allowed to see (see CartPageController::init):
+        // the session value gives access to the order on the order confirmation page.
+        if ($this->currentOrder && $this->currentOrderAccessGranted) {
+            $checkoutPageCurrentOrderID = (int) $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID');
+            if ($checkoutPageCurrentOrderID && (int) $this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
+                $this->clearRetrievalOrderID();
+            }
 
-        if ($this->currentOrder) {
             $this->setRetrievalOrderID($this->currentOrder->ID);
         }
 

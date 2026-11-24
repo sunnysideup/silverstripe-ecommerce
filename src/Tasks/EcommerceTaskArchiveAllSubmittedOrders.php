@@ -8,6 +8,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
@@ -33,6 +34,10 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
+        if (! DestructiveTaskGuard::mayRun(null, $this, 'Moves all submitted orders to the Archived order step.', DestructiveTaskGuard::ANYWHERE)) {
+            return Command::FAILURE;
+        }
+
         //IMPORTANT - just in case!
         Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
         // Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);

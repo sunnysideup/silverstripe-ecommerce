@@ -7,6 +7,7 @@ use SilverStripe\Model\ArrayData;
 use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\Dev\TaskRunner;
@@ -287,7 +288,8 @@ class EcommerceDatabaseAdmin extends TaskRunner
         $renderer->renderInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
         $renderer->writePreOutcome();
         if (class_exists($taskName) && is_subclass_of($taskName, BuildTask::class)) {
-            $title = singleton($taskName)->getTitle();
+            // NB: the task name comes from the URL: escape everything that is shown.
+            $title = Convert::raw2xml((string) singleton($taskName)->getTitle());
             if (Director::is_cli()) {
                 echo "Running task '{$title}'...\n\n";
             } elseif (! Director::is_ajax()) {
@@ -306,7 +308,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
                 echo sprintf('<p>%s is disabled</p>', $title);
             }
         } else {
-            echo sprintf("Build task '%s' not found.", $taskName);
+            echo "Build task '" . Convert::raw2xml((string) $taskName) . "' not found.";
             if (class_exists($taskName)) {
                 echo "  It isn't a subclass of BuildTask.";
             }
@@ -314,7 +316,10 @@ class EcommerceDatabaseAdmin extends TaskRunner
             echo "\n";
         }
 
-        $this->displayCompletionMessage($task);
+        if ($task instanceof BuildTask) {
+            $this->displayCompletionMessage($task);
+        }
+
         $renderer->writePostOutcome();
         $renderer->writeContent($this);
         $renderer->writeFooter();
@@ -341,7 +346,8 @@ class EcommerceDatabaseAdmin extends TaskRunner
             }
         }
 
-        $buildTasksArray = array_unique($buildTasksArray);
+        // skip tasks that do not exist (any more): the menu would crash on them.
+        $buildTasksArray = array_filter(array_unique($buildTasksArray), class_exists(...));
         $arrayList = ArrayList::create();
         foreach ($buildTasksArray as $buildTask) {
             $obj = new $buildTask();

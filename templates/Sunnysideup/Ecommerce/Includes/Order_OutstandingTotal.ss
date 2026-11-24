@@ -23,8 +23,10 @@
         </tr>
     </tbody>
 </table>
-    <p class="paidNote">
-        <%t Order.OUTSTANDINGNOTE 'This order has an outstanding balance.' %>
-        <a href="$Link#PaymentForm"><%t Order.PAYNOW 'Pay now' %></a>.
-    </p>
+<p class="paidNote">
+<% if $ShouldShowPaymentForm %>
+    <a href="$Link#OrderFormPayment_PaymentForm" class="button"><%t Order.PAYNOW 'Pay now' %></a>
+<% end_if %>
+    <%t Order.OUTSTANDINGNOTE 'This order has an outstanding balance.' %>
+</p>
 <% end_if %>

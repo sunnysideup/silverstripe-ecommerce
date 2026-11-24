@@ -34,6 +34,7 @@ use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -233,6 +234,29 @@ class Product extends Page implements BuyableModel
             'FileSort' => 'Int',
         ],
     ];
+
+    public function augmentDatabase(): void
+    {
+        parent::augmentDatabase();
+
+        // Default join table format is {OwnerClass}_{RelationName}
+        DB::require_index(
+            'Product_AdditionalImages',
+            'ImageSortIndex',
+            [
+                'type' => 'index',
+                'columns' => ['ImageSortIndex'],
+            ]
+        );
+        DB::require_index(
+            'Product_AdditionalFiles',
+            'FileSortIndex',
+            [
+                'type' => 'index',
+                'columns' => ['FileSortIndex'],
+            ]
+        );
+    }
 
     /**
      * Standard SS variable.
@@ -520,7 +544,10 @@ class Product extends Page implements BuyableModel
         if ($this->canPurchase()) {
             $fields->addFieldToTab(
                 'Root.Main',
-                LiteralField::create('AddToCartLink', '<p class="message good"><a href="' . $this->AddLink() . '" target="_parent">' . _t('Product.ADD_TO_CART', 'add to cart') . '</a></p>')
+                new LiteralField(
+                    'AddToCartLink',
+                    '<p class="message good">' . _t('Product.CAN_BE_ADDED_TO_CART', 'this product can be added to cart') . '</p>'
+                )
             );
         } else {
             $fields->addFieldToTab(
@@ -847,6 +874,18 @@ class Product extends Page implements BuyableModel
         return null;
     }
 
+
+
+    public function BestAvailableImageScaled()
+    {
+        $image = $this->BestAvailableImage();
+        if ($image instanceof Image && $image->exists()) {
+            return $image->ScaleMinDimensions();
+        }
+
+        return $this->DefaultImage();
+    }
+
     /**
      * Returns the direct parent group for the product.
      *
@@ -1106,6 +1145,16 @@ class Product extends Page implements BuyableModel
         return str_replace('?stage=Stage', '', $this->AbsoluteLink());
     }
 
+    public function SecurityIDToken(): string
+    {
+        return (string) SecurityToken::getSecurityID();
+    }
+
+    public function AddSecurityIdToLinks(): bool
+    {
+        return ShoppingCartController::add_security_id_to_links();
+    }
+
     /**
      * passing on shopping cart links ...is this necessary?? ...why not just pass the cart?
      *
@@ -1205,7 +1254,7 @@ class Product extends Page implements BuyableModel
         );
     }
 
-    public function RemoveFromSaleLink()
+    public function RemoveFromSaleLink(): string
     {
         return ShoppingCartController::remove_from_sale_link($this->ID, $this->ClassName);
     }
@@ -1384,13 +1433,15 @@ class Product extends Page implements BuyableModel
             return $extended;
         }
 
-        if (! EcommerceCountry::allow_sales()) {
-            return false;
-        }
+        // NOTE: there is deliberately NO visitor country check here (EcommerceCountry::allow_sales()).
+        // canPurchase() decides if a product is LISTED, and lists are cached for all visitors
+        // (see BaseProductList::removeExcludedProducts). A visitor / bot from a country with
+        // DoNotAllowSales = 1 that built the cache would hide every product for everybody.
+        // If you need to block sales to certain countries, do it when adding to the cart / at checkout.
 
         if ($checkPrice) {
             $price = $this->getCalculatedPrice();
-            if (0 === $price && ! $config->AllowFreeProductPurchase) {
+            if ((float) 0 === (float) $price && ! $config->AllowFreeProductPurchase) {
                 return false;
             }
         }
@@ -1506,7 +1557,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><b>Can Purchase (overal calculation):</b> ' . ($this->canPurchase() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Shop Open:</b> ' . $config->ShopClosed !== '' ? 'NO' : 'YES </li>';
         $html .= '<li><b>Extended Country Can Purchase:</b> ' . (null === $this->extendedCan('canPurchaseByCountry', null) ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
-        $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . '):</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
+        $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . ') - information only, not used in canPurchase:</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Class Name for OrderItem:</b> ' . $this->classNameForOrderItem() . ' </li>';
         $html .= '<li><b>Quantity Decimals:</b> ' . $this->QuantityDecimals() . ' </li>';
         $html .= '<li><b>Is In Cart:</b> ' . ($this->IsInCart() ? 'YES' : 'NO') . ' </li>';

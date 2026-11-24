@@ -10,7 +10,6 @@ use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Removes superfluous entries in Product_ProductGroups.

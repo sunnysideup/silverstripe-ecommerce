@@ -3,14 +3,13 @@
 namespace Sunnysideup\Ecommerce\Control;
 
 use Override;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\Model\ModelData;
@@ -56,24 +55,6 @@ class ShoppingCartController extends Controller
     private static bool $check_security_id_for_links = true;
 
     /**
-     * We need to only use the Security ID on a few
-     * actions, these are listed here.
-     *
-     * @var array
-     */
-    protected $methodsRequiringSecurityID = [
-        // 'additem', // actions could be cached
-        // 'removeitem', // actions could be cached
-        // 'removeallitem', // actions could be cached
-        // 'removeallitemandedit', // actions could be cached
-        'removemodifier',
-        'addmodifier',
-        'copyorder',
-        'deleteorder',
-        'save',
-    ];
-
-    /**
      * @var ShoppingCart
      */
     protected $cart;
@@ -90,32 +71,60 @@ class ShoppingCartController extends Controller
         '$Action//$ID/$OtherID/$Version' => 'handleAction',
     ];
 
-    private static $allowed_actions = [
+    private static $allowed_actions_as_simple_links = [
         'json',
         'index',
+        // products
+        'submittedbuyable',
+        // cart
+        'numberofitemsincart',
+        'showcart',
+        'clearandlogout',
+        // admin only
+        // NB: the actions below that change data (clearandlogout, removefromsale, placeorderformember, loginas)
+        // can be reached with GET, but they only show a confirmation form
+        // and then need a POST with a valid SecurityID to actually do anything (see ConfirmAction).
+        'removefromsale', // need to be logged-in as shop assistant!
+        'placeorderformember', // need to be logged-in as admin
+        'loginas', // need to be logged-in as admin
+        'debug', // need to be logged-in as admin
+        'ajaxtest', // need to be logged-in as admin
+    ];
+
+    private static $allowed_actions = [
+        // general
+        'json',
+        'index',
+        // products get info only
+        'submittedbuyable',
+        // order get only
+        'numberofitemsincart',
+        'showcart',
+        // buyables
         'additem',
         'addreferral',
         'removeitem',
         'removeallitem',
         'removeallitemandedit',
+        'setquantityitem',
+        // modifiers
         'removemodifier',
         'addmodifier',
+        // order
         'setcountry',
         'setregion',
         'setcurrency',
-        'removefromsale',
-        'setquantityitem',
         'clear',
         'clearandlogout',
         'save',
         'deleteorder',
-        'numberofitemsincart',
-        'showcart',
         'loadorder',
         'copyorder',
+        // addresses
         'removeaddress',
-        'submittedbuyable',
-        'placeorderformember',
+        // admin
+        'removefromsale', // no need to set to  => 'ADMIN',
+        'placeorderformember', // no need to set to  => 'ADMIN',
         'loginas', // no need to set to  => 'ADMIN',
         'debug', // no need to set to  => 'ADMIN',
         'ajaxtest', // no need to set to  => 'ADMIN',
@@ -147,13 +156,18 @@ class ShoppingCartController extends Controller
         return self::create_link($action);
     }
 
+    public static function add_security_id_to_links(): bool
+    {
+        return Config::inst()->get(self::class, 'add_security_id_to_links');
+    }
+
     /**
      * @param int    $buyableID
      * @param string $classNameForBuyable
      *
      * @return string
      */
-    public static function add_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
+    public static function add_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = []): string
     {
         $classNameForBuyable = ClassHelpers::sanitise_class_name($classNameForBuyable);
 
@@ -240,6 +254,8 @@ class ShoppingCartController extends Controller
      */
     public static function remove_address_link($addressID, $addressClassName, array $parameters = [])
     {
+        $addressClassName = ClassHelpers::sanitise_class_name($addressClassName);
+
         return self::create_link('removeaddress/' . $addressID . '/' . $addressClassName . '/' . self::params_to_get_string($parameters));
     }
 
@@ -294,7 +310,7 @@ class ShoppingCartController extends Controller
     public static function copy_order_link(int $orderID, $parameters = []): string
     {
         $order = Order::get_order_cached($orderID);
-        if ($order && $order->IsSubmitted()) {
+        if ($order instanceof Order && $order->IsSubmitted()) {
             return self::create_link('copyorder/' . $orderID . '/' . self::params_to_get_string($parameters));
         }
 
@@ -316,11 +332,44 @@ class ShoppingCartController extends Controller
      *
      * @return string
      */
-    public static function remove_from_sale_link($id, $className)
+    public static function remove_from_sale_link($id, $className): string
     {
-        $className = ClassHelpers::sanitise_class_name($className);
+        if (EcommerceRole::current_member_is_shop_assistant()) {
+            $className = ClassHelpers::sanitise_class_name($className);
+            return self::create_link('removefromsale/' . $className . '/' . $id . '/');
+        }
 
-        return self::create_link('removefromsale/' . $className . '/' . $id . '/');
+        return '';
+    }
+
+    /**
+     * @param int    $id
+     * @param string $className
+     *
+     * @return string
+     */
+    public static function place_order_for_member_link(int $memberID): string
+    {
+        if (EcommerceRole::current_member_is_shop_assistant()) {
+            return self::create_link('placeorderformember/' . $memberID . '/');
+        }
+
+        return '';
+    }
+
+    /**
+     * @param int    $id
+     * @param string $className
+     *
+     * @return string
+     */
+    public static function login_as_link(int $memberID): string
+    {
+        if (Permission::check('ADMIN')) {
+            return self::create_link('loginas/' . $memberID . '/');
+        }
+
+        return '';
     }
 
     /**
@@ -483,7 +532,7 @@ class ShoppingCartController extends Controller
      */
     public function setcountry(HTTPRequest $request)
     {
-        $countryCode = Convert::raw2sql($request->param('ID'));
+        $countryCode = (string) $request->param('ID');
         //set_country will check if the country code is actually allowed....
         $this->cart->setCountry($countryCode);
 
@@ -508,7 +557,7 @@ class ShoppingCartController extends Controller
      */
     public function setcurrency(HTTPRequest $request)
     {
-        $currencyCode = Convert::raw2sql($request->param('ID'));
+        $currencyCode = (string) $request->param('ID');
         $this->cart->setCurrency($currencyCode);
 
         return $this->cart->setMessageAndReturn();
@@ -526,7 +575,9 @@ class ShoppingCartController extends Controller
             $id = (int) $request->param('OtherID');
             if ($id && EcommerceDBConfig::is_buyable($className)) {
                 $obj = $className::get_by_id($id);
-                if ($obj && $obj->hasField('AllowPurchase')) {
+                // a shop assistant is not necessarily allowed to edit (or publish) pages / products in the CMS
+                $canChange = $obj && $obj->canEdit() && (! ($obj instanceof SiteTree) || $obj->canPublish());
+                if ($obj && $canChange && $obj->hasField('AllowPurchase')) {
                     if (! ConfirmAction::isConfirmed($request)) {
                         return ConfirmAction::form(
                             $request,
@@ -534,6 +585,7 @@ class ShoppingCartController extends Controller
                             _t('ShoppingCartController.CONFIRM_REMOVEFROMSALE_BUTTON', 'Remove from sale')
                         );
                     }
+
                     $obj->AllowPurchase = 0;
                     if ($obj instanceof SiteTree) {
                         $obj->writeToStage(Versioned::DRAFT);
@@ -584,15 +636,17 @@ class ShoppingCartController extends Controller
                 _t('ShoppingCartController.CONFIRM_CLEARANDLOGOUT_BUTTON', 'Clear cart and log out')
             );
         }
+
         $this->cart->clear();
-        $member = Security::getCurrentUser();
-        if ($member) {
-            $this->redirect(Security::logout_url());
-        } else {
-            $this->redirect(Director::baseURL());
+        if (Security::getCurrentUser()) {
+            // We log out here (this is a POST with a valid security token, see ConfirmAction) rather than sending
+            // people to the Security/logout page: after that page, people are sent back to the page they came from,
+            // and if that page needs a log in (e.g. the account page) they would land on the login page.
+            Injector::inst()->get(IdentityStore::class)->logOut($request);
         }
 
-        return [];
+        // always go to the home page.
+        return $this->redirect(Director::baseURL());
     }
 
     /**
@@ -629,10 +683,10 @@ class ShoppingCartController extends Controller
     {
         $order = $this->cart->CurrentOrder();
         if ($order) {
-            return (int) $order->TotalItems($recalculate = false);
+            return (float) $order->TotalItems($recalculate = false);
         }
 
-        return 0;
+        return (float) 0;
     }
 
     /**
@@ -707,8 +761,9 @@ class ShoppingCartController extends Controller
      */
     public function submittedbuyable(HTTPRequest $request)
     {
-        $buyableClassName = Convert::raw2sql($this->getRequest()->param('ID'));
-        $buyableClassName = ClassHelpers::unsanitise_class_name($buyableClassName);
+        // The class name is never used in SQL: is_buyable() checks that it is a real class that implements BuyableModel.
+        // (NB: in this action ID is the class name and OtherID the ID. In buyable() it is the other way around.)
+        $buyableClassName = ClassHelpers::unsanitise_class_name((string) $this->getRequest()->param('ID'));
 
         $buyableID = (int) $this->getRequest()->param('OtherID');
         $version = (int) $this->getRequest()->param('Version');
@@ -755,6 +810,7 @@ class ShoppingCartController extends Controller
                         _t('ShoppingCartController.CONFIRM_PLACEORDERFORMEMBER_BUTTON', 'Start new order')
                     );
                 }
+
                 $newOrder = Order::create();
                 //copying fields.
                 $newOrder->MemberID = $member->ID;
@@ -766,12 +822,10 @@ class ShoppingCartController extends Controller
             }
 
             user_error('Can not find this member.');
-        } else {
-            //echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/placeorderformember/".$request->param("ID")."/")."\">log in</a> first.";
-            return Security::permissionFailure($this);
         }
 
-        return '404-error-placeholder-for-member';
+        return Security::permissionFailure($this);
+
     }
 
     /**
@@ -793,6 +847,7 @@ class ShoppingCartController extends Controller
                         _t('ShoppingCartController.CONFIRM_LOGINAS_BUTTON', 'Log in as customer')
                     );
                 }
+
                 Security::setCurrentUser($newMember);
                 Injector::inst()->get(IdentityStore::class)->logIn($newMember);
 
@@ -816,7 +871,7 @@ class ShoppingCartController extends Controller
     #[Override]
     public function Debug(): ModelData | string
     {
-        if (Director::isDev() || EcommerceRole::current_member_is_shop_admin()) {
+        if (Permission::check('ADMIN')) {
             return $this->cart->debug();
         }
 
@@ -832,9 +887,11 @@ class ShoppingCartController extends Controller
      */
     public function ajaxtest(HTTPRequest $request)
     {
-        if (! (Director::isDev() || Permission::check('ADMIN'))) {
+        // developers only: allowed in dev mode, or for admins.
+        if (! Director::isDev() && ! Permission::check('ADMIN')) {
             return Security::permissionFailure($this);
         }
+
         // we want the same response as for an ajax request
         $_REQUEST['ajax'] = 1;
         $v = (string) $this->cart->setMessageAndReturn('test only');
@@ -843,6 +900,7 @@ class ShoppingCartController extends Controller
         if (null !== $decoded) {
             $v = (string) json_encode($decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
+
         $response = HTTPResponse::create($v);
         $response->addHeader('Content-Type', 'text/plain; charset=utf-8');
 
@@ -854,20 +912,20 @@ class ShoppingCartController extends Controller
     {
         parent::init();
         $action = $this->request->param('Action');
-        if ($this->should_check_SecurityID($action)) {
-            $savedSecurityID = $this->getRequest()->getSession()->get('SecurityID');
-            if ($savedSecurityID) {
-                if (! isset($_GET['SecurityID'])) {
-                    $_GET['SecurityID'] = '';
+        if ($this->shouldCheckSecurityID($action)) {
+            $request = $this->getRequest();
+            if (! $request->isPOST()) {
+                if (Director::isDev()) {
+                    user_error('SecurityID check failed for action: ' . $action . ' - only POST requests are allowed for this action.', E_USER_WARNING);
                 }
 
-                if ($savedSecurityID) {
-                    if ($_GET['SecurityID'] !== $savedSecurityID) {
-                        $this->httpError(400, "Security token doesn't match, possible CSRF attack.");
-                    }
-
-                    //all OK!
+                $this->httpError(400);
+            } elseif (!SecurityToken::inst()->checkRequest($request)) {
+                if (Director::isDev()) {
+                    user_error('SecurityID check failed for action: ' . $action . ' - SecurityID is missing or invalid.', E_USER_WARNING);
                 }
+
+                $this->httpError(400);
             }
         }
 
@@ -879,15 +937,18 @@ class ShoppingCartController extends Controller
      * @param null|string $action the Action parameter
      * @return bool
      */
-    private function should_check_SecurityID(?string $action): bool
+    private function shouldCheckSecurityID(?string $action = null): bool
     {
+        $config = $this->config();
         if (!$action) {
             return false;
         }
-        if (!Config::inst()->get(ShoppingCartController::class, 'check_security_id_for_links')) {
+
+        if (!$config->get('check_security_id_for_links')) {
             return false;
         }
-        return in_array($action, $this->methodsRequiringSecurityID, true);
+
+        return ! in_array($action, $config->get('allowed_actions_as_simple_links'), true);
     }
 
     /**
@@ -923,9 +984,7 @@ class ShoppingCartController extends Controller
     {
         $token = SecurityToken::inst();
         if (Config::inst()->get(ShoppingCartController::class, 'add_security_id_to_links')) {
-            if (! isset($array['SecurityID'])) {
-                $array['SecurityID'] = $token->getValue();
-            }
+            $array['SecurityID'] ??= $token->getValue();
         }
 
         return '?' . http_build_query($array);
@@ -938,8 +997,8 @@ class ShoppingCartController extends Controller
      */
     protected function buyable()
     {
-        $buyableClassName = Convert::raw2sql($this->getRequest()->param('OtherID'));
-        $buyableClassName = ClassHelpers::unsanitise_class_name($buyableClassName);
+        // The class name is never used in SQL: is_buyable() checks that it is a real class that implements BuyableModel.
+        $buyableClassName = ClassHelpers::unsanitise_class_name((string) $this->getRequest()->param('OtherID'));
 
         $buyableID = (int) $this->getRequest()->param('ID');
         if ($buyableClassName && $buyableID) {
@@ -995,4 +1054,5 @@ class ShoppingCartController extends Controller
 
         return $this->redirect('page-not-found');
     }
+
 }

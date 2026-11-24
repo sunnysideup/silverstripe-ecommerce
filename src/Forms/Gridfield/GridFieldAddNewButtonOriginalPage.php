@@ -49,7 +49,8 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
         if ($page) {
             $query['ParentID'] = $page->ID;
         }
-        $queryString = $query ? ('?' . http_build_query($query)) : '';
+
+        $queryString = $query !== [] ? ('?' . http_build_query($query)) : '';
 
         $data = ArrayData::create([
             'NewLink' => '/admin/pages/add' . $queryString,

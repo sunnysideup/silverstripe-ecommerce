@@ -127,7 +127,10 @@ interface BuyableModel
      */
     public function HasBeenSold(): bool;
 
+    public function SecurityIDToken(): string;
+
     //LINKS
+    public function AddSecurityIdToLinks(): bool;
 
     /**
      * passing on shopping cart links ...is this necessary?? ...why not just pass the cart?

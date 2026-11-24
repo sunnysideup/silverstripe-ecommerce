@@ -8,6 +8,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -69,13 +70,14 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
      */
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        // @TODO (SS6 upgrade) - Check if dev mode detection is still needed/available
-        // Original code checked Director::isDev() and Director::isLive()
-
         if (!$input->getOption('confirm')) {
             $output->writeln('ERROR: This command will delete ALL orders permanently!');
             $output->writeln('To confirm, run with --confirm flag:');
             $output->writeln('  sake ecommerce:delete-all-orders --confirm');
+            return Command::FAILURE;
+        }
+
+        if (! DestructiveTaskGuard::mayRun(null, $this, 'Deletes ALL orders and payments that have ever been placed.', DestructiveTaskGuard::DEV_ONLY)) {
             return Command::FAILURE;
         }
 

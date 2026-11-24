@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Reports;
 
 use SilverStripe\ORM\DataList;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\DropdownField;
@@ -63,7 +62,7 @@ trait EcommerceProductReportTrait
             $list = $this->updateEcommerceList($list);
         }
 
-        $title = (string) Convert::raw2sql($params['Title'] ?? '');
+        $title = (string) ($params['Title'] ?? '');
         if ($title) {
             $list = $list->filterAny(
                 [

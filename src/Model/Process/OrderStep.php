@@ -12,7 +12,9 @@ use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\HeaderField;
@@ -636,14 +638,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
             $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = HTMLEditorField::create('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
             $htmlEditorField->setRows(3);
-            $orderEmaiLRecordsField = $fields->dataFieldByName('OrderEmailRecords');
-            if ($orderEmaiLRecordsField) {
-                $config = $orderEmaiLRecordsField->getConfig();
-                $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
-                $config->removeComponentsByType(GridFieldDeleteAction::class);
-            }
         } else {
-            $fields->removeFieldFromTab('Root', 'OrderEmailRecords');
             $fields->removeFieldFromTab('Root.Main', 'EmailSubject');
             $fields->removeFieldFromTab('Root.Main', 'CustomerMessage');
         }
@@ -681,13 +676,96 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         );
         $exportButton = Injector::inst()->createWithArgs(GridFieldExportButton::class, ['buttons-before-left']);
         $exportButton->setExportColumns($this->getExportFieldsForOrder());
-        $fields->dataFieldByName('Orders')
-            ->getConfig()
-            ->addComponent(
-                $exportButton
-            );
+
+        $ordersField = $fields->dataFieldByName('Orders');
+        if ($ordersField) {
+            $config = $ordersField->setConfig(GridFieldConfig_RecordViewer::create());
+            $ordersField->getConfig()->addComponent($exportButton);
+        }
+
+        $this->addEmailRecordsToCMSFields($fields);
+        $this->addRelatedLogsToCMSFields($fields);
 
         return $fields;
+    }
+
+    /**
+     * Adds an "Emails" tab showing all emails (for all orders) that have been
+     * sent during this step. This includes emails to the admin, store, etc... not just
+     * emails to the customer.
+     */
+    protected function addEmailRecordsToCMSFields(FieldList $fields): void
+    {
+        //replace the default (editable) has_many scaffold
+        $fields->removeByName('OrderEmailRecords');
+        if (! $this->exists()) {
+            return;
+        }
+
+        $fields->addFieldToTab(
+            'Root.Emails',
+            GridField::create(
+                'OrderEmailRecords',
+                _t('OrderStep.EMAILS_SENT', 'Emails sent during this step'),
+                OrderEmailRecord::get()->filter(['OrderStepID' => $this->ID])->sort(['ID' => 'DESC']),
+                GridFieldConfig_RecordViewer::create(50)
+            )
+        );
+    }
+
+    /**
+     * Adds a "Logs" tab showing all log entries (for all orders)
+     * that are related to this step.
+     */
+    protected function addRelatedLogsToCMSFields(FieldList $fields): void
+    {
+        if (! $this->exists()) {
+            return;
+        }
+
+        $className = $this->getRelatedLogClassName();
+        if ('' === $className) {
+            return;
+        }
+
+        if(! class_exists($className)) {
+            user_error($className.' does not exist in the orderstep ID#:'. $this->ID);
+        }
+
+        $pluralName = $className::singleton()->i18n_plural_name();
+        $fields->addFieldsToTab(
+            'Root.Logs',
+            [
+                LiteralField::create(
+                    'RelatedLogsIntro',
+                    '<p class="message notice">' . _t(
+                        'OrderStep.RELATED_LOGS_INTRO',
+                        'All {name} entries (for all orders) related to this step, newest first.',
+                        ['name' => '<strong>' . $pluralName . '</strong>']
+                    ) . '</p>'
+                ),
+                GridField::create(
+                    'RelatedLogs',
+                    $pluralName,
+                    $className::get()->sort(['ID' => 'DESC']),
+                    GridFieldConfig_RecordViewer::create(50)
+                ),
+            ]
+        );
+    }
+
+    /**
+     * Returns the class name of the log entries that are related to this step,
+     * or an empty string if there are none.
+     */
+    public function getRelatedLogClassName(): string
+    {
+        $className = (string) $this->getRelevantLogEntryClassName();
+        if ('' === $className || '0' === $className || ! class_exists($className) || ! is_a($className, OrderStatusLog::class, true)) {
+            return '';
+        }
+
+        return $className;
     }
 
     /**
@@ -751,6 +829,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 'Root.Next',
                 [
                     ReadonlyField::create('StatusIDNotice', 'Info', $text),
+                ]
+            );
+            $fields->addFieldsToTab(
+                'Root.Process',
+                [
                     DropdownField::create(
                         'StatusID',
                         'Select Status - NOT RECOMMENDED',

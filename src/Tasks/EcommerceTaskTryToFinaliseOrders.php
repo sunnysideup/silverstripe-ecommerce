@@ -11,6 +11,7 @@ use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
@@ -41,6 +42,10 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
+        if (! DestructiveTaskGuard::mayRun(null, $this, 'Tries to finalise orders: this moves orders along and can send emails to customers.', DestructiveTaskGuard::ANYWHERE)) {
+            return Command::FAILURE;
+        }
+
         //IMPORTANT!
         if (! $this->sendEmails) {
             Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');

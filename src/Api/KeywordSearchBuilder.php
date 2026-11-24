@@ -46,7 +46,7 @@ class KeywordSearchBuilder
         $sql = $this->createSql('ProductSearchTable', 'ProductID', $phrase, $where, $limit);
         $result = $this->addPriceAdjustment(DB::prepared_query($sql, $this->ifParams));
         if ($this->debug) {
-            print_r($sql);
+            echo '<pre>' . htmlspecialchars(print_r($sql, true)) . '</pre>';
             echo $this->arrayToHtmlTable($result);
         }
 
@@ -61,6 +61,7 @@ class KeywordSearchBuilder
             $rows = DB::prepared_query($sql, $this->ifParams);
             echo $this->arrayToHtmlTable($rows);
         }
+
         return DB::prepared_query($sql, $this->ifParams)->keyedColumn();
     }
 
@@ -78,16 +79,6 @@ class KeywordSearchBuilder
         return $this->keywordPhrase;
     }
 
-    protected static $ifStatementCache;
-
-    /**
-     * the parameters (values for the ? placeholders) that go with $ifStatementCache.
-     * They always have to be cached (and reused) together with the statement.
-     *
-     * @var array
-     */
-    protected static $ifParamsCache = [];
-
     /**
      * creates three levels of searches that
      * can be executed one after the other, each
@@ -97,24 +88,16 @@ class KeywordSearchBuilder
      * @param mixed  $primaryField
      * @param mixed  $secondaryField
      */
-    protected function createIfStatements(string $phrase, $primaryField = 'Title', $secondaryField = 'Data')
+    protected function createIfStatements(string $phrase, $primaryField = 'Title', $secondaryField = 'Data'): void
     {
-        if (! is_null(self::$ifStatementCache)) {
-            $this->ifStatement = self::$ifStatementCache;
-            $this->ifParams = self::$ifParamsCache;
-
-            return null;
-        }
-
         $phrase = $this->cleanPhrase($phrase);
-        // also resets the parameters
         $this->resetIfStatement();
-        $this->startIfStatement();
         //make three levels of search
         if (strlen($phrase) < 2) {
-            return '"ID" < 0';
+            return;
         }
 
+        $this->startIfStatement();
         $wordAsArray = array_filter(explode(' ', $phrase));
         // create Field LIKE %AAAA% AND Field LIKE %BBBBB
         $searchStringAND = '';
@@ -127,6 +110,7 @@ class KeywordSearchBuilder
                 if (strlen($word) < 2) {
                     continue;
                 }
+
                 $searchStringArray[] = '"_FF_FIELD_GOES_HERE_" LIKE ?';
                 $searchStringANDParams[] = '%' . $this->escapeLike($word) . '%';
             }
@@ -166,9 +150,6 @@ class KeywordSearchBuilder
         }
 
         $this->addEndIfStatement($count);
-        self::$ifStatementCache = $this->ifStatement;
-        self::$ifParamsCache = $this->ifParams;
-        return null;
     }
 
     /**
@@ -215,15 +196,15 @@ class KeywordSearchBuilder
         $this->ifParams = array_merge($this->ifParams, array_values($whereParams), array_values($secondaryParams));
     }
 
-    protected function addEndIfStatement($count)
+    protected function addEndIfStatement($count): void
     {
         $this->ifStatement .= '999' . str_repeat(')', $count) . ') - "Boost" AS gp';
     }
 
     protected function createSql(string $table, string $idField, string $phrase, string $where, $limit): string
     {
-        if ($where !== '' && $where !== '0') {
-            $where = 'WHERE ' . $where;
+        if ($where === '') {
+            $where = '1=1';
         }
 
         $titleField = '';
@@ -231,27 +212,22 @@ class KeywordSearchBuilder
             $titleField = '"Title",';
         }
 
-        return '
-            SELECT
-                "' . $idField . '",
-                ' . $titleField . '
-                ' . $this->ifStatement . '
-            FROM "' . $table . '"
-            ' . $where . '
-            HAVING gp < 999
-            ORDER BY
-                gp ASC
-            LIMIT ' . $limit . ';';
+        $hasGp = $this->ifStatement !== '';
+        $gpField = $hasGp ? $this->ifStatement : '0 AS gp';
+        $fields = implode(', ', array_filter([$idField, $titleField, $gpField]));
+        $orderBy = $hasGp ? 'gp ASC' : "{$idField} DESC";
+        return "SELECT {$fields} FROM {$table} WHERE {$where} HAVING gp < 999 ORDER BY {$orderBy} LIMIT {$limit};";
     }
 
     /**
      * @param string $word (optional word within keywordPhrase)
      */
-    protected function replaceSearchPhraseOrWord(?string $word = '')
+    protected function replaceSearchPhraseOrWord(?string $word = ''): void
     {
         if (! $word) {
             $word = $this->keywordPhrase;
         }
+
         $likeWord = $this->escapeLike((string) $word);
         $replacements = SearchReplacement::get()
             ->where([
@@ -292,7 +268,7 @@ class KeywordSearchBuilder
             $html .= '<th>' . htmlspecialchars((string) $header) . '</th>';
         }
 
-        $html .= '</tr></thead><tbody>';
+        $html .= '<th>Page</th></tr></thead><tbody>';
 
         foreach ($rows as $row) {
             $html .= '<tr>';
@@ -300,6 +276,17 @@ class KeywordSearchBuilder
                 $value = $row[$header] ?? '';
                 $html .= '<td>' . htmlspecialchars((string) $value) . '</td>';
             }
+
+            $pageID = $row['ProductID'] ?? $row['ProductGroupID'] ?? 0;
+            $pageTitle = 'Unknown';
+            if ($pageID) {
+                $pageTitle = DB::prepared_query('SELECT "Title" FROM "SiteTree" WHERE "ID" = ?', [(int) $pageID])->value();
+                if (! $pageTitle) {
+                    $pageTitle = 'Unknown';
+                }
+            }
+
+            $html .= '<td>' . htmlspecialchars((string) $pageTitle) . '</td>';
             $html .= '</tr>';
         }
 
@@ -341,9 +328,9 @@ class KeywordSearchBuilder
 
     protected function cleanPhrase(string $phrase): string
     {
-        //remove special characters ...
-        // return ProductSearchFilter::keyword_sanitised($phrase);
-        // should be already done in ProductSearchFilter...
-        return $phrase;
+        // remove special characters (quotes, backslashes, %, etc.) and limit the length.
+        // This is normally already done in ProductSearchFilter, but this class should not depend on that
+        // (the sanitiser can safely be applied more than once).
+        return ProductSearchFilter::keyword_sanitised($phrase);
     }
 }

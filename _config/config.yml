@@ -47,4 +47,5 @@ Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin:
 #         - Sunnysideup-Ecommerce-Cms-SalesAdminExtras
 #         - Sunnysideup-Ecommerce-Cms-SalesAdminByPaymentType
 #         - Sunnysideup-Ecommerce-Cms-SalesAdminByOrderStep
+#         - Sunnysideup-Ecommerce-Cms-SalesAdminByDay
 #         - Sunnysideup-Ecommerce-Cms-SalesAdminProcess

@@ -19,6 +19,7 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Api\CartResponseAsArray;
@@ -677,7 +678,7 @@ class OrderItem extends OrderAttribute
     {
         $currentOrVersion = $current ? 'current' : 'version';
         $order = $this->getOrderCached();
-        $currentOrVersion = $order && $order->IsSubmitted() && $current === false ? 'version' : 'current';
+        $currentOrVersion = $order instanceof Order && $order->IsSubmitted() && $current === false ? 'version' : 'current';
 
         if (! isset($this->tempBuyableStore[$currentOrVersion])) {
             if (! $this->BuyableID) {
@@ -808,7 +809,7 @@ class OrderItem extends OrderAttribute
         $buyable = $this->getBuyableCached();
         if ($buyable && $buyable->exists()) {
             $order = $this->getOrderCached();
-            if ($order && $order->IsSubmitted()) {
+            if ($order instanceof Order && $order->IsSubmitted()) {
                 return Director::absoluteURL($buyable->VersionedLink());
             }
 
@@ -954,7 +955,16 @@ class OrderItem extends OrderAttribute
         return $this->Order()->CheckoutLink($action);
     }
 
+    public function SecurityIDToken(): string
+    {
+        return (string) SecurityToken::getSecurityID();
+    }
+
     //# Often Overloaded functions ##
+    public function AddSecurityIdToLinks(): bool
+    {
+        return ShoppingCartController::add_security_id_to_links();
+    }
 
     /**
      * @return string (URLSegment)

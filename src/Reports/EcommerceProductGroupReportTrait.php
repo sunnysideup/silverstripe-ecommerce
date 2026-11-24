@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Reports;
 
 use SilverStripe\ORM\DataList;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldGroup;
@@ -51,7 +50,7 @@ trait EcommerceProductGroupReportTrait
             $list = $className::get();
         }
 
-        $title = (string) Convert::raw2sql($params['Title'] ?? '');
+        $title = (string) ($params['Title'] ?? '');
         if ($title) {
             $list = $list->filterAny(['Title:PartialMatch' => $title, 'AlternativeProductGroupNames:PartialMatch' => $title]);
         }

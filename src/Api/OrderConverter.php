@@ -65,9 +65,7 @@ abstract class OrderConverter
             foreach ($this->modifiers as $modifier) {
                 $myType = $modifier->Type ?? $modifier->getLiveType();
                 if ($myType === $type) {
-                    if (! isset($this->amountsPerModifierType[$type])) {
-                        $this->amountsPerModifierType[$type] = 0;
-                    }
+                    $this->amountsPerModifierType[$type] ??= 0;
 
                     $this->amountsPerModifierType[$type] += $modifier->TableValue;
                 }

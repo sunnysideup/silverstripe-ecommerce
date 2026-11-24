@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use Symfony\Component\Console\Command\Command;
@@ -29,6 +30,10 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
+        if (! DestructiveTaskGuard::mayRun(null, $this, 'Changes (and removes) broken order submission records.', DestructiveTaskGuard::ANYWHERE)) {
+            return Command::FAILURE;
+        }
+
         $problem = DB::query('SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLogSubmitted INNER JOIN OrderStatusLog ON OrderStatusLogSubmitted.ID = OrderStatusLog.ID WHERE OrderID = 0');
         if ($problem->value()) {
             $output->writeln('the size of the problem is: ' . $problem->value());

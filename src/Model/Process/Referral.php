@@ -326,9 +326,11 @@ class Referral extends DataObject implements EditableEcommerceObject
         if ($params === null || $params === []) {
             return null;
         }
+
         if (! $order->exists()) {
             return null;
         }
+
         // 1. the unique ID: only accept sensible values (uuid or number as created by UTMReferralPointer.js)
         $uniqueID = $params['_uniqueID'] ?? '';
         if (! is_string($uniqueID) || ! preg_match('/^[A-Za-z0-9-]{8,36}$/', $uniqueID)) {
@@ -350,12 +352,15 @@ class Referral extends DataObject implements EditableEcommerceObject
 
                 return $last ? (int) $last->ID : null;
             }
+
             $ref = Referral::create(['UniqueID' => $uniqueID]);
         }
+
         $ref->OrderID = $order->ID;
 
         $ref->LandingUrl = self::clean_value($params['_landingUrl'] ?? '', 255);
         $ref->Referrer = self::clean_value($params['_referrer'] ?? '', 255);
+
         $capturedAt = self::clean_value($params['_capturedAt'] ?? '', 40);
         if ($capturedAt !== '') {
             try {
@@ -366,6 +371,7 @@ class Referral extends DataObject implements EditableEcommerceObject
                 // invalid date: ignore.
             }
         }
+
         // set fields based on config
         $fieldValues = [];
         $from = [];
@@ -378,6 +384,7 @@ class Referral extends DataObject implements EditableEcommerceObject
             if ($key === '' || $val === '') {
                 continue;
             }
+
             $getVarDetails = $list[$key] ?? null;
             $name = $getVarDetails['Name'] ?? $key;
             $field = $getVarDetails['Field'] ?? '';
@@ -386,14 +393,16 @@ class Referral extends DataObject implements EditableEcommerceObject
                 $field = 'Source';
                 $val .= ' (' . $name . ')';
             }
-            if (! isset($fieldValues[$field])) {
-                $fieldValues[$field] = [];
-            }
+
+            $fieldValues[$field] ??= [];
+
             $fieldValues[$field][] = $val;
         }
+
         foreach ($fieldValues as $field => $values) {
             $ref->$field = self::clean_value(implode(' | ', array_filter(array_unique($values))), 100);
         }
+
         $ref->From = self::clean_value($from !== [] ? implode(' | ', array_filter(array_unique($from))) : 'Other', 100);
         $ref->write();
 
@@ -409,6 +418,7 @@ class Referral extends DataObject implements EditableEcommerceObject
         if (! is_scalar($value)) {
             return '';
         }
+
         $value = strip_tags((string) $value);
         $value = (string) preg_replace('/[\x00-\x1F\x7F]/u', '', $value);
 
@@ -690,14 +700,13 @@ class Referral extends DataObject implements EditableEcommerceObject
     {
         if ($this->From) {
             return $this->From;
-        } else {
-            $source = Config::inst()->get(Referral::class, 'basic_searches');
-            $txt = $this->getFullCode();
-            $list = [];
-            foreach ($source as $key => $getVarDetails) {
-                if (str_contains($txt, (string) $key)) {
-                    $list[] = $getVarDetails['Name'];
-                }
+        }
+        $source = Config::inst()->get(Referral::class, 'basic_searches');
+        $txt = $this->getFullCode();
+        $list = [];
+        foreach ($source as $key => $getVarDetails) {
+            if (str_contains($txt, (string) $key)) {
+                $list[] = $getVarDetails['Name'];
             }
         }
 

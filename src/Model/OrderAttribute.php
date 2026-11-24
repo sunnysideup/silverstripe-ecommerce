@@ -272,9 +272,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             return true;
         }
 
-        if (null === $this->_canEdit) {
-            $this->_canEdit = ! $this->priceHasBeenFixed();
-        }
+        $this->_canEdit ??= ! $this->priceHasBeenFixed();
 
         return $this->_canEdit;
     }
@@ -584,7 +582,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             if (null === self::get_price_has_been_fixed($this->OrderID) || $recalculate || Order::get_needs_recalculating($this->OrderID)) {
                 self::$_price_has_been_fixed[$this->OrderID] = false;
                 $order = $this->getOrderCached();
-                if ($order && $order->IsSubmitted()) {
+                if ($order instanceof Order && $order->IsSubmitted()) {
                     self::$_price_has_been_fixed[$this->OrderID] = true;
                     if ($recalculate) {
                         user_error('You are trying to recalculate an order that is already submitted.', E_USER_NOTICE);

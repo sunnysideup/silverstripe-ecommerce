@@ -102,6 +102,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         'ShowFullDetailsForProducts' => 'Boolean',
         'PhoneNumberForShop' => PhoneField::class,
         'ShippingDescriptionShort' => 'Text',
+        'OrderPaymentPendingMessage' => 'Varchar(255)',
     ];
 
     /**
@@ -216,6 +217,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         //"ProductsHaveVariations" => false,
         'CurrenciesExplanation' => '<p>Apart from our main currency, you can view prices in a number of other currencies. The exchange rate is indicative only.</p>',
         'AllowFreeProductPurchase' => true,
+        'OrderPaymentPendingMessage' => 'This order has a pending payment.',
     ];
 
     /**
@@ -469,6 +471,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             'DefaultContentImageSize' => _t('EcommerceDBConfig.DEFAULTCONTENTIMAGESIZE', 'Product Content Image Optimised Size'),
             'DefaultLargeImageSize' => _t('EcommerceDBConfig.DEFAULTLARGEIMAGESIZE', 'Product Large Image Optimised Size'),
             'AllowFreeProductPurchase' => _t('EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE', 'Allow free products to be purchased? '),
+            'OrderPaymentPendingMessage' => _t('EcommerceDBConfig.ORDERPAYMENTPENDINGMESSAGE', 'Pending payment message'),
         ];
     }
 
@@ -492,6 +495,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             'PackingSlipNote' => _t('EcommerceDBConfig.PACKING_SLIP_NOTE_DESCRIPTION', 'e.g. a disclaimer'),
             'InvoiceTitle' => _t('EcommerceDBConfig.INVOICETITLE_DESCRIPTION', 'e.g. Tax Invoice or Update for your recent order on www.yoursite.co.nz'),
             'InvoiceMessage' => _t('EcommerceDBConfig.INVOICEMESSAGE_DESCRIPTION', 'e.g. Thank you for your order.'),
+            'OrderPaymentPendingMessage' => _t('EcommerceDBConfig.ORDERPAYMENTPENDINGMESSAGE_DESCRIPTION', 'Shown on the order when a payment is still pending.'),
         ];
     }
 
@@ -628,6 +632,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         $fields->addFieldsToTab(
             'Root.Payments',
             [
+                TextField::create('OrderPaymentPendingMessage', $fieldLabels['OrderPaymentPendingMessage']),
                 LiteralField::create(
                     'PaymentMethodsExplanation',
                     '<p>
@@ -706,6 +711,11 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         return GridField::create('OrderSteps', _t('OrderStep.PLURALNAME', 'Order Steps'), OrderStep::get(), $gridFieldConfig);
     }
 
+    public function getOrderPaymentPendingMessageForTemplate(): string
+    {
+        return $this->OrderPaymentPendingMessage ?: _t('Order.OUTSTANDINGNOTE', 'This order has a pending payment.');
+    }
+
     /**
      * tells us if a Class Name is a buyable.
      *
@@ -767,7 +777,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         $list = EcommerceCurrency::get_list();
 
-        if ($list && $list->limit(2)->count() > 1) {
+        if ($list instanceof DataList && $list->limit(2)->count() > 1) {
             return $list;
         }
 

@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataList;
 use Sunnysideup\AjaxSelectField\AjaxSelectField;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -58,7 +57,10 @@ class ProductSelectField extends AjaxSelectField
         $fx = function ($query, $request) use ($dataList, $className, $idFieldName, $labelFieldName): array {
             // This part is only required if the idOnlyMode is active
             if ($id = $request->getVar('id')) {
-                $page = $className::get()->filter([$idFieldName => Convert::raw2sql($id)])->first();
+                $page = $className::get()->filter([$idFieldName => $id])->first();
+                if (! $page) {
+                    return [];
+                }
 
                 return [
                     'id' => $page->$idFieldName,

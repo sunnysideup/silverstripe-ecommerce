@@ -16,6 +16,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\SecurityToken;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Api\SetThemed;
@@ -473,10 +474,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $v = $this->getFieldValueWithPrefix('Country');
         return (string) EcommerceCountry::find_title($v);
     }
+
     public function validateMemberForAutocompletion(Member $member): bool
     {
         $loggedInUser = Security::getCurrentUser();
-        return $member && $member->exists() && $loggedInUser && $member->ID === $loggedInUser->ID && ! $member->IsShopAdmin();
+        return $member instanceof Member && $member->exists() && $loggedInUser && $member->ID === $loggedInUser->ID && ! $member->IsShopAdmin();
     }
 
     /**
@@ -514,7 +516,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         $excludedFields = ['ID', 'OrderID'];
         $fieldPrefix = $this->fieldPrefix();
-        if ($member && $member->exists()) {
+        if ($this->validateMemberForAutocompletion($member)) {
             $oldAddress = $member->previousOrderAddress($this->baseClassLinkingToOrder(), $this->ID);
             if ($oldAddress) {
                 $fieldNameArray = array_keys($this->Config()->get('db')) + array_keys($this->Config()->get('has_one'));
@@ -589,6 +591,16 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
 
         $this->Obsolete = 1;
         $this->write();
+    }
+
+    public function SecurityIDToken(): string
+    {
+        return (string) SecurityToken::getSecurityID();
+    }
+
+    public function AddSecurityIdToLinks(): bool
+    {
+        return ShoppingCartController::add_security_id_to_links();
     }
 
     /**
@@ -757,7 +769,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $order = $this->getOrderCached();
 
         $countryCode = null;
-        if ($order && $order->exists()) {
+        if ($order instanceof Order && $order->exists()) {
             //if it is the billing country field and we use a shipping address then ignore Order Country
             if ($order->UseShippingAddress && ($this instanceof BillingAddress)) {
                 //do nothing
