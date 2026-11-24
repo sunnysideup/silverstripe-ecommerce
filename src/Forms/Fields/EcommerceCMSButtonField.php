@@ -2,16 +2,19 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\FieldType\DBField;
 
 class EcommerceCMSButtonField extends LiteralField
 {
     /**
-     * @param mixed  $link      (string|ViewableData|FormField)
+     * @param string $link  a URL (it is escaped here)
+     * @param string $title HTML: the caller has to escape anything that is not fixed text (e.g. names of customers)
      */
     public function __construct(string $name, string $link, string $title, ?bool $newWindow = false)
     {
+        $link = Convert::raw2att($link);
         $target = '';
         if ($newWindow) {
             $target = 'target="_blank"';

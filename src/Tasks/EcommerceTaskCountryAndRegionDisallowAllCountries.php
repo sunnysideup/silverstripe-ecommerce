@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\PolyExecution\PolyOutput;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,6 +26,10 @@ class EcommerceTaskCountryAndRegionDisallowAllCountries extends BuildTask
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
+        if (! DestructiveTaskGuard::mayRun(null, $this, 'Stops sales to ALL countries.', DestructiveTaskGuard::NOT_LIVE)) {
+            return Command::FAILURE;
+        }
+
         $allowedArray = EcommerceCountry::get()
             ->filter(['DoNotAllowSales' => 0]);
         if ($allowedArray->exists()) {

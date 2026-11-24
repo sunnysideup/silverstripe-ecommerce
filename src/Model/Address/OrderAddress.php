@@ -16,6 +16,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\SecurityToken;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Api\SetThemed;
@@ -502,6 +503,12 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return strtolower(trim($comparisonString));
     }
 
+    public function validateMemberForAutocompletion(Member $member): bool
+    {
+        $loggedInUser = Security::getCurrentUser();
+        return $member && $member->exists() && $loggedInUser && $member->ID === $loggedInUser->ID && ! $member->IsShopAdmin();
+    }
+
     /**
      *@todo: are there times when the Shipping rather than the Billing address should be linked?
      * Copies the last address used by the member.
@@ -514,7 +521,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         $excludedFields = ['ID', 'OrderID'];
         $fieldPrefix = $this->fieldPrefix();
-        if ($member && $member->exists()) {
+        if ($this->validateMemberForAutocompletion($member)) {
             $oldAddress = $member->previousOrderAddress($this->baseClassLinkingToOrder(), $this->ID);
             if ($oldAddress) {
                 $fieldNameArray = array_keys($this->Config()->get('db')) + array_keys($this->Config()->get('has_one'));
@@ -589,6 +596,14 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
 
         $this->Obsolete = 1;
         $this->write();
+    }
+    public function SecurityIDToken(): string
+    {
+        return (string) SecurityToken::getSecurityID();
+    }
+    public function AddSecurityIdToLinks(): bool
+    {
+        return ShoppingCartController::add_security_id_to_links();
     }
 
     /**

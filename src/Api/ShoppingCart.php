@@ -766,7 +766,7 @@ class ShoppingCart
      *
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @param OrderModifier $modifier | int
+     * @param OrderModifier|int $modifier
      *
      * @return null|bool
      */
@@ -774,7 +774,7 @@ class ShoppingCart
     {
         if ($this->allowWrites()) {
             $modifier = is_numeric($modifier) ? OrderModifier::get_by_id($modifier) : $modifier;
-            if (! $modifier || ! $this->modifierBelongsToCurrentOrder($modifier)) {
+            if (! $modifier instanceof OrderModifier || ! $this->modifierBelongsToCurrentOrder($modifier)) {
                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
 
                 return false;
@@ -801,11 +801,11 @@ class ShoppingCart
     }
 
     /**
-     * Removes a modifier from the cart.
+     * Adds (back) a modifier to the cart.
      *
-     * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
+     * returns false if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @param OrderModifier $modifier | int
+     * @param int|OrderModifier $modifier
      *
      * @return bool
      */
@@ -816,9 +816,10 @@ class ShoppingCart
                 $modifier = OrderModifier::get_by_id($modifier);
             } elseif (! is_a($modifier, EcommerceConfigClassNames::getName(OrderModifier::class))) {
                 user_error('Bad parameter provided to ShoppingCart::addModifier', E_USER_WARNING);
+                $modifier = null;
             }
 
-            if (! $modifier || ! $this->modifierBelongsToCurrentOrder($modifier)) {
+            if (! $modifier instanceof OrderModifier || ! $this->modifierBelongsToCurrentOrder($modifier)) {
                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
 
                 return false;
@@ -826,7 +827,7 @@ class ShoppingCart
 
             $modifier->HasBeenRemoved = 0;
             $modifier->write();
-            $this->addMessage(_t('Order.MODIFIERREMOVED', 'Added.'));
+            $this->addMessage(_t('Order.MODIFIERADDED', 'Added.'));
 
             return true;
         }
@@ -1315,7 +1316,7 @@ class ShoppingCart
     protected function allowWrites()
     {
         if (null === self::$_allow_writes_cache) {
-            if ($this->order) {
+            if ($this->order && $this->order->exists()) {
                 self::$_allow_writes_cache = true;
             } elseif (PHP_SAPI === 'cli') {
                 self::$_allow_writes_cache = false;

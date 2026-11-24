@@ -69,6 +69,13 @@ class OrderFormAddress extends Form
     protected $loggedInMember;
 
     /**
+     * whether the order member can be used (i.e. matches the logged in member)
+     *
+     * @var bool
+     */
+    protected $orderMemberAndLoggedInMemberAreEqual = false;
+
+    /**
      * ID of the member that has just been created.
      *
      * @var int
@@ -122,32 +129,41 @@ class OrderFormAddress extends Form
         $this->order = ShoppingCart::current_order();
         $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
         $this->loggedInMember = Security::getCurrentUser();
+        $this->orderMemberAndLoggedInMemberAreEqual = $this->orderMember && $this->loggedInMember && $this->orderMember->ID === $this->loggedInMember->ID;
 
         //strange security situation...
         if ($this->orderMember->exists() && $this->loggedInMember && $this->orderMember->ID !== $this->loggedInMember->ID && ! $this->loggedInMember->IsShopAdmin()) {
             $this->loggedInMember->logOut();
+            $this->loggedInMember = null;
+            $this->orderMemberAndLoggedInMemberAreEqual = false;
         }
 
         // member fields
         if ($this->orderMember) {
-            $memberFields = $this->orderMember->getEcommerceFields();
-            $requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
-            if (! $this->loggedInMember && ! EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase')) {
-                // Nobody has proven that they own the email address, so we do not set a password here.
-                // Customers get an account without a password and can log in with a one-time code
-                // (which proves that they own the email address) and set a password after that.
-                $memberFields->removeByName(['LoginDetails', 'PasswordCheck1', 'PasswordCheck2']);
-                $memberFields->push(
-                    LiteralField::create(
-                        'GuestAccountInfo',
-                        '<p class="message good guest-account-info">' .
-                        _t(
-                            'OrderForm.GUESTACCOUNTINFO',
-                            'We will create an account for you with this email address. To see your orders next time, log in with the one-time code that we email you or use our password reset functionality.'
-                        ) .
-                        '</p>'
-                    )
-                );
+            if ($this->orderMemberAndLoggedInMemberAreEqual) {
+                $memberFields = $this->orderMember->getEcommerceFields(false, true);
+                $requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
+            } else {
+                $tempMember = Member::create();
+                $memberFields = $tempMember->getEcommerceFields(false, true);
+                $requiredFields = array_merge($requiredFields, $tempMember->getEcommerceRequiredFields());
+                if (! EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase')) {
+                    // Nobody has proven that they own the email address, so we do not set a password here.
+                    // Customers get an account without a password and can log in with a one-time code
+                    // (which proves that they own the email address) and set a password after that.
+                    $memberFields->removeByName(['LoginDetails', 'PasswordCheck1', 'PasswordCheck2']);
+                    $memberFields->push(
+                        LiteralField::create(
+                            'GuestAccountInfo',
+                            '<p class="message good guest-account-info">' .
+                            _t(
+                                'OrderForm.GUESTACCOUNTINFO',
+                                'Please ensure your email address is correct so we can keep you updated on your order.'
+                            ) .
+                            '</p>'
+                        )
+                    );
+                }
             }
             if ($this->loggedInMember) {
                 $memberFields->replaceField('Email', ReadonlyField::create('Email', 'Email', $this->loggedInMember->Email));
@@ -162,7 +178,7 @@ class OrderFormAddress extends Form
 
         //billing address field
         $billingAddress = $this->order->CreateOrReturnExistingAddress(BillingAddress::class);
-        $billingAddressFields = $billingAddress->getFields($this->orderMember);
+        $billingAddressFields = $billingAddress->getFields($this->loggedInMember);
         $addressFieldsBilling->merge($billingAddressFields);
 
         $requiredFields = array_merge($requiredFields, $billingAddress->getRequiredFields());
@@ -219,7 +235,7 @@ class OrderFormAddress extends Form
             //$addressFieldsShipping->merge($useShippingAddressField);
             //now we can add the shipping fields
             $shippingAddress = $this->order->CreateOrReturnExistingAddress(ShippingAddress::class);
-            $shippingAddressFields = $shippingAddress->getFields($this->orderMember);
+            $shippingAddressFields = $shippingAddress->getFields($this->loggedInMember);
             $requiredFields = array_merge($requiredFields, $shippingAddress->getRequiredFields());
             $addressFieldsShipping->merge($shippingAddressFields);
         }
@@ -291,18 +307,6 @@ class OrderFormAddress extends Form
                         '</p>')
                 );
             }
-
-            if ($this->orderMember->exists() && $this->loggedInMember && $this->loggedInMember->ID !== $this->orderMember->ID) {
-                $rightFields->push(
-                    LiteralField::create('OrderAddedTo', '<p class="message good">' .
-                        _t('Account.ORDERADDEDTO', 'Order will be retrievable using') .
-                        ' ' .
-                        Convert::raw2xml($this->orderMember->Email) .
-                        ' ' .
-                        _t('Account.AS_IDENTIFIER', 'as identifier') .
-                        '</p>')
-                );
-            }
         }
 
         //  ________________  5) Put all the fields in one FieldList
@@ -341,7 +345,7 @@ class OrderFormAddress extends Form
 
         //we do this first so that Billing and Shipping Address can override this...
 
-        if ($this->orderMember) {
+        if ($this->orderMemberAndLoggedInMemberAreEqual) {
             $this->loadDataFrom($this->orderMember);
         }
 
@@ -355,7 +359,7 @@ class OrderFormAddress extends Form
                 $this->loadDataFrom($shippingAddress);
             }
         }
-        if ($this->orderMember && $this->loggedInMember) {
+        if ($this->orderMemberAndLoggedInMemberAreEqual) {
             $fields->dataFieldByName('FirstName')->setValue($this->orderMember->FirstName);
             $fields->dataFieldByName('Surname')->setValue($this->orderMember->Surname);
             $fields->dataFieldByName('Email')->setValue($this->orderMember->Email);
@@ -418,7 +422,7 @@ class OrderFormAddress extends Form
 
         // the password must be taken from the data as it was typed (before any escaping).
         $enteredPassword = $this->validPasswordHasBeenEntered($data);
-        $data = Convert::raw2sql($data);
+        // no need to escape for SQL: the ORM does that, and escaping twice would store altered values (e.g. o\'brien@...)
         //check for cart items
         if (! $this->order) {
             $form->sessionMessage(_t('OrderForm.ORDERNOTFOUND', 'Your order could not be found.'), 'bad');
@@ -538,8 +542,9 @@ class OrderFormAddress extends Form
      * - AND the member being "tested" is already logged in...
      * in that case the logged in member tries to take on another identity.
      * If you are not logged BUT the the unique field is used by an existing member then we can still
-     * use the field - we just CAN NOT log in the member AND we do NOT attach the order to that member
-     * (it is a guest order until the customer logs in with a one-time code).
+     * use the field - we just CAN NOT log in the member AND we do NOT attach the order to that member here
+     * (when the order is submitted, it is linked to that member but held until they have verified
+     * their email address with a one-time code, see OrderStepSubmitted and Order.EmailNotVerified).
      * This method needs to be public because it is used by the OrderFormValidator (see below).
      *
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
@@ -642,7 +647,7 @@ class OrderFormAddress extends Form
                     }
 
                     $this->orderMember = Member::create();
-                    $this->orderMember->Email = Convert::raw2sql($newEmail);
+                    $this->orderMember->Email = $newEmail;
                     $this->newlyCreatedMemberID = $this->orderMember->write();
                 }
             }
@@ -668,13 +673,14 @@ class OrderFormAddress extends Form
                     }
                     //5. is there already a member with the email entered?
                     //SECURITY: we can not prove that this visitor owns that email address.
-                    //We therefore never attach the order to that member (this would put
-                    //the order in their account).  Instead, the order stays a guest order (no member).
-                    //Once the customer has logged in with a one-time code (which proves they own the email address),
-                    //guest orders with their email address are linked to their account
-                    //(see EcommerceRole::claimGuestOrdersForVerifiedEmail).
+                    //We therefore do not attach the order to that member here, and we never use
+                    //(or change) any of that member's data.
+                    //When the order is submitted, it is linked to that member but held (Order.EmailNotVerified):
+                    //it is only shown to them once they have logged in with a one-time code
+                    //(which proves they own the email address), see OrderStepSubmitted
+                    //and EcommerceRole::releaseOrdersHeldUntilEmailIsVerified.
                     if ($this->debug) {
-                        $this->debugArray[] = '5. existing member with same email is NOT attached to order for anonymous visitors';
+                        $this->debugArray[] = '5. existing member with same email is NOT attached to order here for anonymous visitors (see OrderStepSubmitted)';
                     }
                     $this->orderMember = null;
 
@@ -688,9 +694,9 @@ class OrderFormAddress extends Form
                         // 7. We do one last check to see if we are allowed to create one
                         //are we allowed to create a member?
                         // NB: this is only done if customers MUST have an account to purchase.
-                        // In all other cases, the member for a guest is created when the order is submitted
+                        // In all other cases, the member for a guest is created (or found) when the order is submitted
                         // (with the final email address and WITHOUT a password,
-                        // see EcommerceRole::find_or_create_guest_member_for_order).
+                        // see EcommerceRole::attach_member_to_guest_order).
                         // Before, an empty member was created every time someone visited this step.
                         if (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase') && $this->memberShouldBeCreated($data)) {
                             if ($this->debug) {
@@ -800,6 +806,7 @@ class OrderFormAddress extends Form
 
     protected function orderMemberAndLoggedInMemberAreDifferent()
     {
+        return ! $this->orderMemberAndLoggedInMemberAreEqual;
     }
 
     /**
@@ -815,7 +822,7 @@ class OrderFormAddress extends Form
         if (isset($data[$uniqueFieldName])) {
             $currentUserID = $this->loggedInMember ? $this->loggedInMember->ID : 0;
             $uniqueFieldValue = $data[$uniqueFieldName];
-            //no need to convert raw2sql as this has already been done.
+            // no need to convert raw2sql: the ORM filter takes care of that.
             return Member::get()
                 ->filter(
                     [

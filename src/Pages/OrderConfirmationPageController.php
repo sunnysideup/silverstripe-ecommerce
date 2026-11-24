@@ -6,13 +6,14 @@ use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\Form;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Security\Permission;
-use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\AttemptLimiter;
 use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -62,12 +63,19 @@ class OrderConfirmationPageController extends CartPageController
     private static $include_as_checkout_step = true;
 
     /**
-     * Customers who own an order can have the email for the current step of their order re-sent
-     * to their own account email. This is the minimum number of seconds between two such sends (per order).
+     * Customers who have access to an order can have the email for the current step of their order re-sent
+     * to the email address of the order. This is the minimum number of seconds between two such sends (per order).
      *
      * @var int
      */
     private static $owner_email_resend_cooldown_in_seconds = 300;
+
+    /**
+     * The maximum number of times per hour (per visitor and per order) that the email can be re-sent.
+     *
+     * @var int
+     */
+    private static $customer_email_resend_max_per_hour = 5;
 
     /**
      * This method exists just so that template
@@ -359,7 +367,11 @@ class OrderConfirmationPageController extends CartPageController
             if ($this->currentOrder->canPay()) {
                 Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
 
-                return OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder);
+                $form = OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder);
+                if ($form instanceof OrderFormPayment) {
+                    return $form;
+                }
+                return [];
             }
 
             return [];
@@ -400,6 +412,8 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function sendemail(HTTPRequest $request)
     {
+        // The page that this action echoes has a security token in it (the "send" form): it must never be cached.
+        HTTPCacheControlMiddleware::singleton()->disableCache(true);
         if ($this->currentOrder) {
             $subject = '';
             $message = '';
@@ -425,12 +439,13 @@ class OrderConfirmationPageController extends CartPageController
 
             if ($stepID !== 0) {
                 // Shop admins can send any step email (and test emails, and to any address).
-                // The owner of the order can only re-send the email for the current step of their order,
-                // and only to their own account email (see below).
+                // Anyone else who has access to this order (they are logged in as the owner, they opened the
+                // retrieve link in their email, or they have just placed the order) can only re-send the email for the
+                // current step of the order, and only to the email address of the order (see below).
                 $isShopAdmin = Permission::check('ADMIN') || EcommerceRole::current_member_is_shop_admin();
-                $ownerEmail = $isShopAdmin ? '' : $this->orderOwnerEmail();
+                $customerEmail = $isShopAdmin ? '' : $this->orderCustomerEmail();
                 if (! $isShopAdmin) {
-                    if ($ownerEmail === '' || $isTest || $stepID !== (int) $this->currentOrder->StatusID) {
+                    if ($customerEmail === '' || $isTest || $stepID !== (int) $this->currentOrder->StatusID) {
                         return $this->httpError(403, 'You do not have permission to send order emails.');
                     }
                 }
@@ -457,10 +472,11 @@ class OrderConfirmationPageController extends CartPageController
                         $email = $adminOnlyOrToEmail ? 'site administrator' : $this->currentOrder->getOrderEmail();
                         // goes to Email for order.
                     }
-                    if ($ownerEmail !== '') {
-                        // owner of the order: always send to their account email, nowhere else.
-                        $adminOnlyOrToEmail = $ownerEmail;
-                        $email = $ownerEmail;
+                    if ($customerEmail !== '') {
+                        // not a shop admin: always send to the email address of the order, nowhere else.
+                        // (false = the email goes to the customer email of the order)
+                        $adminOnlyOrToEmail = false;
+                        $email = $customerEmail;
                         $to = '';
                     }
                     if ($request->isPOST()) {
@@ -471,13 +487,19 @@ class OrderConfirmationPageController extends CartPageController
                         $session = $request->getSession();
                         $sessionKey = 'OrderEmailResentAt.' . $this->currentOrder->ID;
                         $cooldown = (int) $this->config()->get('owner_email_resend_cooldown_in_seconds');
-                        if ($ownerEmail !== '' && time() - (int) $session->get($sessionKey) < $cooldown) {
+                        $limiter = AttemptLimiter::create(
+                            'OrderEmailResent' . (int) $this->currentOrder->ID,
+                            (int) $this->config()->get('customer_email_resend_max_per_hour'),
+                            3600
+                        );
+                        if ($customerEmail !== '' && (time() - (int) $session->get($sessionKey) < $cooldown || $limiter->isLimited())) {
                             $outcome = false;
                             $tooSoon = true;
                         } else {
                             $tooSoon = false;
-                            if ($ownerEmail !== '') {
+                            if ($customerEmail !== '') {
                                 $session->set($sessionKey, time());
+                                $limiter->record();
                             }
                             $outcome = $this->currentOrder->sendEmail(
                                 $emailClassName,
@@ -496,7 +518,7 @@ class OrderConfirmationPageController extends CartPageController
                         }
                     } else {
                         // GET: never send, only show a preview and a form to send it.
-                        $message = $this->sendEmailConfirmationForm($request, $isTest ? 'test' : 'send', $stepID, (string) $to, (string) $email, (string) $subject);
+                        $message = $this->sendEmailConfirmationForm($request, $isTest ? 'test' : 'send', $stepID, (string) $to, (string) $email);
                     }
                 } else {
                     $message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
@@ -518,27 +540,38 @@ class OrderConfirmationPageController extends CartPageController
     }
 
     /**
-     * If the current user is logged in and owns the (submitted) current order,
-     * then this returns their account email (if valid), otherwise an empty string.
+     * If the current user has access to the (submitted) current order (see CartPageController::init),
+     * then this returns the email address of the order (if it is valid), otherwise an empty string.
+     *
+     * This works for people who are logged in and for people who are not:
+     * a customer who has just placed an order (guest checkout), or who has opened the link in the order email,
+     * is not logged in but must still be able to email the invoice to the address that is on the order.
+     * They can never choose the address, so this can not be used to send email to someone else.
      */
-    protected function orderOwnerEmail(): string
+    protected function orderCustomerEmail(): string
     {
-        $member = Security::getCurrentUser();
         $order = $this->currentOrder;
-        if ($member && $member->exists() && $order && $order->exists() && $order->IsSubmitted() && (int) $order->MemberID === (int) $member->ID) {
-            $email = (string) $member->Email;
-            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                return $email;
+        if (! $this->currentOrderAccessGranted || ! $order || ! $order->exists() || ! $order->IsSubmitted()) {
+            return '';
+        }
+        $email = trim((string) $order->getOrderEmail());
+        if ('' === $email) {
+            return '';
+        }
+        // there can be more than one address (see Order::getOrderEmail)
+        foreach (preg_split('/\s*[;,]\s*/', $email) as $address) {
+            if (! filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                return '';
             }
         }
 
-        return '';
+        return $email;
     }
 
     /**
      * returns the HTML for a small form that sends the email (POST + security token).
      */
-    protected function sendEmailConfirmationForm(HTTPRequest $request, string $stepVarName, int $stepID, string $to, string $email, string $subject): string
+    protected function sendEmailConfirmationForm(HTTPRequest $request, string $stepVarName, int $stepID, string $to, string $email): string
     {
         $action = Controller::join_links(Director::baseURL(), $request->getURL());
         $token = SecurityToken::inst();
@@ -550,7 +583,7 @@ class OrderConfirmationPageController extends CartPageController
         }
         $html .= '<p>' . _t('OrderConfirmationPage.PREVIEWONLY', 'Preview only - nothing has been sent yet.')
             . '<br />' . _t('OrderConfirmationPage.SENDTO', 'Send to:') . ' <strong>' . Convert::raw2xml($email) . '</strong>'
-            . '<br />' . _t('OrderConfirmationPage.WITHSUBJECT', 'Subject:') . ' <strong>' . Convert::raw2xml($subject) . '</strong></p>'
+            . '</p>'
             . '<button type="submit">' . _t('OrderConfirmationPage.SENDEMAILNOW', 'Send this email now') . '</button>'
             . '</form>';
 

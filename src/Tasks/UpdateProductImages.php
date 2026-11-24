@@ -6,6 +6,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Assets\Image;
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use Symfony\Component\Console\Command\Command;
@@ -31,6 +32,10 @@ class UpdateProductImages extends BuildTask
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
+        if (! DestructiveTaskGuard::mayRun(null, $this, 'Changes the class of all images in the database (a migration task).', DestructiveTaskGuard::NOT_LIVE)) {
+            return Command::FAILURE;
+        }
+
         DB::query('
             UPDATE "File"
             SET "ClassName" = \'' . Image::class . '\'

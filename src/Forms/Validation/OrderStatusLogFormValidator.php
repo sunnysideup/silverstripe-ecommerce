@@ -7,18 +7,22 @@ use Override;
 
 class OrderStatusLogFormValidator extends RequiredFieldsValidator
 {
+    use ExtendedValidationTrait;
+
     #[Override]
     public function php($data)
     {
         $this->form->saveDataToSession();
-        $validExtended = $this->extend('updatePHP', $data, $this);
-        if (false === $validExtended) {
+        $extensionsAreFine = $this->extensionsAcceptTheData($data, 'We could not update your order status.');
+        if (! $extensionsAreFine) {
             $this->form->sessionError(
                 _t('OrderForm.OrderModifierForm', 'We could not update your order status.'),
                 'error'
             );
         }
 
-        return parent::php($data);
+        $valid = parent::php($data);
+
+        return $extensionsAreFine && $valid;
     }
 }

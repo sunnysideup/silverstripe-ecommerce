@@ -97,6 +97,7 @@ class EcommerceMoney extends Extension
         }
 
         $amount = $this->getOwner()->getAmount();
+        $amount = is_numeric($amount) ? (float)$amount : 0.0; // enforce 0 if non-numeric
 
         $formatter = $this->getOwner()->getFormatter();
         $data = $formatter->format($amount);

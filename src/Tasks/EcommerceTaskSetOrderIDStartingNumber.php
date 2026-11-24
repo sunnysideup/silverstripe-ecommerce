@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -29,6 +30,10 @@ class EcommerceTaskSetOrderIDStartingNumber extends BuildTask
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
+        if (! DestructiveTaskGuard::mayRun(null, $this, 'Changes the order numbers of the orders.', DestructiveTaskGuard::ANYWHERE)) {
+            return Command::FAILURE;
+        }
+
         //set starting order number ID
         $number = EcommerceConfig::get(Order::class, 'order_id_start_number');
         $currentMax = 0;

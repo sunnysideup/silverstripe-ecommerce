@@ -8,6 +8,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Symfony\Component\Console\Command\Command;
@@ -35,6 +36,10 @@ class EcommerceTaskArchiveAllOldOrders extends BuildTask
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
+        if (! DestructiveTaskGuard::mayRun(null, $this, 'Moves old orders to the Archived order step.', DestructiveTaskGuard::ANYWHERE)) {
+            return Command::FAILURE;
+        }
+
         //IMPORTANT!
         Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
         Injector::inst()->registerService(new EcommerceDummyMailer(), MailerInterface::class);

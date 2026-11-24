@@ -10,7 +10,6 @@ use PageController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Security;
@@ -69,6 +68,22 @@ class CartPageController extends PageController
      * @var int
      */
     protected $overrideCanViewOrderID = 0;
+
+    /**
+     * Has init() established that the current visitor may see the current order?
+     * Only then can we remember the order in the session (see setRetrievalOrderID).
+     *
+     * @var bool
+     */
+    protected $currentOrderAccessGranted = false;
+
+    /**
+     * Was the current order found with a (valid, not expired) retrieve link?
+     * The link is only remembered AFTER the permission check in init() has passed.
+     *
+     * @var bool
+     */
+    protected $orderRetrievedWithLink = false;
 
     /**
      * @var bool
@@ -152,7 +167,9 @@ class CartPageController extends PageController
      */
     public function share(HTTPRequest $request): array|HTTPResponse
     {
-        $codes = Convert::raw2sql($request->param('ID'));
+        // the codes are only ever used to build a link on this site and to look up
+        // buyables by int ID, so we only allow the characters that a valid code can contain
+        $codes = preg_replace('/[^A-Za-z0-9_,.\-]/', '', (string) $request->param('ID'));
         if (! $request->getVar('ready') && ! $request->getVar('done')) {
             return $this->redirect($this->Link('share/' . $codes) . '?ready=1');
         }
@@ -166,8 +183,7 @@ class CartPageController extends PageController
                 $details = explode(',', $buyable);
                 if (3 === count($details)) {
                     // only buyables can be added to the cart (the class name comes from the URL!)
-                    $className = ClassHelpers::unsanitise_class_name($details[0]);
-                    $className = EcommerceDBConfig::is_buyable($className) ? $className : null;
+                    $className = ClassHelpers::decode_buyable_class_name($details[0]);
                     $id = (int) $details[1];
                     $quantity = floatval($details[2]);
                     if ($className && $id && $quantity) {
@@ -270,6 +286,9 @@ class CartPageController extends PageController
      */
     public function deleteorder(HTTPRequest $request)
     {
+        if (! $this->currentOrder) {
+            return $this->httpError(404);
+        }
         if (! ConfirmAction::isConfirmed($request)) {
             return ConfirmAction::form(
                 $request,
@@ -280,9 +299,9 @@ class CartPageController extends PageController
         if (! $this->CurrentOrderIsInCart() && $this->currentOrder->canDelete()) {
             $this->currentOrder->delete();
             self::set_message(_t('CartPage.ORDERDELETED', 'Order has been deleted.'));
+        } else {
+            self::set_message(_t('CartPage.ORDERNOTDELETED', 'Order could not be deleted.'));
         }
-
-        self::set_message(_t('CartPage.ORDERNOTDELETED', 'Order could not be deleted.'));
 
         return [];
     }
@@ -430,7 +449,7 @@ class CartPageController extends PageController
             //the code below is for submitted orders, but we still put it here so
             //we can do all the retrieval options at once.
             if (('retrieveorder' === $action) && $id && $otherID) {
-                $sessionID = Convert::raw2sql($id);
+                $sessionID = (string) $id;
                 $retrievedOrder = Order::get()->filter(
                     [
                         'SessionID' => $sessionID,
@@ -449,7 +468,8 @@ class CartPageController extends PageController
                     } else {
                         $this->overrideCanView = true;
                         $this->overrideCanViewOrderID = (int) $retrievedOrder->ID;
-                        $this->setRetrievalOrderID($this->currentOrder->ID);
+                        // remembered in the session once the permission check below has passed.
+                        $this->orderRetrievedWithLink = true;
                     }
                 } else {
                     $this->httpError(404, 'No order was found.');
@@ -481,6 +501,11 @@ class CartPageController extends PageController
             $canView = $this->overrideCanView ? $this->currentOrder->canOverrideCanView() : $this->currentOrder->canView();
             //IMPORTANT SECURITY QUESTION!
             if ($canView) {
+                $this->currentOrderAccessGranted = true;
+                if ($this->orderRetrievedWithLink) {
+                    $this->setRetrievalOrderID($this->currentOrder->ID);
+                }
+
                 if (! $this->getRequest()->getVar('CMSPreview')) {
                     if ($this->currentOrder->IsSubmitted() && $this->onlyShowUnsubmittedOrders()) {
                         $this->redirect($this->currentOrder->Link());
@@ -529,6 +554,12 @@ class CartPageController extends PageController
      */
     protected function setRetrievalOrderID($orderID, $validUntilTS = null)
     {
+        // SECURITY: the session value gives access to the order on other pages (e.g. the order confirmation page).
+        // It may therefore only be set for the order that this visitor has been allowed to see.
+        if (! $this->currentOrderAccessGranted || ! $this->currentOrder || (int) $orderID !== (int) $this->currentOrder->ID) {
+            return;
+        }
+
         if (! $validUntilTS) {
             $validUntilTS = time() + 3600;
         }
@@ -769,4 +800,10 @@ class CartPageController extends PageController
             If you haven\'t shopped with us before, please proceed to checkout as a guest or create an account.',
         );
     }
+
+    public function canCachePage(): bool
+    {
+        return false;
+    }
+
 }

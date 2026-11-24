@@ -577,6 +577,15 @@ class ProductGroup extends Page
     }
 
     /**
+     *
+     * @return DataList
+     */
+    public function Products()
+    {
+        return $this->getProducts();
+    }
+
+    /**
      * @EcommerceCache candidate?
      *
      * @return DataList
@@ -830,27 +839,6 @@ class ProductGroup extends Page
     {
         parent::onBeforeDelete();
         ProductGroupSearchTable::remove_product_group($this);
-    }
-
-    /**
-     * returns a URL without the -2 or -3, at the end,
-     * so that the URLSegment can be used as a code.
-     *
-     * @return string [description]
-     */
-    public function CleanURLSegment(): string
-    {
-        $urlSegment = $this->URLSegment;
-        $x = 2;
-        while ($x < 10) {
-            if (substr((string) $urlSegment, -2) === '-' . $x) {
-                return substr((string) $urlSegment, 0, -2);
-            }
-
-            ++$x;
-        }
-
-        return $urlSegment;
     }
 
     protected function getTemplateForSelectionOfProducts(): string

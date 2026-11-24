@@ -48,7 +48,7 @@ class OrderFormPayment extends Form
         $bottomFields = CompositeField::create();
         $bottomFields->addExtraClass('bottomOrder');
         if ($order->Total() > 0) {
-            $paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceLongSymbol(false), $order);
+            $paymentFields = EcommercePayment::combined_form_fields($order->TotalOutstandingAsMoney()->NiceLongSymbol(false), $order);
             foreach ($paymentFields as $paymentField) {
                 $bottomFields->push($paymentField);
             }
@@ -101,9 +101,17 @@ class OrderFormPayment extends Form
                 $formHelper = EcommercePayment::ecommerce_payment_form_setup_and_validation_object();
                 if ($formHelper->validatePayment($order, $data, $form)) {
                     $outcome = $formHelper->processPaymentFormAndReturnNextStep($order, $data, $form);
-                    if ($outcome === null) {
+                    if (! $outcome) {
+                        // the payment could not be processed (e.g. the payment method is not available).
+                        if ($this->controller->redirectedTo()) {
+                            // a redirect has been set already
+                            return $this->controller->getResponse();
+                        }
+                        $form->sessionMessage(_t('OrderForm.COULDNOTPROCESSPAYMENT_TRYAGAIN', 'Sorry, we could not process your payment. Please check your details and try again.'), 'bad');
+
                         return $this->controller->redirectBack();
                     }
+
                     return $outcome;
                 }
                 //error messages are set in validation

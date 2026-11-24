@@ -14,10 +14,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            font-family: 'Roboto', sans-serif;
-        }
         body {
+            font-family: 'Roboto', sans-serif;
             padding: 0;
             margin: 0;
             color: #222;
@@ -38,6 +36,9 @@
         header, main, footer {
             clear: both;
         }
+        main {
+            padding: 0 .5rem;
+        }
         header {
             border-bottom: 3px solid #222;
         }
@@ -49,6 +50,9 @@
             min-height: 1400px;
         }
         @media only screen and (min-width: 800px) {
+            main {
+                padding: 0;
+            }
             footer .content {
                 position: fixed;
                 top: 120px;
@@ -102,16 +106,23 @@
             width: calc(100% - 20px)!important;
             height: auto!important;
         }
-        select, input, textarea {
+        select, input:not([type="checkbox"]), textarea {
             padding: 8px;
             border: 1px solid #ced5e1;
             width: calc(100% - 2px);
+            box-sizing: border-box;
+        }
+        .field.checkbox {
+            border-top: 1px solid #008a0066;
         }
         span.description {
             font-style: italic;
             font-family: serif;
             text-align: right;
             display: block;
+        }
+        .link-explanation {
+            font-size: 0.85em;
         }
 
         input.action {

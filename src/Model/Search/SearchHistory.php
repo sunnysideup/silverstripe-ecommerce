@@ -108,7 +108,7 @@ class SearchHistory extends DataObject
         // Anyone can search, so we limit the number of rows that can be added:
         // 1. the same keyword is only recorded once per minute per visitor (e.g. page reloads).
         $now = time();
-        $session = Controller::curr() instanceof Controller ? Controller::curr()->getRequest()?->getSession() : null;
+        $session = Controller::has_curr() ? Controller::curr()->getRequest()?->getSession() : null;
         if ($session) {
             $last = $session->get('SearchHistoryLastEntry');
             if (is_array($last) && ($last['keyword'] ?? '') === $keywordString && ($now - (int) ($last['time'] ?? 0)) < 60) {

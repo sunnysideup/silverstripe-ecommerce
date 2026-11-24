@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -32,7 +31,7 @@ class EcommerceTaskCountryAndRegion extends BuildTask
         $allowedArray = EcommerceConfig::get(EcommerceCountry::class, 'allowed_country_codes');
         foreach ($array as $code => $name) {
             $ecommerceCountry = EcommerceCountry::get()->filter(
-                ['Code' => Convert::raw2sql($code)],
+                ['Code' => $code],
             )->first();
             if ($ecommerceCountry) {
                 //do nothing

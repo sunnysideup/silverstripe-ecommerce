@@ -8,7 +8,6 @@ use SilverStripe\Model\List\ArrayList;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -229,13 +228,35 @@ class UserPreference
             } elseif (! isset($this->userPreferences[$type])) {
                 $newPreference = $this->request->getVar($getVariableName);
                 if ('GROUPFILTER' === $type) {
+                    // group filters are sent as a POST variable so that robots can not
+                    // crawl every combination (see ProductGroupController::init).
+                    // A (single) GET variable is still supported.
+                    $postedPreference = $this->request->postVar($getVariableName);
+                    if ($postedPreference) {
+                        $newPreference = $postedPreference;
+                    }
+
+                    if (! is_string($newPreference)) {
+                        $newPreference = null;
+                    }
+
                     if ($newPreference) {
-                        $otherProductGroup = ProductGroupFilter::get_group_from_get_variable($newPreference);
-                        if ($otherProductGroup instanceof ProductGroup) {
+                        // supports a single group token (my-group.123) or a comma
+                        // separated list of group tokens (my-group.123,other-group.456)
+                        // to filter for more than one group at once
+                        $otherProductGroups = ProductGroupFilter::get_groups_from_get_variable($newPreference);
+                        if (! empty($otherProductGroups)) {
+                            $segments = [];
+                            $titles = [];
+                            foreach ($otherProductGroups as $otherProductGroup) {
+                                $segments[] = $otherProductGroup->FilterForGroupSegment();
+                                $titles[] = $otherProductGroup->MenuTitle;
+                            }
+
                             $newPreference = [
                                 'key' => BaseApplyer::DEFAULT_NAME,
-                                'params' => $otherProductGroup->FilterForGroupSegment(),
-                                'title' => $otherProductGroup->MenuTitle,
+                                'params' => implode(',', $segments),
+                                'title' => implode(', ', $titles),
                             ];
                         }
                     }
@@ -293,7 +314,7 @@ class UserPreference
             }
 
             $sessionValue = $this->request->getSession()->get('ProductGroup_' . $sessionName);
-            $key = Convert::raw2sql($sessionValue);
+            $key = is_scalar($sessionValue) ? (string) $sessionValue : '';
         }
 
         if (! $key) {
@@ -339,7 +360,8 @@ class UserPreference
     {
         $pageStart = '';
         if ($withPageNumber) {
-            $pageStart = $this->rootGroupController->getCurrentPageNumber();
+            // the exact start (not the page number): start=32 and start=40 show different products
+            $pageStart = (int) $this->request->getVar('start');
         }
 
         $pageId = $this->rootGroup->ID;
@@ -493,6 +515,7 @@ class UserPreference
                 }
 
                 $isCurrent = ! (bool) $currentKey;
+                $currentKeyParts = $currentKey ? explode(',', (string) $currentKey) : [];
                 $previousClassName = '';
                 $getVar = $this->rootGroupController->getSortFilterDisplayValues()[$type]['getVariable'] ?? '';
                 $prevGroup = null;
@@ -501,44 +524,45 @@ class UserPreference
                     if ($group->ClassName !== $previousClassName) {
                         $previousClassName = $group->ClassName;
                         $obj = ArrayData::create([
-                            'ID' => 0,
-                            'ClassName' => null,
-                            'Title' => _t('ProductGroup.ALL', 'All') . ' ' . $group->i18n_plural_name(), //
-                            'Current' => $isCurrent,
-                            'Link' => $this->getLinkTemplate('', $type, '', true),
-                            'LinkingMode' => $isCurrent ? 'current is-all' : 'link is-all',
-                            'Ajaxify' => $ajaxify,
-                            'Image' => null,
-                            'Key' => '',
-                            'ResetFor' => $getVar,
-                            'IsResetFor' => true,
-                        ]);
+                                'ID' => 0,
+                                'ClassName' => null,
+                                'Title' => _t('ProductGroup.ALL', 'All') . ' ' . $group->i18n_plural_name(), //
+                                'Current' => $isCurrent,
+                                'Link' => $this->getLinkTemplate('', $type, '', true),
+                                'LinkingMode' => $isCurrent ? 'current is-all' : 'link is-all',
+                                'Ajaxify' => $ajaxify,
+                                'Image' => null,
+                                'Key' => '',
+                                'Segment' => '',
+                                'ResetFor' => $getVar,
+                                'IsResetFor' => true,
+                            ]);
                         $list->push($obj);
                     }
-
-                    $isCurrent = $currentKey === $group->FilterForGroupSegment();
+                    $isCurrent = in_array($group->FilterForGroupSegment(), $currentKeyParts, true);
                     $title = $group->MenuTitle;
                     $crumb = $group->getProductGroupBreadcrumbCalculated();
                     if ($prevGroup && trim((string) $prevGroup->Title) === trim((string) $group->Title) && $prevGroup->ParentID !== $group->ParentID) {
                         $title = $crumb . ' - ' . $title;
                         $prevGroup->Title = $prevGroup->ProductGroupBreadcrumb . ' - ' . $prevGroup->Title;
                     }
-
+                    $linkValue = $this->combineGroupFilterValue($currentKeyParts, $group->FilterForGroupSegment());
                     foreach (array_keys($options) as $key) {
                         $obj = ArrayData::create([
-                            'ID' => $group->ID,
-                            'ClassName' => $group->ClassName,
-                            'Title' => $title,
-                            'ProductGroupBreadcrumb' => $crumb,
-                            'Current' => $isCurrent,
-                            'Link' => $this->getLinkTemplate('', $type, $group->FilterForGroupSegment()),
-                            'LinkingMode' => $isCurrent ? 'current' : 'link',
-                            'Ajaxify' => $ajaxify,
-                            'Image' => $group->Image(),
-                            'Key' => $key,
-                            'IsResetFor' => false,
-                            'ResetFor' => '',
-                        ]);
+                                'ID' => $group->ID,
+                                'ClassName' => $group->ClassName,
+                                'Title' => $title,
+                                'ProductGroupBreadcrumb' => $crumb,
+                                'Current' => $isCurrent,
+                                'Link' => $this->getLinkTemplate('', $type, $linkValue),
+                                'LinkingMode' => $isCurrent ? 'current' : 'link',
+                                'Ajaxify' => $ajaxify,
+                                'Image' => $group->Image(),
+                                'Key' => $key,
+                                'Segment' => $group->FilterForGroupSegment(),
+                                'IsResetFor' => false,
+                                'ResetFor' => '',
+                            ]);
                         $list->push($obj);
                     }
 
@@ -618,6 +642,31 @@ class UserPreference
         }
 
         return self::$linkTemplateCache[$cacheKey];
+    }
+
+    /**
+     * Works out the groupfilter GET var value to use when a user clicks a
+     * particular group filter link, given the groups that are already
+     * selected (as a comma separated list of group segments).
+     *
+     * - if the group is not currently selected, it is added to the existing
+     *   selection (so the previous groupfilter selections are kept)
+     * - if the group is already selected, clicking it again removes it
+     *   (so it acts as an on/off toggle)
+     *
+     * @param array  $currentSegments the group segments that are currently selected
+     * @param string $groupSegment    the group segment being clicked
+     */
+    protected function combineGroupFilterValue(array $currentSegments, string $groupSegment): string
+    {
+        $position = array_search($groupSegment, $currentSegments, true);
+        if (false !== $position) {
+            unset($currentSegments[$position]);
+        } else {
+            $currentSegments[] = $groupSegment;
+        }
+
+        return implode(',', array_values(array_unique($currentSegments)));
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use Sunnysideup\Ecommerce\Api\CartResponseAsArray;
 
@@ -73,6 +74,14 @@ class CartResponse extends EcommerceResponse
         //add header
         if ($this->includeHeaders) {
             $this->addHeader('Content-Type', 'application/json');
+            // This object is only used to build the JSON string: the string is returned by a controller,
+            // and it is the response of THAT controller that is sent to the browser.
+            // Without this, the JSON is sent as text/html and a browser may treat it as a web page.
+            if (Controller::has_curr()) {
+                $controllerResponse = Controller::curr()->getResponse();
+                $controllerResponse->addHeader('Content-Type', 'application/json; charset=utf-8');
+                $controllerResponse->addHeader('X-Content-Type-Options', 'nosniff');
+            }
         }
 
         //bad status
@@ -83,7 +92,8 @@ class CartResponse extends EcommerceResponse
 
         $js = CartResponseAsArray::return_cart_array($messages, $additionalData, $status);
 
-        $flag = Director::isDev() ? JSON_PRETTY_PRINT : 0;
+        // JSON_HEX_TAG: no < or > in the output, so it can never be mistaken for HTML.
+        $flag = JSON_HEX_TAG | (Director::isDev() ? JSON_PRETTY_PRINT : 0);
         $json = json_encode($js, $flag);
         $json = preg_replace('/[\t\r\n]+/', ' ', $json);
 

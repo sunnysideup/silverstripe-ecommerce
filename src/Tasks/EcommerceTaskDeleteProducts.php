@@ -6,6 +6,7 @@ use Override;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\PolyExecution\PolyOutput;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
@@ -34,6 +35,10 @@ class EcommerceTaskDeleteProducts extends BuildTask
             $output->writeln('WARNING: This command will delete ALL products permanently!');
             $output->writeln('To confirm, run with --confirm flag:');
             $output->writeln('  sake ecommerce:delete-products --confirm');
+            return Command::FAILURE;
+        }
+
+        if (! DestructiveTaskGuard::mayRun(null, $this, 'Deletes ALL products (every buyable), live and draft.', DestructiveTaskGuard::NOT_LIVE)) {
             return Command::FAILURE;
         }
 

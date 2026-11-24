@@ -214,6 +214,7 @@ class ProductSearchFilter extends BaseApplyer
 
     public static function keyword_sanitised(?string $string = ''): string
     {
+        // quotes and backslashes (the things that need escaping for SQL) are removed below
         $string = Convert::raw2sql($string);
         $string = strtolower((string) $string);
         $string = preg_replace('/[^\p{L}\p{N}\s\-\._\/\+\#\(\)\:]/u', ' ', (string) $string);

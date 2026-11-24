@@ -271,23 +271,20 @@ class ShippingAddress extends OrderAddress
         if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
             $shippingFieldsHeader = CompositeField::create(HeaderField::create('SendGoodsToADifferentAddress', _t('ShippingAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'), 2), LiteralField::create('ShippingNote', '<p class="message warning" id="ShippingNote">' . _t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.') . '</p>'));
 
-            if ($member && Security::getCurrentUser()) {
-                if ($member->exists() && ! $member->IsShopAdmin()) {
-                    $this->FillWithLastAddressFromMember($member, true);
-                    if (EcommerceConfig::get(ShippingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
-                        $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
-                        //we want MORE than one here not just one.
-                        if ($addresses->count() > 1) {
-                            $shippingFieldsHeader->push(SelectOrderAddressField::create('SelectShippingAddressField', _t('ShippingAddress.SELECTBILLINGADDRESS', 'Select Shipping Address'), $addresses));
-                        }
+            if ($member && $this->validateMemberForAutocompletion($member)) {
+                $this->FillWithLastAddressFromMember($member, true);
+                if (EcommerceConfig::get(ShippingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
+                    $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
+                    //we want MORE than one here not just one.
+                    if ($addresses->count() > 1) {
+                        $shippingFieldsHeader->push(SelectOrderAddressField::create('SelectShippingAddressField', _t('ShippingAddress.SELECTBILLINGADDRESS', 'Select Shipping Address'), $addresses));
                     }
                 }
-
-                $shippingFields = CompositeField::create(TextField::create('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')), TextField::create('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname')));
-            } else {
-                $shippingFields = CompositeField::create(TextField::create('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')), TextField::create('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname')));
             }
-
+            $shippingFields = CompositeField::create(
+                TextField::create('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')),
+                TextField::create('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname'))
+            );
             $shippingFields->push(TextField::create('ShippingPhone', _t('ShippingAddress.PHONE', 'Phone')));
             $mappingArray = $this->Config()->get('fields_to_google_geocode_conversion');
             if (is_array($mappingArray) && count($mappingArray)) {

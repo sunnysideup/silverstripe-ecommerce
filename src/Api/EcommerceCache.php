@@ -83,7 +83,7 @@ class EcommerceCache implements Flushable
             $this->productCacheKey .= '_' . strtotime((string) Product::get()->max('LastEdited'));
             $this->productCacheKey .= '_' . ProductGroup::get()->count();
             $this->productCacheKey .= '_' . strtotime((string) ProductGroup::get()->max('LastEdited'));
-            $this->productCacheKey .= '_' . Versioned::get_reading_mode();
+            $this->productCacheKey .= '_' . self::escapeCacheKey((string) Versioned::get_reading_mode());
         }
 
         return $this->productCacheKey;
@@ -163,6 +163,11 @@ class EcommerceCache implements Flushable
             $cacheKey = implode('_', $cacheKey);
         }
 
+        return self::escapeCacheKey($cacheKey) . $this->productCacheKey();
+    }
+
+    private static function escapeCacheKey(string $cacheKey): string
+    {
         $arrayOfReservedChars = [
             '{',
             '}',
@@ -179,7 +184,6 @@ class EcommerceCache implements Flushable
             $arrayOfReservedChars,
             '_',
             $cacheKey
-        ) .
-            $this->productCacheKey();
+        );
     }
 }

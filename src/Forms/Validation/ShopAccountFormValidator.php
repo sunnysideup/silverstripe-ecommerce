@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Forms\Validation;
 use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use Override;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Api\AttemptLimiter;
@@ -14,10 +13,12 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 class ShopAccountFormValidator extends RequiredFieldsValidator
 {
+    use ExtendedValidationTrait;
+
     /**
      * @var int
      */
-    private static $minimum_password_length = 7;
+    private static $minimum_password_length = 8;
 
     /**
      * How many times (per visitor and per time period) can someone enter an email address that
@@ -63,8 +64,10 @@ class ShopAccountFormValidator extends RequiredFieldsValidator
             if ($isShopAdmin || $allowExistingEmail) {
                 //do nothing
             } else {
-                $uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
-                // This check tells people if an email address already has an account.
+                // NB: do not strip characters from the value (e.g. "@" and "." in an email address):
+                // the lookup below must find exactly what Member::onBeforeWrite() will look for (it trims, nothing else).
+                // The ORM parameterises the value, so there is no need to escape it.
+                $uniqueFieldValue = trim((string) $data[$uniqueFieldName]);                // This check tells people if an email address already has an account.
                 // To stop people from using it to find out which email addresses have accounts,
                 // we limit how often someone can run into an email address that is taken.
                 // Once the limit has been reached, every email address is refused (whether it is taken or not).
@@ -91,27 +94,22 @@ class ShopAccountFormValidator extends RequiredFieldsValidator
                     ->filter([$uniqueFieldName => $uniqueFieldValue])
                     ->exclude(['ID' => $loggedInMemberID]);
                 if ($otherMembersWithSameEmail->exists()) {
+                    // Existing emails are allowed (see the `$allowExistingEmail` check above) when we are NOT logged in
+                    // and are placing an order, so we only get here for the account form and for logged-in people.
                     $limiter->record();
-                    //we allow existing email
-                    // if we are currently NOT logged in
-                    // in case we place an order!
-                    if ($allowExistingEmail) {
-                        //do nothing
-                    } else {
-                        // NB: we do not repeat the email address and we do not say that an account exists.
-                        $message = _t(
-                            'Account.ALREADYTAKEN',
-                            'This {uniqueFieldName} can not be used. If you already have an account, please log in. Otherwise, please use another {uniqueFieldName}.',
-                            ['uniqueFieldName' => strtolower((string) $uniqueFieldName)]
-                        );
-                        $this->validationError(
-                            $uniqueFieldName,
-                            $message,
-                            'required'
-                        );
-                        $valid = false;
-                    }
-                }
+                    // NB: we do not repeat the email address and we do not say that an account exists.
+                    // (Someone can still find out, but only a few times per hour: see the limiter above.)
+                    $message = _t(
+                        'Account.ALREADYTAKEN',
+                        'This {uniqueFieldName} can not be used. If you already have an account, please log in. Otherwise, please use another {uniqueFieldName}.',
+                        ['uniqueFieldName' => strtolower((string) $uniqueFieldName)]
+                    );
+                    $this->validationError(
+                        $uniqueFieldName,
+                        $message,
+                        'required'
+                    );
+                    $valid = false;                }
             }
         }
 
@@ -138,7 +136,7 @@ class ShopAccountFormValidator extends RequiredFieldsValidator
             }
 
             $letterCount = strlen((string) $data['PasswordCheck1']);
-            $minLength = Config::inst()->get(ShopAccountFormValidator::class, 'minimum_password_length');
+            $minLength = self::getMinimumPasswordLength();
             if ($letterCount > 0 && $letterCount < $minLength) {
                 $this->validationError(
                     'PasswordCheck1',
@@ -166,10 +164,8 @@ class ShopAccountFormValidator extends RequiredFieldsValidator
             );
             $valid = false;
         }
-
-        $validExtended = $this->extend('updatePHP', $data, $this);
-        if (false === $validExtended) {
-            $valid = false;
+        // see ExtendedValidationTrait for how extensions work with validators
+        if (! $this->extensionsAcceptTheData($data, _t('Account.ERRORINFORM', 'We could not save your details, please check your errors below.'))) {            $valid = false;
         }
 
         if (! $valid) {
@@ -177,5 +173,12 @@ class ShopAccountFormValidator extends RequiredFieldsValidator
         }
 
         return $valid;
+    }
+
+    public static function getMinimumPasswordLength()
+    {
+        $minLength = (int) Config::inst()->get(ShopAccountFormValidator::class, 'minimum_password_length');
+        $validator = Member::password_validator();
+        return max($minLength, $validator->getMinLength());
     }
 }

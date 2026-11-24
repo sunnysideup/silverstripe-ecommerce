@@ -3,10 +3,10 @@
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use Override;
+use SilverStripe\Control\HTTP;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
-use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
 class EcommerceSearchHistoryFormField extends LiteralField
@@ -124,7 +124,6 @@ class EcommerceSearchHistoryFormField extends LiteralField
     {
         $row = [];
         $maxWidth = 100;
-        $redirectToPage = ProductGroupSearchPage::get()->setUseCache(true)->first();
         $title = $this->getContent();
         $totalNumberOfDaysBack = $this->numberOfDays + $this->endingDaysBack;
         $data = DB::query('
@@ -171,18 +170,18 @@ class EcommerceSearchHistoryFormField extends LiteralField
 
                 $multipliedWidthInPercentage = floor(($row['myCount'] / $maxWidth) * 100);
                 $list[$row['myCount'] . '-' . $key] = $row['Title'];
-                $link = $redirectToPage->Link() . '?searchfilter=Keyword~' . urlencode((string) $row['Title']);
-                $debugLink = $link . '&showdebug=1';
+                $link = $this->getSearchLink($row['Title']);
+                $debugLink = $this->getSearchLink($row['Title'], true);
                 $tableContent .= '
                     <tr>
                         <td style="text-align: right; width: 30%; padding: 5px;">
-                            <a href="' . $link . '">' . $row['Title'] . '</a>
+                            <a href="' . $link . '" target="_blank">' . $row['Title'] . '</a>
                         </td>
                         <td style="background-color: silver;  padding: 5px; width: 70%;">
                             <div style="width: ' . $multipliedWidthInPercentage . '%; background-color: #C51162; color: #fff;">' . $row['myCount'] . '</div>
                         </td>
                         <td style="background-color: silver; width: 20px">
-                            <a href="' . $debugLink . '">☕</a>
+                            <a href="' . $debugLink . '" target="_blank">☕</a>
                         </td>
                     </tr>';
             }
@@ -193,22 +192,22 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 asort($list);
                 $tableContent .= '
                     <h3>A - Z</h3>
-                    <table class="aToz" style="widht: 100%">';
+                    <table class="aToz" style="width: 100%">';
                 foreach ($list as $key => $title) {
-                    $link = $redirectToPage->Link(ProductSearchForm::class) . '?Keyword=' . urlencode((string) $row['Title']) . '&action_doProductSearchForm=Search';
-                    $debugLink = $link . '&showdebug=1';
+                    $link = $this->getSearchLink($title);
+                    $debugLink = $this->getSearchLink($title, true);
                     $array = explode('-', $key);
                     $multipliedWidthInPercentage = floor(($array[0] / $maxWidth) * 100);
                     $tableContent .= '
                         <tr>
                             <td style="text-align: right; width: 30%; padding: 5px;">
-                                <a href="' . $link . '">' . $title . '</a>
+                                <a href="' . $link . '" target="_blank">' . $title . '</a>
                             </td>
                             <td style="background-color: silver;  padding: 5px; width: 70%">
                                 <div style="width: ' . $multipliedWidthInPercentage . '%; background-color: #004D40; color: #fff;">' . trim($array[0]) . '</div>
                             </td>
                             <td style="background-color: silver; width: 20px">
-                                <a href="' . $debugLink . '">☕</a>
+                                <a href="' . $debugLink . '" target="_blank">☕</a>
                             </td>
                         </tr>';
                 }
@@ -238,5 +237,17 @@ class EcommerceSearchHistoryFormField extends LiteralField
             'HTMLText',
             $content
         );
+    }
+
+    private function getSearchLink(string $keyword, bool $showDebug = false): string
+    {
+        $redirectToPage = ProductGroupSearchPage::get()->setUseCache(true)->first();
+        $link = $redirectToPage->Link();
+        $link = HTTP::setGetVar('stage', null, $link);
+        $link = HTTP::setGetVar('searchfilter', 'Keyword~' . $keyword, $link);
+        if ($showDebug) {
+            $link = HTTP::setGetVar('showdebug', '1', $link);
+        }
+        return $link;
     }
 }

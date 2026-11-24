@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 use Override;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\PolyExecution\PolyOutput;
+use Sunnysideup\Ecommerce\Api\DestructiveTaskGuard;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
@@ -35,6 +36,9 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $doCancel = $input->getOption('cancel');
+        if ($doCancel && ! DestructiveTaskGuard::mayRun(null, $this, 'Cancels and archives all orders that do not have an order step.', DestructiveTaskGuard::ANYWHERE)) {
+            return Command::FAILURE;
+        }
         if (! $doCancel) {
             $output->writeForHtml('You can add <strong>--cancel</strong> option to cancel and archive all orders.');
         }
