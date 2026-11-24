@@ -79,6 +79,7 @@ class BuyableSelectFieldDataList extends Controller
         if ('' === $term) {
             return $this->array2json([]);
         }
+
         $arrayOfBuyables = EcommerceConfig::get(EcommerceDBConfig::class, 'array_of_buyables');
         $arrayOfAddedItemIDsByClassName = [];
         $lengthOfFieldsToSearch = count($this->fieldsToSearch);
@@ -110,9 +111,7 @@ class BuyableSelectFieldDataList extends Controller
 
                     $className = $buyableArray['ClassName'];
                     $tableName = $buyableArray['TableName'];
-                    if (! isset($arrayOfAddedItemIDsByClassName[$className])) {
-                        $arrayOfAddedItemIDsByClassName[$className] = ArrayMethods::filter_array([]);
-                    }
+                    $arrayOfAddedItemIDsByClassName[$className] ??= ArrayMethods::filter_array([]);
 
                     if ($singleton->hasDatabaseField($fieldName)) {
                         // $where = "\"${fieldName}\" LIKE '%${term}%'

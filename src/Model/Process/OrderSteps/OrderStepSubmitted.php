@@ -123,6 +123,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
 
                 return false;
             }
+
             $order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
             $className = $this->getRelevantLogEntryClassName();
             if (class_exists($className)) {
@@ -183,9 +184,11 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
                 $order->MemberID = $memberOrderID;
             }
         }
+
         if (! $order->MemberID) {
             EcommerceRole::attach_member_to_guest_order($order);
         }
+
         if (! $order->MemberID) {
             return false;
         }

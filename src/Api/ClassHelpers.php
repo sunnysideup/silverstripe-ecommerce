@@ -10,7 +10,7 @@ class ClassHelpers
     /**
      * Length of the code that represents a buyable class name in (share) links.
      */
-    private const BUYABLE_CODE_LENGTH = 8;
+    private const int BUYABLE_CODE_LENGTH = 8;
 
     /**
      * Turns a buyable class name into a short, lowercase, hex code (e.g. 'a1b2c3d4')
@@ -35,12 +35,14 @@ class ClassHelpers
         if ('' === $code) {
             return null;
         }
+
         $lowerCode = strtolower($code);
         foreach (ClassInfo::implementorsOf(BuyableModel::class) as $class) {
             if (self::encode_buyable_class_name($class) === $lowerCode) {
                 return $class;
             }
         }
+
         // legacy links
         $class = self::unsanitise_class_name($code);
         if (class_exists($class) && in_array(BuyableModel::class, class_implements($class), true)) {

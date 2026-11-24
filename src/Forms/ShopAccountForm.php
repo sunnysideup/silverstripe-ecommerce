@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
+use SilverStripe\Core\Validation\ValidationException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
@@ -13,7 +14,6 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
-use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -74,6 +74,7 @@ class ShopAccountForm extends Form
                     Requirements::customScript(self::getCurrentPasswordScript(), 'ShopAccountFormCurrentPassword');
                 }
             }
+
             $actions = FieldList::create();
             $order = ShoppingCart::current_order();
             if ($order) {
@@ -258,13 +259,14 @@ JS;
                 } elseif ($member->validate()->isValid()) {
                     try {
                         $member->write();
-                    } catch (ValidationException $exception) {
+                    } catch (ValidationException) {
                         // e.g. the email address is already used by another member.
                         $this->sessionMessage(_t('ShopAccountForm.COULD_NOT_VALIDATE_MEMBER', 'Could not save your details.'), 'bad');
                         $this->controller->redirectBack();
 
                         return;
                     }
+
                     if ($member->exists()) {
                         if (! $order->MemberID) {
                             $order->MemberID = $member->ID;
@@ -313,12 +315,14 @@ JS;
 
             return $this->controller->redirectBack();
         }
+
         $password = ShopAccountFormPasswordValidator::clean_password($data);
         if (! $password && ! empty($data['PasswordCheck1'])) {
             $form->sessionMessage(_t('Account.NO_VALID_PASSWORD', 'You need to enter a valid password.'), 'bad');
 
             return $this->controller->redirectBack();
         }
+
         // Changing the email or the password of an account that has a password
         // requires the current password.
         // (otherwise anyone with access to a logged-in browser can take over the account).
@@ -347,6 +351,7 @@ JS;
                 return $this->controller->redirectBack();
             }
         }
+
         if (($password || $emailChanged) && ! ShopAccountFormPasswordValidator::can_set_password_without_current_password($member)) {
             $currentPassword = isset($data['CurrentPassword']) && is_string($data['CurrentPassword']) ? $data['CurrentPassword'] : '';
             if (! ShopAccountFormPasswordValidator::is_current_password($member, $currentPassword)) {
@@ -356,6 +361,7 @@ JS;
                 return $this->controller->redirectBack();
             }
         }
+
         $form->saveInto($member);
         if ($password) {
             // do not write yet: we only write if the member as a whole is valid (see below).
@@ -366,14 +372,16 @@ JS;
                 return $this->controller->redirectBack();
             }
         }
+
         if ($member->validate()->isValid()) {
             try {
                 $member->write();
-            } catch (ValidationException $exception) {
+            } catch (ValidationException) {
                 $form->sessionMessage(_t('Account.NO_VALID_DATA', 'Your details can not be updated.'), 'bad');
 
                 return $this->controller->redirectBack();
             }
+
             if ($link) {
                 return $this->controller->redirect($link);
             }

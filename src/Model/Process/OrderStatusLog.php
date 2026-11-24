@@ -268,7 +268,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         }
 
         $order = $this->getOrderCached();
-        if ($order && $order->canView($member)) {
+        if ($order instanceof Order && $order->canView($member)) {
             return true;
         }
 
@@ -385,7 +385,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         //OrderID Field
         if ($this->exists() && $this->OrderID) {
             $order = $this->getOrderCached();
-            if ($order && $order->exists()) {
+            if ($order instanceof Order && $order->exists()) {
                 $fields->removeByName('OrderID');
                 $fields->addFieldToTab(
                     'Root.Main',
@@ -399,7 +399,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 
             $bypassField = $fields->dataFieldByName('BypassEmailing');
             if ($bypassField) {
-                if ($order && $order->MyStep()->hasCustomerMessage()) {
+                if ($order instanceof Order && $order->MyStep()->hasCustomerMessage()) {
                     $bypassField->setDescription('Do not send email for this Order.');
                 } else {
                     $fields->removeByName('BypassEmailing');

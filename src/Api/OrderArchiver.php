@@ -22,7 +22,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
  */
 class OrderArchiver
 {
-    private const CHUNK_SIZE = 500;
+    private const int CHUNK_SIZE = 500;
 
     /**
      * THE definition of an "old" order: orders placed before this
@@ -150,6 +150,6 @@ class OrderArchiver
      */
     protected static function clean_ids(array $ids): array
     {
-        return array_values(array_unique(array_filter(array_map('intval', $ids))));
+        return array_values(array_unique(array_filter(array_map(intval(...), $ids))));
     }
 }

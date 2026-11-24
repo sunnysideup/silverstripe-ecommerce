@@ -100,7 +100,7 @@ class ProductGroupFilter extends BaseApplyer
                 }
             }
 
-            if (! empty($allIds)) {
+            if ($allIds !== []) {
                 $allIds = array_unique($allIds);
                 $newIDs = array_intersect($allIds, $this->products->columnUnique());
                 $filter = ['ID' => ArrayMethods::filter_array($newIDs)];
@@ -120,7 +120,7 @@ class ProductGroupFilter extends BaseApplyer
     public function getTitle(?string $key = '', $params = null): string
     {
         $groups = $this->findGroups($params);
-        if (empty($groups)) {
+        if ($groups === []) {
             return '';
         }
 
@@ -169,6 +169,7 @@ class ProductGroupFilter extends BaseApplyer
         if (empty($filter)) {
             return [];
         }
+
         if (is_array($filter)) {
             $filter = implode('.', $filter);
         }

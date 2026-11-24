@@ -678,7 +678,7 @@ class OrderItem extends OrderAttribute
     {
         $currentOrVersion = $current ? 'current' : 'version';
         $order = $this->getOrderCached();
-        $currentOrVersion = $order && $order->IsSubmitted() && $current === false ? 'version' : 'current';
+        $currentOrVersion = $order instanceof Order && $order->IsSubmitted() && $current === false ? 'version' : 'current';
 
         if (! isset($this->tempBuyableStore[$currentOrVersion])) {
             if (! $this->BuyableID) {
@@ -809,7 +809,7 @@ class OrderItem extends OrderAttribute
         $buyable = $this->getBuyableCached();
         if ($buyable && $buyable->exists()) {
             $order = $this->getOrderCached();
-            if ($order && $order->IsSubmitted()) {
+            if ($order instanceof Order && $order->IsSubmitted()) {
                 return Director::absoluteURL($buyable->VersionedLink());
             }
 
@@ -954,6 +954,7 @@ class OrderItem extends OrderAttribute
     {
         return $this->Order()->CheckoutLink($action);
     }
+
     public function SecurityIDToken(): string
     {
         return (string) SecurityToken::getSecurityID();

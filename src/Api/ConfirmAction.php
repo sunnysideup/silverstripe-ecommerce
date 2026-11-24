@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
+use Throwable;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\CMS\Controllers\ModelAsController;
 use SilverStripe\Control\Controller;
@@ -60,7 +61,7 @@ class ConfirmAction
             if ('' !== $themed) {
                 return $themed;
             }
-        } catch (\Throwable $throwable) {
+        } catch (Throwable) {
             // fall through to the plain page.
         }
 

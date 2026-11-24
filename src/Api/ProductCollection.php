@@ -79,35 +79,38 @@ abstract class ProductCollection
                 if (is_string($internalItemIDs) && $internalItemIDs !== '') {
                     $internalItemIDs = explode('.', $internalItemIDs);
                 }
+
                 if ($parentId || $internalItemIDs) {
                     $whereArray = [];
                     $stage = '_Live'; // always live
-                    if (is_array($internalItemIDs) && !empty($internalItemIDs)) {
+                    if (is_array($internalItemIDs) && $internalItemIDs !== []) {
                         $internalItemIDs = array_map(
-                            function ($id) {
-                                return str_replace('"', '', (string) $id);
-                            },
+                            fn($id) => str_replace('"', '', (string) $id),
                             array_values($internalItemIDs)
                         );
                         $internalItemIDs = Convert::raw2sql($internalItemIDs);
-                        $whereArray[] = '"Product' . $stage . '"."InternalItemID" IN (\'' . implode("','", $internalItemIDs) . '\')';
+                        $whereArray[] = '"Product' . $stage . '"."InternalItemID" IN (\'' . implode("','", $internalItemIDs) . "')";
                     }
+
                     if ($parentId) {
                         $parent = ProductGroup::get()->byID($parentId);
                         if ($parent) {
-                            $productIds = array_map('intval', $parent->getProducts()->columnUnique());
-                            $whereArray[] = '"Product' . $stage . '"."ID" IN (' . ($productIds ? implode(',', $productIds) : '0') . ')';
+                            $productIds = array_map(intval(...), $parent->getProducts()->columnUnique());
+                            $whereArray[] = '"Product' . $stage . '"."ID" IN (' . ($productIds !== [] ? implode(',', $productIds) : '0') . ')';
                         } else {
                             // unknown group: match nothing, never fall back to everything
                             $whereArray[] = '1 = 0';
                         }
                     }
-                    return !empty($whereArray) ? implode(' AND ', $whereArray) : '';
+
+                    return $whereArray !== [] ? implode(' AND ', $whereArray) : '';
                 }
             }
         }
+
         return '';
     }
+
     protected function getWhereArrayForSql(array|string|null $where = ''): array
     {
         $array = $this->standardiseToArray($where);
@@ -119,6 +122,7 @@ abstract class ProductCollection
         if (! is_array($where)) {
             $where = [$where];
         }
+
         $where[] = $this->getAdditionalPredeterminedFiltersWhere();
         $where = array_filter($where);
         return array_unique($where);
@@ -129,7 +133,7 @@ abstract class ProductCollection
         $array = $this->getWhereArrayForSql($where);
 
         $stage = '_Live'; // always live
-        if ($array) {
+        if ($array !== []) {
             $where = '(' . implode(' AND ', $array) . ') AND ';
         }
 

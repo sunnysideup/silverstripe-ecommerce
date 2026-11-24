@@ -617,10 +617,12 @@ class OrderModifier extends OrderAttribute
     {
         return $this->CalculatedTotal;
     }
+
     public function SecurityIDToken(): string
     {
         return (string) SecurityToken::getSecurityID();
     }
+
     public function AddSecurityIdToLinks(): bool
     {
         return ShoppingCartController::add_security_id_to_links();

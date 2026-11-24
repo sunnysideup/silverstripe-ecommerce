@@ -423,6 +423,7 @@ class ShoppingCart
 
                 return false;
             }
+
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
             $quantity = $this->prepareQuantity($buyable, $quantity);
             if ($item && $quantity) {
@@ -1225,6 +1226,7 @@ class ShoppingCart
             if (! is_array($messages)) {
                 $messages = [];
             }
+
             //clear old messages
             $session->clear($sessionVariableName);
         }
@@ -1299,6 +1301,7 @@ class ShoppingCart
             if (isset($_REQUEST['BackURL']) && is_string($_REQUEST['BackURL'])) {
                 $backURL = urldecode($_REQUEST['BackURL']);
             }
+
             if ('' !== $backURL && Director::is_site_url($backURL)) {
                 Controller::curr()->redirect($backURL);
             } else {
@@ -1400,8 +1403,9 @@ class ShoppingCart
             if (! is_scalar($value) || ! preg_match('/^[A-Za-z0-9_]+$/', (string) $field)) {
                 continue;
             }
+
             // $value has been escaped in cleanParameters (raw2sql) so it just needs to be quoted.
-            $outputArray[] = ' AND "' . $field . '" = \'' . $value . '\'';
+            $outputArray[] = ' AND "' . $field . '" = \'' . $value . "'";
         }
 
         // NB: this is added to the end of a WHERE statement (see getExistingItem)

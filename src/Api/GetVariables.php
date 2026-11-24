@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Convert;
 
 class GetVariables
 {

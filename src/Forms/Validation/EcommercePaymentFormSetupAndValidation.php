@@ -178,8 +178,9 @@ class EcommercePaymentFormSetupAndValidation
                     if (isset($dbFieldMap[$paymentClassName]['CardNumber'])) {
                         $dbFieldName = $dbFieldMap[$paymentClassName]['CardNumber'];
                     }
+
                     $cardNumberParts = is_array($data[$formFieldName]) ? array_slice(array_values($data[$formFieldName]), 0, 4) : [];
-                    $cardNumberParts = array_filter($cardNumberParts, 'is_scalar');
+                    $cardNumberParts = array_filter($cardNumberParts, is_scalar(...));
                     $this->paymentObject->{$dbFieldName} = trim(implode('', $cardNumberParts));
                     $cardNumber = $this->paymentObject->{$dbFieldName};
                     if (! $this->validateCardNumber($this->paymentObject->{$dbFieldName})) {
@@ -242,6 +243,7 @@ class EcommercePaymentFormSetupAndValidation
 
             return false;
         }
+
         // the card details stay in memory (for the payment gateway), they are never saved to the database.
         $this->writePaymentWithoutCardData();
 
@@ -297,12 +299,14 @@ class EcommercePaymentFormSetupAndValidation
         if (! $payment || ! $payment->exists()) {
             return;
         }
+
         [$cardNumberField, $cvvField] = $this->cardFieldNames($payment);
         $changed = false;
         if ($payment->hasDatabaseField($cvvField) && '' !== (string) $payment->{$cvvField}) {
             $payment->{$cvvField} = '';
             $changed = true;
         }
+
         if ($payment->hasDatabaseField($cardNumberField)) {
             $number = (string) $payment->{$cardNumberField};
             // only mask if it still looks like a full card number (not already masked)
@@ -311,6 +315,7 @@ class EcommercePaymentFormSetupAndValidation
                 $changed = true;
             }
         }
+
         if ($changed) {
             $payment->write();
         }
@@ -332,6 +337,7 @@ class EcommercePaymentFormSetupAndValidation
         if (! is_string($paymentClass) || '' === $paymentClass) {
             return null;
         }
+
         //important! convert back to PHP class
         $paymentClass = ltrim(EcommercePayment::html_class_to_php_class($paymentClass), '\\');
         $supportedClasses = array_map(
@@ -341,6 +347,7 @@ class EcommercePaymentFormSetupAndValidation
         if (! in_array($paymentClass, $supportedClasses, true)) {
             return null;
         }
+
         if (! class_exists($paymentClass) || ! is_a($paymentClass, EcommercePayment::class, true)) {
             return null;
         }

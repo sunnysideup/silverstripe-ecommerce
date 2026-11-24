@@ -349,9 +349,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      */
     public function getGroups(?int $maxRecursiveLevel = null, $filter = null)
     {
-        if (null === $maxRecursiveLevel) {
-            $maxRecursiveLevel = $this->getLevelOfProductsToShow();
-        }
+        $maxRecursiveLevel ??= $this->getLevelOfProductsToShow();
 
         $list = $this->getProductGroupListProvider()->getGroups($maxRecursiveLevel, $filter);
         ClassHelpers::check_for_instance_of($list, SS_List::class);

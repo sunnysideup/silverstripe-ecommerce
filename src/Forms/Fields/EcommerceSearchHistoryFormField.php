@@ -248,6 +248,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
         if ($showDebug) {
             $link = HTTP::setGetVar('showdebug', '1', $link);
         }
+
         return $link;
     }
 }

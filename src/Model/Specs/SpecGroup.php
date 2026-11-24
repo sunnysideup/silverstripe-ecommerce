@@ -46,8 +46,10 @@ class SpecGroup extends DataObject
                 $obj->Type = $type;
                 $obj->write();
             }
+
             return $obj;
         }
+
         $obj = SpecGroup::create($filter);
         $obj->Type = $type ?: 'Text';
         $obj->write();
@@ -79,6 +81,7 @@ class SpecGroup extends DataObject
     private static $has_one = [
         'Parent' => SpecGroup::class,
     ];
+
     private static $has_many = [
         'Children' => SpecGroup::class,
     ];
@@ -104,6 +107,7 @@ class SpecGroup extends DataObject
             ],
         ]
     ];
+
     public function getTypeCssClass(): string
     {
         return strtolower($this->Type) . '-class';

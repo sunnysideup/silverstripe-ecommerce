@@ -74,6 +74,7 @@ class OrderStepPaymentAttempted extends OrderStep implements OrderStepInterface
         if ($this->hasPaymentAttempt($order)) {
             return true;
         }
+
         if ($this->hasWaitedTooLong($order)) {
             $this->cancelOrder($order);
         }
@@ -119,9 +120,11 @@ class OrderStepPaymentAttempted extends OrderStep implements OrderStepInterface
         if ($days <= 0) {
             return false;
         }
+
         if ($order->CancelledByID) {
             return false;
         }
+
         $startTs = $this->orderStartTimestamp($order);
         if ($startTs <= 0) {
             return false;
@@ -140,6 +143,7 @@ class OrderStepPaymentAttempted extends OrderStep implements OrderStepInterface
                 $message .= ' If there is still no payment attempt ' . $this->daysToWait()
                     . ' days after the order was submitted then the order will be cancelled.';
             }
+
             $fields->addFieldToTab(
                 'Root.Next',
                 LiteralField::create(

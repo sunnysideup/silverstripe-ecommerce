@@ -777,7 +777,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         $list = EcommerceCurrency::get_list();
 
-        if ($list && $list->limit(2)->count() > 1) {
+        if ($list instanceof DataList && $list->limit(2)->count() > 1) {
             return $list;
         }
 

@@ -141,9 +141,10 @@ class SetEmailVerifiedForPaidAndNewMembers extends BuildTask
         if ($codes === []) {
             return [];
         }
+
         $ids = Permission::get_members_by_permission($codes)->column('ID');
 
-        return array_values(array_unique(array_map('intval', $ids)));
+        return array_values(array_unique(array_map(intval(...), $ids)));
     }
 
     /**

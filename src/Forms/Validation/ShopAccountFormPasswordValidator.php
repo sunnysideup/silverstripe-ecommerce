@@ -29,6 +29,7 @@ class ShopAccountFormPasswordValidator
         if (! is_array($data)) {
             return '';
         }
+
         if (isset($data['PasswordCheck1'], $data['PasswordCheck2'])) {
             if (is_string($data['PasswordCheck1']) && $data['PasswordCheck1'] === $data['PasswordCheck2']) {
                 return $data['PasswordCheck1'];
@@ -46,7 +47,7 @@ class ShopAccountFormPasswordValidator
      */
     public static function can_set_password_without_current_password(?Member $member): bool
     {
-        return ! $member || ! $member->exists() || ! $member->Password;
+        return ! $member instanceof Member || ! $member->exists() || ! $member->Password;
     }
 
     /**
@@ -62,6 +63,7 @@ class ShopAccountFormPasswordValidator
         if (! $password) {
             return false;
         }
+
         $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::CHECK_PASSWORD);
         foreach ($authenticators as $authenticator) {
             if ($authenticator->checkPassword($member, $password)->isValid()) {

@@ -199,6 +199,7 @@ abstract class OrderStepController extends Controller
                 $id = (int) $this->request->param('ID');
                 $sessionID = (string) $this->request->param('OtherID');
             }
+
             $sessionID = preg_replace('/[^A-Za-z0-9]/', '', (string) $sessionID);
             self::$_order = Order::get_order_cached($id);
             if (self::$_order instanceof Order && $this->secureHash(self::$_order) !== $sessionID) {

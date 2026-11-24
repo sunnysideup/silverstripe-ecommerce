@@ -77,7 +77,7 @@ class CartResponse extends EcommerceResponse
             // This object is only used to build the JSON string: the string is returned by a controller,
             // and it is the response of THAT controller that is sent to the browser.
             // Without this, the JSON is sent as text/html and a browser may treat it as a web page.
-            if (Controller::has_curr()) {
+            if (Controller::curr() !== null) {
                 $controllerResponse = Controller::curr()->getResponse();
                 $controllerResponse->addHeader('Content-Type', 'application/json; charset=utf-8');
                 $controllerResponse->addHeader('X-Content-Type-Options', 'nosniff');

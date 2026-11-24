@@ -12,7 +12,6 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
@@ -271,7 +270,7 @@ class ShippingAddress extends OrderAddress
         if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
             $shippingFieldsHeader = CompositeField::create(HeaderField::create('SendGoodsToADifferentAddress', _t('ShippingAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'), 2), LiteralField::create('ShippingNote', '<p class="message warning" id="ShippingNote">' . _t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.') . '</p>'));
 
-            if ($member && $this->validateMemberForAutocompletion($member)) {
+            if ($member instanceof Member && $this->validateMemberForAutocompletion($member)) {
                 $this->FillWithLastAddressFromMember($member, true);
                 if (EcommerceConfig::get(ShippingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
                     $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
@@ -281,6 +280,7 @@ class ShippingAddress extends OrderAddress
                     }
                 }
             }
+
             $shippingFields = CompositeField::create(
                 TextField::create('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')),
                 TextField::create('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname'))

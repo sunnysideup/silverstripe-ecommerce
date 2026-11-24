@@ -50,6 +50,7 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
             );
             $valid = false;
         }
+
         // NOTE: the 'updatePHP' extension is run by ShopAccountFormValidator::php() (parent::php above),
         // and its answer is part of $valid. Do not run it again here: that runs every extension twice
         // (and shows every error message twice).

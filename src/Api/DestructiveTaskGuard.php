@@ -60,7 +60,7 @@ class DestructiveTaskGuard
     public static function mayRun(HTTPRequest|null $request, BuildTask $task, string $whatItDoes, string $restriction = self::ANYWHERE): bool
     {
         $title = (string) $task->getTitle();
-        if (! $request && Controller::has_curr()) {
+        if (! $request && Controller::curr() !== null) {
             $request = Controller::curr()->getRequest();
         }
 

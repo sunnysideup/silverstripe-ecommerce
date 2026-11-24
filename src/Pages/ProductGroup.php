@@ -617,7 +617,7 @@ class ProductGroup extends Page
             while (self::$parentGroupCache[$this->ID]) {
                 $obj = self::$parentGroupCache[$this->ID];
                 $nextParent = $obj->ParentGroup();
-                if ($nextParent && $nextParent->ClassName === $this->ClassName) {
+                if ($nextParent instanceof \Sunnysideup\Ecommerce\Pages\ProductGroup && $nextParent->ClassName === $this->ClassName) {
                     self::$parentGroupCache[$this->ID] = $nextParent;
                 } else {
                     //important to return here...
@@ -682,7 +682,7 @@ class ProductGroup extends Page
     public function TopParentGroup(): ProductGroup
     {
         $parent = $this->ParentGroup();
-        self::$topParentGroupCache[$this->ID] = $parent && $parent->exists() ? $parent->TopParentGroup() : $this;
+        self::$topParentGroupCache[$this->ID] = $parent instanceof \Sunnysideup\Ecommerce\Pages\ProductGroup && $parent->exists() ? $parent->TopParentGroup() : $this;
 
         return self::$topParentGroupCache[$this->ID];
     }
@@ -969,7 +969,7 @@ class ProductGroup extends Page
 
             if (! $value || 'inherit' === $value) {
                 $parent = $this->ParentGroup();
-                if ($parent && $parent->exists() && $parent->ID !== $this->ID) {
+                if ($parent instanceof \Sunnysideup\Ecommerce\Pages\ProductGroup && $parent->exists() && $parent->ID !== $this->ID) {
                     $value = $parent->recursiveValue($fieldNameOrMethod, $default);
                 } else {
                     $value = EcommerceConfig::inst()->recursiveValue($fieldNameOrMethod, $default);

@@ -537,7 +537,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
     public static function set_order_cached(?Order $order)
     {
-        if ($order && $order->exists()) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->exists()) {
             self::$order_cache[$order->ID] = $order;
         }
     }
@@ -651,7 +651,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $id = (int) $id;
         $order = Order::get_order_cached($id);
-        if ($order && $order->canView()) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canView()) {
             if ($order->IsSubmitted()) {
                 // LITTLE HACK TO MAKE SURE WE SHOW THE LATEST INFORMATION!
                 $order->tryToFinaliseOrder();
@@ -890,6 +890,7 @@ class Order extends DataObject implements EditableEcommerceObject
         foreach ($this->fieldsAndTabsToBeRemoved as $field) {
             $fields->removeByName($field);
         }
+
         if ($this->EmailNotVerified) {
             $fields->addFieldToTab(
                 'Root.Main',
@@ -1743,6 +1744,7 @@ class Order extends DataObject implements EditableEcommerceObject
             if (abs($totalOutstanding) < $maxDifference) {
                 $totalOutstanding = 0;
             }
+
             return ($this->Total() >= 0) && ($totalOutstanding <= 0);
             //return ($this->Total() >= 0) && ($this->TotalOutstanding() <= 0);
         }
@@ -1919,11 +1921,11 @@ class Order extends DataObject implements EditableEcommerceObject
             }
         }
 
-        if (! ($member && $member->exists())) {
+        if (!$member || !$member->exists()) {
             $member = $this->Member();
         }
 
-        if (! ($member && $member->exists())) {
+        if (!$member || !$member->exists()) {
             $member = Member::create();
         }
 
@@ -2010,10 +2012,11 @@ class Order extends DataObject implements EditableEcommerceObject
             return $address;
         }
     }
+
     public function validateMemberForAutocompletion(Member $member): bool
     {
         $loggedInUser = Security::getCurrentUser();
-        return $member && $member->exists() && $loggedInUser && $member->ID === $loggedInUser->ID && ! $member->IsShopAdmin();
+        return $member instanceof Member && $member->exists() && $loggedInUser && $member->ID === $loggedInUser->ID && ! $member->IsShopAdmin();
     }
 
     /**
@@ -2572,9 +2575,11 @@ class Order extends DataObject implements EditableEcommerceObject
                 $tsOrder = strtotime((string) $this->LastEdited);
                 $withinTimeWindow = ((time() - $tsOrder) / 60) < $minutes;
             }
+
             if ($withinTimeWindow) {
                 return true;
             }
+
             // The time window has passed.
             // The only order that can still be viewed without logging in
             // is the order that is in the visitor's own session.
@@ -2599,7 +2604,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $orderInSession = ShoppingCart::session_order();
 
-        return $orderInSession && $this->ID && $this->ID === $orderInSession->ID;
+        return $orderInSession instanceof \Sunnysideup\Ecommerce\Model\Order && $this->ID && $this->ID === $orderInSession->ID;
     }
 
     /**
@@ -2705,7 +2710,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
         $submitErrors = $this->SubmitErrors();
 
-        return ! ($submitErrors && $submitErrors->count());
+        return !$submitErrors || !$submitErrors->count();
     }
 
     /**
@@ -3008,10 +3013,12 @@ class Order extends DataObject implements EditableEcommerceObject
 
         return null;
     }
+
     public function SecurityIDToken(): string
     {
         return (string) SecurityToken::getSecurityID();
     }
+
     public function AddSecurityIdToLinks(): bool
     {
         return ShoppingCartController::add_security_id_to_links();
@@ -3073,13 +3080,9 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->exists()) {
             $titleArray = [];
-            if (null === $dateFormat) {
-                $dateFormat = EcommerceConfig::get(Order::class, 'date_format_for_title');
-            }
+            $dateFormat ??= EcommerceConfig::get(Order::class, 'date_format_for_title');
 
-            if (null === $includeName) {
-                $includeName = EcommerceConfig::get(Order::class, 'include_customer_name_in_title');
-            }
+            $includeName ??= EcommerceConfig::get(Order::class, 'include_customer_name_in_title');
 
             $titleArray[] = $this->i18n_singular_name() . ' #' . $this->ID;
             if ($dateFormat) {
@@ -3786,6 +3789,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($minutes <= 0) {
             return false;
         }
+
         $submissionLog = $this->SubmissionLog();
         if (! $submissionLog) {
             // not placed yet.
@@ -3828,6 +3832,7 @@ class Order extends DataObject implements EditableEcommerceObject
             foreach ($problems as $problem) {
                 $al->push(ArrayData::create(['Title' => $problem]));
             }
+
             foreach ((array) $extendedSubmitErrors as $returnResultArray) {
                 foreach ((array) $returnResultArray as $issue) {
                     if ($issue) {
@@ -3857,12 +3862,14 @@ class Order extends DataObject implements EditableEcommerceObject
                 $candidates[] = $billingAddress->Email;
             }
         }
+
         if ($this->MemberID) {
             $member = $this->Member();
             if ($member && $member->exists()) {
                 $candidates[] = $member->Email;
             }
         }
+
         foreach ($candidates as $candidate) {
             $candidate = trim((string) $candidate);
             if ('' !== $candidate && filter_var($candidate, FILTER_VALIDATE_EMAIL)) {
@@ -4174,14 +4181,17 @@ class Order extends DataObject implements EditableEcommerceObject
             $billingAddress = $this->BillingAddress();
             $email = $billingAddress && $billingAddress->exists() ? trim((string) $billingAddress->Email) : '';
         }
+
         if ('' === $email) {
             $email = _t('Order.CUSTOMER_NO_EMAIL', 'no email');
         }
+
         $guest = _t('Member.TYPE_GUEST', 'guest');
         $member = $this->MemberID ? $this->Member() : null;
         if (! $member || ! $member->exists()) {
             return $email . $separator . $guest . ', ' . _t('Member.MEMBER_ORDER_COUNT_PAID', 'paid') . ': ' . $this->countPaidOrdersWithoutMemberByEmail($email);
         }
+
         if ($this->EmailNotVerified) {
             return $email . $separator . $guest . ', ' .
                 sprintf(
@@ -4202,6 +4212,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return 0;
         }
+
         $ids = Order::get()
             ->filter([
                 'MemberID' => 0,
@@ -4644,9 +4655,8 @@ class Order extends DataObject implements EditableEcommerceObject
 
         if (is_array($extrafilter)) {
             return $className::get()->filter(['OrderID' => $this->ID] + $extrafilter);
-        } else {
-            return $className::get()->filter(['OrderID' => $this->ID])->where($extrafilter);
         }
+        return $className::get()->filter(['OrderID' => $this->ID])->where($extrafilter);
     }
 
     /**

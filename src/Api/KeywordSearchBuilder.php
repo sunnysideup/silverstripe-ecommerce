@@ -61,6 +61,7 @@ class KeywordSearchBuilder
             $rows = DB::prepared_query($sql, $this->ifParams);
             echo $this->arrayToHtmlTable($rows);
         }
+
         return DB::prepared_query($sql, $this->ifParams)->keyedColumn();
     }
 
@@ -95,6 +96,7 @@ class KeywordSearchBuilder
         if (strlen($phrase) < 2) {
             return;
         }
+
         $this->startIfStatement();
         $wordAsArray = array_filter(explode(' ', $phrase));
         // create Field LIKE %AAAA% AND Field LIKE %BBBBB
@@ -108,6 +110,7 @@ class KeywordSearchBuilder
                 if (strlen($word) < 2) {
                     continue;
                 }
+
                 $searchStringArray[] = '"_FF_FIELD_GOES_HERE_" LIKE ?';
                 $searchStringANDParams[] = '%' . $this->escapeLike($word) . '%';
             }
@@ -208,6 +211,7 @@ class KeywordSearchBuilder
         if ($this->debug) {
             $titleField = '"Title",';
         }
+
         $hasGp = $this->ifStatement !== '';
         $gpField = $hasGp ? $this->ifStatement : '0 AS gp';
         $fields = implode(', ', array_filter([$idField, $titleField, $gpField]));
@@ -223,6 +227,7 @@ class KeywordSearchBuilder
         if (! $word) {
             $word = $this->keywordPhrase;
         }
+
         $likeWord = $this->escapeLike((string) $word);
         $replacements = SearchReplacement::get()
             ->where([
@@ -262,6 +267,7 @@ class KeywordSearchBuilder
         foreach ($headers as $header) {
             $html .= '<th>' . htmlspecialchars((string) $header) . '</th>';
         }
+
         $html .= '<th>Page</th></tr></thead><tbody>';
 
         foreach ($rows as $row) {
@@ -270,6 +276,7 @@ class KeywordSearchBuilder
                 $value = $row[$header] ?? '';
                 $html .= '<td>' . htmlspecialchars((string) $value) . '</td>';
             }
+
             $pageID = $row['ProductID'] ?? $row['ProductGroupID'] ?? 0;
             $pageTitle = 'Unknown';
             if ($pageID) {

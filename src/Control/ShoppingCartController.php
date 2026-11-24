@@ -310,7 +310,7 @@ class ShoppingCartController extends Controller
     public static function copy_order_link(int $orderID, $parameters = []): string
     {
         $order = Order::get_order_cached($orderID);
-        if ($order && $order->IsSubmitted()) {
+        if ($order instanceof Order && $order->IsSubmitted()) {
             return self::create_link('copyorder/' . $orderID . '/' . self::params_to_get_string($parameters));
         }
 
@@ -338,6 +338,7 @@ class ShoppingCartController extends Controller
             $className = ClassHelpers::sanitise_class_name($className);
             return self::create_link('removefromsale/' . $className . '/' . $id . '/');
         }
+
         return '';
     }
 
@@ -352,6 +353,7 @@ class ShoppingCartController extends Controller
         if (EcommerceRole::current_member_is_shop_assistant()) {
             return self::create_link('placeorderformember/' . $memberID . '/');
         }
+
         return '';
     }
 
@@ -366,6 +368,7 @@ class ShoppingCartController extends Controller
         if (Permission::check('ADMIN')) {
             return self::create_link('loginas/' . $memberID . '/');
         }
+
         return '';
     }
 
@@ -582,6 +585,7 @@ class ShoppingCartController extends Controller
                             _t('ShoppingCartController.CONFIRM_REMOVEFROMSALE_BUTTON', 'Remove from sale')
                         );
                     }
+
                     $obj->AllowPurchase = 0;
                     if ($obj instanceof SiteTree) {
                         $obj->writeToStage(Versioned::DRAFT);
@@ -632,6 +636,7 @@ class ShoppingCartController extends Controller
                 _t('ShoppingCartController.CONFIRM_CLEARANDLOGOUT_BUTTON', 'Clear cart and log out')
             );
         }
+
         $this->cart->clear();
         if (Security::getCurrentUser()) {
             // We log out here (this is a POST with a valid security token, see ConfirmAction) rather than sending
@@ -805,6 +810,7 @@ class ShoppingCartController extends Controller
                         _t('ShoppingCartController.CONFIRM_PLACEORDERFORMEMBER_BUTTON', 'Start new order')
                     );
                 }
+
                 $newOrder = Order::create();
                 //copying fields.
                 $newOrder->MemberID = $member->ID;
@@ -817,6 +823,7 @@ class ShoppingCartController extends Controller
 
             user_error('Can not find this member.');
         }
+
         return Security::permissionFailure($this);
 
     }
@@ -840,6 +847,7 @@ class ShoppingCartController extends Controller
                         _t('ShoppingCartController.CONFIRM_LOGINAS_BUTTON', 'Log in as customer')
                     );
                 }
+
                 Security::setCurrentUser($newMember);
                 Injector::inst()->get(IdentityStore::class)->logIn($newMember);
 
@@ -883,6 +891,7 @@ class ShoppingCartController extends Controller
         if (! Director::isDev() && ! Permission::check('ADMIN')) {
             return Security::permissionFailure($this);
         }
+
         // we want the same response as for an ajax request
         $_REQUEST['ajax'] = 1;
         $v = (string) $this->cart->setMessageAndReturn('test only');
@@ -891,6 +900,7 @@ class ShoppingCartController extends Controller
         if (null !== $decoded) {
             $v = (string) json_encode($decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
+
         $response = HTTPResponse::create($v);
         $response->addHeader('Content-Type', 'text/plain; charset=utf-8');
 
@@ -908,11 +918,13 @@ class ShoppingCartController extends Controller
                 if (Director::isDev()) {
                     user_error('SecurityID check failed for action: ' . $action . ' - only POST requests are allowed for this action.', E_USER_WARNING);
                 }
+
                 $this->httpError(400);
             } elseif (!SecurityToken::inst()->checkRequest($request)) {
                 if (Director::isDev()) {
                     user_error('SecurityID check failed for action: ' . $action . ' - SecurityID is missing or invalid.', E_USER_WARNING);
                 }
+
                 $this->httpError(400);
             }
         }
@@ -931,6 +943,7 @@ class ShoppingCartController extends Controller
         if (!$action) {
             return false;
         }
+
         if (!$config->get('check_security_id_for_links')) {
             return false;
         }
@@ -971,9 +984,7 @@ class ShoppingCartController extends Controller
     {
         $token = SecurityToken::inst();
         if (Config::inst()->get(ShoppingCartController::class, 'add_security_id_to_links')) {
-            if (! isset($array['SecurityID'])) {
-                $array['SecurityID'] = $token->getValue();
-            }
+            $array['SecurityID'] ??= $token->getValue();
         }
 
         return '?' . http_build_query($array);

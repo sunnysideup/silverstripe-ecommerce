@@ -879,7 +879,7 @@ class Product extends Page implements BuyableModel
     public function BestAvailableImageScaled()
     {
         $image = $this->BestAvailableImage();
-        if ($image && $image->exists()) {
+        if ($image instanceof Image && $image->exists()) {
             return $image->ScaleMinDimensions();
         }
 
@@ -1144,10 +1144,12 @@ class Product extends Page implements BuyableModel
     {
         return str_replace('?stage=Stage', '', $this->AbsoluteLink());
     }
+
     public function SecurityIDToken(): string
     {
         return (string) SecurityToken::getSecurityID();
     }
+
     public function AddSecurityIdToLinks(): bool
     {
         return ShoppingCartController::add_security_id_to_links();

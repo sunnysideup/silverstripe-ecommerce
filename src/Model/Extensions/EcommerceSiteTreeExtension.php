@@ -85,6 +85,7 @@ class EcommerceSiteTreeExtension extends Extension
             if (substr((string) $urlSegment, -2) === '-' . $x) {
                 return substr((string) $urlSegment, 0, -2);
             }
+
             ++$x;
         }
 

@@ -318,7 +318,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         $order = $this->getOrderCached();
 
         $orderMember = null;
-        if ($order && $order->exists() && $order->MemberID) {
+        if ($order instanceof Order && $order->exists() && $order->MemberID) {
             $member = $order->Member();
             if ($member && $member->exists()) {
                 $orderMember = $member;
@@ -335,9 +335,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         }
 
         $emails = [];
-        if ($order && $order->exists()) {
+        if ($order instanceof Order && $order->exists()) {
             // the order can give us more than one address (separated by a semicolon)
-            $emails = array_values(array_filter(array_map('trim', explode(';', (string) $order->getOrderEmail()))));
+            $emails = array_values(array_filter(array_map(trim(...), explode(';', (string) $order->getOrderEmail()))));
         }
 
         foreach ($emails as $email) {
@@ -440,7 +440,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         }
 
         $order = $this->getOrderCached();
-        if ($order && $order->exists()) {
+        if ($order instanceof Order && $order->exists()) {
             return $order->canView();
         }
 
@@ -721,6 +721,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             if ($methodClass::config()->get('method_disabled')) {
                 $methodFields->addExtraClass('methodDisabled');
             }
+
             // Add those fields to the initial FieldSet we first created
             $fields->push($methodFields);
         }
@@ -864,7 +865,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         parent::onAfterWrite();
         $order = $this->getOrderCached();
-        if ($order && is_a($order, EcommerceConfigClassNames::getName(Order::class)) && $order->IsSubmitted()) {
+        if ($order instanceof Order && is_a($order, EcommerceConfigClassNames::getName(Order::class)) && $order->IsSubmitted()) {
             $order->tryToFinaliseOrder();
         }
     }

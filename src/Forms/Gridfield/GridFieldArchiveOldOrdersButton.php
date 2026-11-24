@@ -23,7 +23,7 @@ use Sunnysideup\Ecommerce\Cms\SalesAdmin;
  */
 class GridFieldArchiveOldOrdersButton implements GridField_HTMLProvider, GridField_ActionProvider
 {
-    private const ACTION_NAME = 'archiveoldorders';
+    private const string ACTION_NAME = 'archiveoldorders';
 
     /**
      * @var string

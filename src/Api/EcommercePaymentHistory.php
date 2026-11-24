@@ -25,7 +25,7 @@ class EcommercePaymentHistory
     /**
      * Columns that are about the version itself, or that change with every save.
      */
-    private const IGNORE_FIELDS = [
+    private const array IGNORE_FIELDS = [
         'ID',
         'RecordID',
         'Version',
@@ -39,7 +39,7 @@ class EcommercePaymentHistory
         'ClassName',
     ];
 
-    private const MAX_LENGTH = 300;
+    private const int MAX_LENGTH = 300;
 
     public static function html(EcommercePayment $payment): string
     {

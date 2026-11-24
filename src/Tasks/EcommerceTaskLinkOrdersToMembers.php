@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use SilverStripe\Security\Member;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
@@ -67,9 +68,11 @@ class EcommerceTaskLinkOrdersToMembers extends BuildTask
         if ($limit < 1) {
             $limit = (int) static::config()->get('default_limit');
         }
+
         if ($fix && ! DestructiveTaskGuard::mayRun(null, $this, 'Links submitted orders that have no member to a member (and creates members for them). The orders are changed (member only).', DestructiveTaskGuard::ANYWHERE)) {
             return Command::FAILURE;
         }
+
         set_time_limit(1200);
 
         $this->reportOnOrdersWithMember();
@@ -96,10 +99,12 @@ class EcommerceTaskLinkOrdersToMembers extends BuildTask
 
                 break;
             }
+
             $order = Order::get_by_id((int) $orderID);
             if (! $order || ! $order->exists()) {
                 continue;
             }
+
             $billingAddress = $order->BillingAddressID ? $order->BillingAddress() : null;
             $email = $billingAddress && $billingAddress->exists() ? trim((string) $billingAddress->Email) : '';
             if ('' === $email || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -108,12 +113,13 @@ class EcommerceTaskLinkOrdersToMembers extends BuildTask
 
                 continue;
             }
+
             $existing = EcommerceRole::find_member_by_email($email);
             $key = mb_strtolower($email);
 
             if (! $fix) {
                 // report only
-                if ($existing) {
+                if ($existing instanceof Member) {
                     if ($existing->EmailVerifiedAt) {
                         ++$stats['linked to an existing member who has verified their email address'];
                     } else {
@@ -129,15 +135,17 @@ class EcommerceTaskLinkOrdersToMembers extends BuildTask
             }
 
             $member = EcommerceRole::attach_member_to_guest_order($order, true);
-            if (! $member || ! $order->MemberID) {
+            if (! $member instanceof Member || ! $order->MemberID) {
                 ++$stats['can not be linked: other problem'];
                 $notLinkable[] = $order->ID;
 
                 continue;
             }
-            if (! $existing) {
+
+            if (!$existing instanceof Member) {
                 $this->createdMemberIDs[(int) $member->ID] = true;
             }
+
             if (isset($this->createdMemberIDs[(int) $member->ID])) {
                 // the member was created by this task for this email address: it is their order.
                 $order->EmailNotVerified = false;
@@ -147,6 +155,7 @@ class EcommerceTaskLinkOrdersToMembers extends BuildTask
             } else {
                 ++$stats['linked to an existing member who has verified their email address'];
             }
+
             // direct update: we do not want to change anything else about the (submitted) order,
             // not even the LastEdited date.
             DB::prepared_query(
@@ -159,10 +168,12 @@ class EcommerceTaskLinkOrdersToMembers extends BuildTask
         if (! $fix) {
             DB::alteration_message('Members that would be created (one per new email address): ' . count($emailsOfNewMembers));
         }
+
         DB::alteration_message($fix ? 'RESULT (orders changed):' : 'REPORT (nothing has been changed - add --fix to link the orders):', 'created');
         foreach ($stats as $label => $number) {
             DB::alteration_message(Convert::raw2xml($label) . ': ' . $number, $number && str_starts_with($label, 'can not') ? 'deleted' : 'created');
         }
+
         if ([] !== $notLinkable) {
             DB::alteration_message('Orders that can not be linked (fix these by hand in the CMS): #' . implode(', #', array_slice($notLinkable, 0, 200)) . (count($notLinkable) > 200 ? ' ...' : ''), 'deleted');
         }
@@ -186,6 +197,7 @@ class EcommerceTaskLinkOrdersToMembers extends BuildTask
                 }
             }
         }
+
         $heldCount = Order::get()->filter(['EmailNotVerified' => 1])->count();
         DB::alteration_message('Submitted orders with a member but without any valid email address: ' . count($noEmail) . ([] !== $noEmail ? ' (#' . implode(', #', array_slice($noEmail, 0, 200)) . ')' : ''), [] === $noEmail ? 'created' : 'deleted');
         DB::alteration_message('Orders held until the email address of the member is verified: ' . $heldCount);

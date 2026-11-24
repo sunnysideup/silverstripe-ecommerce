@@ -64,7 +64,7 @@ class UserPreference
     ];
 
     /**
-     * @var HTTPRequest
+     * @var HttpRequest
      */
     protected $request;
 
@@ -245,7 +245,7 @@ class UserPreference
                         // separated list of group tokens (my-group.123,other-group.456)
                         // to filter for more than one group at once
                         $otherProductGroups = ProductGroupFilter::get_groups_from_get_variable($newPreference);
-                        if (! empty($otherProductGroups)) {
+                        if ($otherProductGroups !== []) {
                             $segments = [];
                             $titles = [];
                             foreach ($otherProductGroups as $otherProductGroup) {
@@ -457,9 +457,7 @@ class UserPreference
     public function standardiseCurrentUserPreferences(string $type, $keyOrArray): array
     {
         if (is_array($keyOrArray)) {
-            if (null === $keyOrArray['params']) {
-                $keyOrArray['params'] = [];
-            }
+            $keyOrArray['params'] ??= [];
 
             if (isset($keyOrArray['key'], $keyOrArray['params'], $keyOrArray['title'])) {
                 return $keyOrArray;
@@ -539,6 +537,7 @@ class UserPreference
                             ]);
                         $list->push($obj);
                     }
+
                     $isCurrent = in_array($group->FilterForGroupSegment(), $currentKeyParts, true);
                     $title = $group->MenuTitle;
                     $crumb = $group->getProductGroupBreadcrumbCalculated();
@@ -546,6 +545,7 @@ class UserPreference
                         $title = $crumb . ' - ' . $title;
                         $prevGroup->Title = $prevGroup->ProductGroupBreadcrumb . ' - ' . $prevGroup->Title;
                     }
+
                     $linkValue = $this->combineGroupFilterValue($currentKeyParts, $group->FilterForGroupSegment());
                     foreach (array_keys($options) as $key) {
                         $obj = ArrayData::create([
@@ -815,12 +815,10 @@ class UserPreference
 
     protected function matchingSegment(?string $action): bool
     {
-        $outcome = true;
         if ($action) {
-            $outcome = $action === $this->mySegment();
+            return $action === $this->mySegment();
         }
-
-        return $outcome;
+        return true;
     }
 
     protected function mySegment(): string

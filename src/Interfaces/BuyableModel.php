@@ -126,7 +126,9 @@ interface BuyableModel
      * Has it been sold?
      */
     public function HasBeenSold(): bool;
+
     public function SecurityIDToken(): string;
+
     //LINKS
     public function AddSecurityIdToLinks(): bool;
 

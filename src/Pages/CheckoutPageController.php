@@ -341,7 +341,7 @@ class CheckoutPageController extends CartPageController
 
         $this->steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         $this->currentStep = $this->request->Param('ID');
-        if (! ($this->currentStep && in_array($this->currentStep, $this->steps, true))) {
+        if (!$this->currentStep || !in_array($this->currentStep, $this->steps, true)) {
             $this->currentStep = $this->steps[array_key_first($this->steps)];
         }
 

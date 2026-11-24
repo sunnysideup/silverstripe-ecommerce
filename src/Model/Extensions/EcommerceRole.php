@@ -8,7 +8,6 @@ use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -505,116 +504,6 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
     }
 
     /**
-     * Called by the one-time-code login (sunnysideup/one-time-code-authentication)
-     * after the member has logged in with a code that was sent to their email address.
-     * That proves that they control the email address, so:
-     * 1. we remember that the email address has been verified
-     * 2. we link the guest orders that were placed with this email address to their account.
-     */
-    public function onAfterOneTimeCodeLogin(): void
-    {
-        $this->markEmailAsVerified();
-        $this->claimGuestOrdersForVerifiedEmail();
-    }
-
-    /**
-     * Called after every login (core SilverStripe).
-     * Members who have verified their email address (see markEmailAsVerified)
-     * get the guest orders that were placed with their email address, whatever way they log in.
-     * Members who have not verified their email address do NOT get any orders linked:
-     * a password only proves that someone chose it, not that they own the email address.
-     */
-    public function afterMemberLoggedIn(): void
-    {
-        if ($this->getOwner()->EmailVerifiedAt) {
-            $this->claimGuestOrdersForVerifiedEmail();
-        }
-    }
-
-    /**
-     * Remembers that the member has proven that they own their email address.
-     * ONLY call this after a login method that proves this (e.g. a code sent to the email address).
-     *
-     * The first time this happens, a password that is already on the account is removed
-     * (see clear_password_when_email_is_first_verified).
-     */
-    public function markEmailAsVerified(): void
-    {
-        $owner = $this->getOwner();
-        if (! $owner->exists() || $owner->EmailVerifiedAt) {
-            return;
-        }
-        $now = DBDatetime::now()->Rfc2822();
-        $clearPassword = $owner->Password && Config::inst()->get(EcommerceRole::class, 'clear_password_when_email_is_first_verified');
-        // direct updates: we do not want any of the side effects of writing a member.
-        if ($clearPassword) {
-            // NB: the encryption algorithm must stay a valid one (see find_or_create_guest_member_for_order).
-            DB::prepared_query(
-                'UPDATE "Member" SET "EmailVerifiedAt" = ?, "Password" = NULL, "Salt" = NULL, "PasswordEncryption" = ?, "AutoLoginHash" = NULL, "AutoLoginExpired" = NULL WHERE "ID" = ?',
-                [$now, self::default_password_encryption(), (int) $owner->ID]
-            );
-            // remember-me logins also have to go.
-            // NB: we do NOT change the password on $owner itself: that would make a later write() hash an empty password.
-            RememberLoginHash::get()->filter(['MemberID' => $owner->ID])->removeAll();
-        } else {
-            DB::prepared_query('UPDATE "Member" SET "EmailVerifiedAt" = ? WHERE "ID" = ?', [$now, (int) $owner->ID]);
-        }
-        $owner->EmailVerifiedAt = $now;
-    }
-
-    /**
-     * Links submitted orders that do not have a member yet (guest orders) and
-     * that have been placed with the email address of this member (billing address email)
-     * to this member.  Cancelled orders are included.
-     *
-     * ONLY call this if the member has verified that they control their email address.
-     *
-     * @return int number of orders linked
-     */
-    public function claimGuestOrdersForVerifiedEmail(?int $batchSize = 200): int
-    {
-        $owner = $this->getOwner();
-        $email = trim((string) $owner->Email);
-        if (! $owner->exists() || ! $owner->EmailVerifiedAt || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return 0;
-        }
-        // staff place orders on behalf of customers: do not link those to the staff account.
-        if ($owner->IsShopAdmin() || $owner->IsShopAssistant()) {
-            return 0;
-        }
-        $count = 0;
-        // in batches, so that we get all of them without loading too many at once.
-        for ($i = 0; $i < 100; ++$i) {
-            $orderIDs = Order::get_datalist_of_orders_with_submit_record(true, true)
-                ->filter(['MemberID' => 0, 'BillingAddress.Email' => $email])
-                ->limit($batchSize)
-                ->column('ID');
-            if ([] === $orderIDs) {
-                break;
-            }
-            foreach ($orderIDs as $orderID) {
-                // direct update: we do not want to change anything else about the (submitted) order,
-                // not even the LastEdited date.
-                DB::prepared_query(
-                    'UPDATE "Order" SET "MemberID" = ? WHERE "ID" = ? AND "MemberID" = 0',
-                    [(int) $owner->ID, (int) $orderID]
-                );
-                ++$count;
-            }
-        }
-
-        return $count;
-    }
-
-    /**
-     * The password encryption algorithm that new members get (e.g. blowfish).
-     */
-    protected static function default_password_encryption(): string
-    {
-        return (string) (Security::config()->get('password_encryption_algorithm') ?: 'blowfish');
-    }
-
-    /**
      * Every customer gets a member, even if they check out as a guest.
      *
      * Creates a member (with the email address and name of the billing address) for a guest order,
@@ -633,23 +522,28 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         if ($order->MemberID) {
             return null;
         }
+
         $currentUser = Security::getCurrentUser();
         if ($currentUser && $currentUser->exists()) {
             // someone is logged in (e.g. the shop admin placing an order on behalf of a customer)
             return null;
         }
+
         $billingAddress = $order->BillingAddress();
         if (! $billingAddress || ! $billingAddress->exists()) {
             return null;
         }
+
         $email = trim((string) $billingAddress->Email);
         if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return null;
         }
+
         $uniqueField = Member::config()->get('unique_identifier_field') ?: 'Email';
         if (Member::get()->filter([$uniqueField => $email])->exists()) {
             return null;
         }
+
         $member = Member::create();
         $member->{$uniqueField} = $email;
         $member->FirstName = mb_substr(trim((string) $billingAddress->FirstName), 0, 100);
@@ -659,9 +553,11 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         } catch (ValidationException) {
             return null;
         }
+
         if (! $member->exists()) {
             return null;
         }
+
         // SilverStripe hashes the password when a member is first written, even if it is empty
         // (so the member would end up with the hash of an empty password).
         // This member must not have a password at all, so we remove it.
@@ -726,6 +622,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         if (! $owner->exists() || $owner->EmailVerifiedAt) {
             return;
         }
+
         $now = DBDatetime::now()->Rfc2822();
         $clearPassword = $owner->Password && Config::inst()->get(EcommerceRole::class, 'clear_password_when_email_is_first_verified');
         // direct updates: we do not want any of the side effects of writing a member.
@@ -739,6 +636,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         } else {
             DB::prepared_query('UPDATE "Member" SET "EmailVerifiedAt" = ? WHERE "ID" = ?', [$now, (int) $owner->ID]);
         }
+
         $owner->EmailVerifiedAt = $now;
 
         // Nobody had proven that they own this email address until now, so every login that exists
@@ -765,7 +663,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         $owner = $this->getOwner();
         try {
             $keepID = 0;
-            if (Controller::has_curr()) {
+            if (Controller::curr() !== null) {
                 $current = LoginSession::getCurrentLoginSession(Controller::curr()->getRequest());
                 if ($current && (int) $current->MemberID === (int) $owner->ID) {
                     $keepID = (int) $current->ID;
@@ -802,10 +700,12 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         if (! $owner->exists() || ! $owner->EmailVerifiedAt || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return 0;
         }
+
         // staff place orders on behalf of customers: do not link those to the staff account.
         if ($owner->IsShopAdmin() || $owner->IsShopAssistant()) {
             return 0;
         }
+
         $count = 0;
         // in batches, so that we get all of them without loading too many at once.
         for ($i = 0; $i < 100; ++$i) {
@@ -817,6 +717,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
             if ([] === $orderIDs) {
                 break;
             }
+
             foreach ($orderIDs as $orderID) {
                 // direct update: we do not want to change anything else about the (submitted) order,
                 // not even the LastEdited date.
@@ -846,10 +747,12 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         if (! $owner->exists() || ! $owner->EmailVerifiedAt) {
             return 0;
         }
+
         $count = (int) $this->getOrdersIncludingUnverified()->filter(['EmailNotVerified' => 1])->count();
         if (0 === $count) {
             return 0;
         }
+
         // direct update: we do not want to change anything else about the (submitted) order,
         // not even the LastEdited date.
         DB::prepared_query(
@@ -870,6 +773,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         if ('' === $email) {
             return null;
         }
+
         $uniqueField = (string) (Member::config()->get('unique_identifier_field') ?: 'Email');
         $uniqueField = preg_replace('/[^A-Za-z0-9_]/', '', $uniqueField);
 
@@ -926,6 +830,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
                     // (see Order::submissionProblems)
                     return null;
                 }
+
                 $order->MemberID = $currentUser->ID;
                 $order->EmailNotVerified = false;
 
@@ -937,6 +842,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         if (! $billingAddress || ! $billingAddress->exists()) {
             return null;
         }
+
         $email = trim((string) $billingAddress->Email);
         if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return null;
@@ -951,6 +857,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
 
                 return $member;
             }
+
             // could not create one: has someone else just created one with this email address?
             $member = self::find_member_by_email($email);
             if (! $member instanceof Member) {
@@ -961,7 +868,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         // there is already a member with this email address:
         // the order is linked to them, but it is held until they have verified their email address.
         $order->MemberID = $member->ID;
-        $order->EmailNotVerified = ! ($isBackfill && $member->EmailVerifiedAt);
+        $order->EmailNotVerified = !$isBackfill || !$member->EmailVerifiedAt;
 
         return $member;
     }
@@ -981,9 +888,11 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         } catch (ValidationException) {
             return null;
         }
+
         if (! $member->exists()) {
             return null;
         }
+
         // SilverStripe hashes the password when a member is first written, even if it is empty
         // (so the member would end up with the hash of an empty password).
         // This member must not have a password at all, so we remove it.
@@ -1045,6 +954,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         if (! $owner->exists()) {
             return 0;
         }
+
         $orderTable = Order::getSchema()->tableName(Order::class);
         $paymentTable = Order::getSchema()->tableName(EcommercePayment::class);
 
@@ -1244,7 +1154,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
      */
     public function SetPreferredCurrency(EcommerceCurrency $currency)
     {
-        if ($this->getOwner()->exists() && ($currency && $currency->exists())) {
+        if ($this->getOwner()->exists() && ($currency instanceof EcommerceCurrency && $currency->exists())) {
             $this->getOwner()->PreferredCurrencyID = $currency->ID;
             $this->getOwner()->write();
         }

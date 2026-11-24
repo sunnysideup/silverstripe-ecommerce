@@ -163,6 +163,7 @@ class ProductGroupController extends PageController
         if (! $includeCurrentOrder) {
             return;
         }
+
         $currentOrder = ShoppingCart::current_order();
         if ($currentOrder->TotalItems(true)) {
             $responseClass = EcommerceConfig::get(ShoppingCart::class, 'response_class');
@@ -287,9 +288,7 @@ class ProductGroupController extends PageController
      */
     public function ClientSideListMode(): bool
     {
-        if (null === $this->clientSideListModeCache) {
-            $this->clientSideListModeCache = $this->calculateClientSideListMode();
-        }
+        $this->clientSideListModeCache ??= $this->calculateClientSideListMode();
 
         return $this->clientSideListModeCache;
     }
@@ -413,9 +412,7 @@ class ProductGroupController extends PageController
 
     public function HasManyProducts(): bool
     {
-        if (null === $this->hasManyProductsCache) {
-            $this->hasManyProductsCache = $this->getBaseProductList()->hasMoreThanOne($this->Config()->get('minimum_number_of_pages_to_show_filters_and_sort'));
-        }
+        $this->hasManyProductsCache ??= $this->getBaseProductList()->hasMoreThanOne($this->Config()->get('minimum_number_of_pages_to_show_filters_and_sort'));
 
         return $this->hasManyProductsCache;
     }
@@ -559,9 +556,8 @@ class ProductGroupController extends PageController
         if ($this->IsShowFullList()) {
             // there is still pagination, but we show more of them.
             return $this->getProductsPerPage() * 4;
-        } else {
-            return $this->getProductsPerPage();
         }
+        return $this->getProductsPerPage();
     }
 
     public function AdjacentPaginationLinks(): array
@@ -575,6 +571,7 @@ class ProductGroupController extends PageController
                 $current = $page;
                 continue;
             }
+
             if (!$current) {
                 $previous = $page;
             } else {
@@ -582,6 +579,7 @@ class ProductGroupController extends PageController
                 break;
             }
         }
+
         return [
             'Previous' => $previous['Link'] ?? null,
             'Next' => $next['Link'] ?? null,
@@ -1079,7 +1077,7 @@ class ProductGroupController extends PageController
             return false;
         }
 
-        $tokens = array_filter(array_map('trim', explode(',', $value)));
+        $tokens = array_filter(array_map(trim(...), explode(',', $value)));
 
         return count($tokens) > 1;
     }

@@ -211,6 +211,7 @@ class OrderProcessQueue extends DataObject
         if (! $order || ! $order->ID) {
             user_error('No real order provided.');
         }
+
         // an order is only ever at one step: entries for other steps are stale
         // and would otherwise keep taking up slots in every run
         $staleEntries = OrderProcessQueue::get()
@@ -270,7 +271,7 @@ class OrderProcessQueue extends DataObject
             } elseif (
                 // was $this->OrderStepID, which is 0 when called on a singleton,
                 // so stale entries were never cleaned up
-                $myQueueObject
+                $myQueueObject instanceof \Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue
                 && $myQueueObject->OrderStepID > 0
                 && (int) $order->StatusID !== (int) $myQueueObject->OrderStepID
             ) {
@@ -299,6 +300,7 @@ class OrderProcessQueue extends DataObject
                             $myQueueObject->write();
                         }
                     }
+
                     if ($hasMoved) {
                         return true;
                     }

@@ -39,6 +39,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
         if ($doCancel && ! DestructiveTaskGuard::mayRun(null, $this, 'Cancels and archives all orders that do not have an order step.', DestructiveTaskGuard::ANYWHERE)) {
             return Command::FAILURE;
         }
+
         if (! $doCancel) {
             $output->writeForHtml('You can add <strong>--cancel</strong> option to cancel and archive all orders.');
         }

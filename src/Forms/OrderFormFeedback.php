@@ -87,8 +87,9 @@ class OrderFormFeedback extends Form
             $allowedRatings = [];
             $ratingField = $this->Fields()->dataFieldByName('Rating');
             if ($ratingField instanceof OptionsetField) {
-                $allowedRatings = array_map('strval', array_keys($ratingField->getSource()));
+                $allowedRatings = array_map(strval(...), array_keys($ratingField->getSource()));
             }
+
             $maxPerOrder = (int) Config::inst()->get(self::class, 'max_feedback_entries_per_order');
             if (! is_string($rating) || ! in_array($rating, $allowedRatings, true) || ! is_string($note)) {
                 $form->sessionMessage(

@@ -56,7 +56,7 @@ class OrderItemProductFilter extends ExactMatchFilter
                     $orderIds = $logs->column('OrderID');
                 }
 
-                $query->where('OrderID IN (' . implode(',', array_map('intval', $orderIds)) . ')');
+                $query->where('OrderID IN (' . implode(',', array_map(intval(...), $orderIds)) . ')');
             }
         }
 

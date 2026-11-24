@@ -101,21 +101,29 @@ class SearchHistory extends DataObject
         if ($member && $member->IsShopAdmin()) {
             return null;
         }
+
         $keywordString = mb_substr(trim($keywordString), 0, self::KEYWORD_LENGTH_LIMIT);
         if (mb_strlen($keywordString) < 2) {
             return null;
         }
+
         // Anyone can search, so we limit the number of rows that can be added:
         // 1. the same keyword is only recorded once per minute per visitor (e.g. page reloads).
         $now = time();
-        $session = Controller::has_curr() ? Controller::curr()->getRequest()?->getSession() : null;
+        /**
+         * @deprecated Controller::has_curr() has been deprecated. It will be removed without equivalent functionality to replace it.
+         * See: https://docs.silverstripe.org/en/5/changelogs/5.4.0/#deprecated-api
+         */
+        $session = Controller::curr() !== null ? Controller::curr()->getRequest()?->getSession() : null;
         if ($session) {
             $last = $session->get('SearchHistoryLastEntry');
             if (is_array($last) && ($last['keyword'] ?? '') === $keywordString && ($now - (int) ($last['time'] ?? 0)) < 60) {
                 return null;
             }
+
             $session->set('SearchHistoryLastEntry', ['keyword' => $keywordString, 'time' => $now]);
         }
+
         // 2. overall maximum number of entries per minute (visitors can change their keyword and drop their session).
         $max = (int) Config::inst()->get(self::class, 'max_entries_per_minute');
         if ($max > 0) {
@@ -126,6 +134,7 @@ class SearchHistory extends DataObject
                 return null;
             }
         }
+
         $obj = SearchHistory::create();
         $obj->Title = $keywordString;
         $obj->ProductCount = $productCount;

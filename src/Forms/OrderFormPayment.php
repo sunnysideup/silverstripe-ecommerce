@@ -18,25 +18,22 @@ use Sunnysideup\Ecommerce\Model\Order;
 class OrderFormPayment extends Form
 {
     /**
-     * The order this form was built for. dopayment() must only ever act on this order,
-     * never on an order ID taken from the submitted data.
-     */
-    protected ?Order $order = null;
-
-    /**
      * @param string $name
      * @param string $returnToLink
      */
-    public function __construct(Controller $controller, $name, Order $order, $returnToLink = '')
+    public function __construct(Controller $controller, $name, /**
+     * The order this form was built for. dopayment() must only ever act on this order,
+     * never on an order ID taken from the submitted data.
+     */
+    protected Order $order, $returnToLink = '')
     {
-        $this->order = $order;
         $requiredFields = [];
-        $fields = FieldList::create(HiddenField::create('OrderID', '', $order->ID));
+        $fields = FieldList::create(HiddenField::create('OrderID', '', $this->order->ID));
         if ($returnToLink) {
             $fields->push(HiddenField::create('returntolink', '', Convert::raw2att($returnToLink)));
         }
 
-        if ($order->PaymentIsPending()) {
+        if ($this->order->PaymentIsPending()) {
             $fields->push(
                 LiteralField::create('PaymentIsPending', '<p class="message warning">' . _t(
                     'OrderForm.PAYMENTISPENDING',
@@ -47,13 +44,13 @@ class OrderFormPayment extends Form
 
         $bottomFields = CompositeField::create();
         $bottomFields->addExtraClass('bottomOrder');
-        if ($order->Total() > 0) {
-            $paymentFields = EcommercePayment::combined_form_fields($order->TotalOutstandingAsMoney()->NiceLongSymbol(false), $order);
+        if ($this->order->Total() > 0) {
+            $paymentFields = EcommercePayment::combined_form_fields($this->order->TotalOutstandingAsMoney()->NiceLongSymbol(false), $this->order);
             foreach ($paymentFields as $paymentField) {
                 $bottomFields->push($paymentField);
             }
 
-            $paymentRequiredFields = EcommercePayment::combined_form_requirements($order);
+            $paymentRequiredFields = EcommercePayment::combined_form_requirements($this->order);
             if ($paymentRequiredFields !== []) {
                 $requiredFields = array_merge($requiredFields, $paymentRequiredFields);
             }
@@ -96,7 +93,7 @@ class OrderFormPayment extends Form
         $orderID = (int) ($data['OrderID'] ?? 0);
         // the submitted OrderID must match the order this form was built for
         // and the current user must be allowed to view it.
-        if ($order && $order->exists() && $orderID === (int) $order->ID && $order->canView()) {
+        if ($order instanceof Order && $order->exists() && $orderID === (int) $order->ID && $order->canView()) {
             if ($order->canPay()) {
                 $formHelper = EcommercePayment::ecommerce_payment_form_setup_and_validation_object();
                 if ($formHelper->validatePayment($order, $data, $form)) {
@@ -107,6 +104,7 @@ class OrderFormPayment extends Form
                             // a redirect has been set already
                             return $this->controller->getResponse();
                         }
+
                         $form->sessionMessage(_t('OrderForm.COULDNOTPROCESSPAYMENT_TRYAGAIN', 'Sorry, we could not process your payment. Please check your details and try again.'), 'bad');
 
                         return $this->controller->redirectBack();
@@ -114,9 +112,11 @@ class OrderFormPayment extends Form
 
                     return $outcome;
                 }
+
                 //error messages are set in validation
                 return $this->controller->redirectBack();
             }
+
             $form->sessionMessage(_t('OrderForm.NO_PAYMENTS_CAN_BE_MADE_FOR_THIS_ORDER', 'No payments can be made for this order.'), 'bad');
 
             return $this->controller->redirectBack();

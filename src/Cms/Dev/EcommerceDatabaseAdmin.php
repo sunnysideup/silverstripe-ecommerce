@@ -315,6 +315,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
 
             echo "\n";
         }
+
         if ($task instanceof BuildTask) {
             $this->displayCompletionMessage($task);
         }
@@ -344,8 +345,9 @@ class EcommerceDatabaseAdmin extends TaskRunner
                 $buildTasksArray = array_merge($buildTasksArray, $extendedBuildTasks);
             }
         }
+
         // skip tasks that do not exist (any more): the menu would crash on them.
-        $buildTasksArray = array_filter(array_unique($buildTasksArray), 'class_exists');
+        $buildTasksArray = array_filter(array_unique($buildTasksArray), class_exists(...));
         $arrayList = ArrayList::create();
         foreach ($buildTasksArray as $buildTask) {
             $obj = new $buildTask();

@@ -20,7 +20,6 @@ use Sunnysideup\Ecommerce\Api\SendLoginToken;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Order;
 
 /**
@@ -202,6 +201,7 @@ class CartPageController extends PageController
             if ($order) {
                 $order->calculateOrderAttributes(false);
             }
+
             if (! $request->getVar('done')) {
                 return $this->redirect($this->Link('share/' . $codes) . '?done=1');
             }
@@ -228,6 +228,7 @@ class CartPageController extends PageController
         if (! $this->currentOrder) {
             return $this->httpError(404);
         }
+
         if (! ConfirmAction::isConfirmed($request)) {
             return ConfirmAction::form(
                 $request,
@@ -235,6 +236,7 @@ class CartPageController extends PageController
                 _t('CartPage.CONFIRM_LOADORDER_BUTTON', 'Load order')
             );
         }
+
         self::set_message(_t('CartPage.ORDERLOADED', 'Order has been loaded.'));
         ShoppingCart::singleton()->loadOrder($this->currentOrder->ID);
         $this->redirect($this->Link());
@@ -289,6 +291,7 @@ class CartPageController extends PageController
         if (! $this->currentOrder) {
             return $this->httpError(404);
         }
+
         if (! ConfirmAction::isConfirmed($request)) {
             return ConfirmAction::form(
                 $request,
@@ -296,6 +299,7 @@ class CartPageController extends PageController
                 _t('CartPage.CONFIRM_DELETEORDER_BUTTON', 'Delete order')
             );
         }
+
         if (! $this->CurrentOrderIsInCart() && $this->currentOrder->canDelete()) {
             $this->currentOrder->delete();
             self::set_message(_t('CartPage.ORDERDELETED', 'Order has been deleted.'));
@@ -321,6 +325,7 @@ class CartPageController extends PageController
                 _t('CartPage.CONFIRM_STARTNEWORDER_BUTTON', 'Start new order')
             );
         }
+
         ShoppingCart::singleton()->clear();
         self::set_message(_t('CartPage.NEWORDERSTARTED', 'New order has been started.'));
         $this->redirect($this->Link());
@@ -783,11 +788,13 @@ class CartPageController extends PageController
         if (! SecurityToken::inst()->checkRequest($request)) {
             return $this->httpError(400, 'Invalid security token');
         }
+
         $email = $request->requestVar('email');
         $backURL = $request->requestVar('BackURL');
         if (! is_string($email) || ! filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
             return $this->httpError(400, 'Invalid email address');
         }
+
         $email = trim($email);
         $backURL = is_string($backURL) ? $backURL : '';
         $obj = Injector::inst()->get(SendLoginToken::class);

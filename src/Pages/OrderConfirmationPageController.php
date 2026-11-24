@@ -371,6 +371,7 @@ class OrderConfirmationPageController extends CartPageController
                 if ($form instanceof OrderFormPayment) {
                     return $form;
                 }
+
                 return [];
             }
 
@@ -425,6 +426,7 @@ class OrderConfirmationPageController extends CartPageController
             if (class_exists($potentialClassName) && is_a(singleton($potentialClassName), EcommerceConfigClassNames::getName(OrderEmail::class))) {
                 $emailClassName = $potentialClassName;
             }
+
             // POST vars are used by the "send" form, GET vars by the (CMS) links that open the preview.
             $sendStepID = (int) $request->requestVar('send');
             $testStepID = (int) $request->requestVar('test');
@@ -449,6 +451,7 @@ class OrderConfirmationPageController extends CartPageController
                         return $this->httpError(403, 'You do not have permission to send order emails.');
                     }
                 }
+
                 $to = '';
                 if (Permission::check('ADMIN')) {
                     $to = (string) $request->requestVar('to');
@@ -472,6 +475,7 @@ class OrderConfirmationPageController extends CartPageController
                         $email = $adminOnlyOrToEmail ? 'site administrator' : $this->currentOrder->getOrderEmail();
                         // goes to Email for order.
                     }
+
                     if ($customerEmail !== '') {
                         // not a shop admin: always send to the email address of the order, nowhere else.
                         // (false = the email goes to the customer email of the order)
@@ -479,11 +483,13 @@ class OrderConfirmationPageController extends CartPageController
                         $email = $customerEmail;
                         $to = '';
                     }
+
                     if ($request->isPOST()) {
                         // only a POST with a valid security token actually sends the email.
                         if (! SecurityToken::inst()->checkRequest($request)) {
                             return $this->httpError(400, 'Invalid security token');
                         }
+
                         $session = $request->getSession();
                         $sessionKey = 'OrderEmailResentAt.' . $this->currentOrder->ID;
                         $cooldown = (int) $this->config()->get('owner_email_resend_cooldown_in_seconds');
@@ -501,6 +507,7 @@ class OrderConfirmationPageController extends CartPageController
                                 $session->set($sessionKey, time());
                                 $limiter->record();
                             }
+
                             $outcome = $this->currentOrder->sendEmail(
                                 $emailClassName,
                                 $subject,
@@ -509,6 +516,7 @@ class OrderConfirmationPageController extends CartPageController
                                 $adminOnlyOrToEmail
                             );
                         }
+
                         if ($tooSoon) {
                             $message = _t('OrderConfirmationPage.RECEIPT_TOO_SOON', 'This email has been sent recently. Please wait a few minutes before sending it again.');
                         } elseif ($outcome) {
@@ -554,10 +562,12 @@ class OrderConfirmationPageController extends CartPageController
         if (! $this->currentOrderAccessGranted || ! $order || ! $order->exists() || ! $order->IsSubmitted()) {
             return '';
         }
+
         $email = trim((string) $order->getOrderEmail());
         if ('' === $email) {
             return '';
         }
+
         // there can be more than one address (see Order::getOrderEmail)
         foreach (preg_split('/\s*[;,]\s*/', $email) as $address) {
             if (! filter_var($address, FILTER_VALIDATE_EMAIL)) {
@@ -581,6 +591,7 @@ class OrderConfirmationPageController extends CartPageController
         if ($to !== '') {
             $html .= '<input type="hidden" name="to" value="' . Convert::raw2att($to) . '" />';
         }
+
         $html .= '<p>' . _t('OrderConfirmationPage.PREVIEWONLY', 'Preview only - nothing has been sent yet.')
             . '<br />' . _t('OrderConfirmationPage.SENDTO', 'Send to:') . ' <strong>' . Convert::raw2xml($email) . '</strong>'
             . '</p>'

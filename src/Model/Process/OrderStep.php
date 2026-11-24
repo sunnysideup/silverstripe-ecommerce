@@ -14,7 +14,6 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
-use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
@@ -677,11 +676,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         );
         $exportButton = Injector::inst()->createWithArgs(GridFieldExportButton::class, ['buttons-before-left']);
         $exportButton->setExportColumns($this->getExportFieldsForOrder());
+
         $ordersField = $fields->dataFieldByName('Orders');
         if ($ordersField) {
             $config = $ordersField->setConfig(GridFieldConfig_RecordViewer::create());
             $ordersField->getConfig()->addComponent($exportButton);
         }
+
         $this->addEmailRecordsToCMSFields($fields);
         $this->addRelatedLogsToCMSFields($fields);
 
@@ -700,6 +701,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if (! $this->exists()) {
             return;
         }
+
         $fields->addFieldToTab(
             'Root.Emails',
             GridField::create(
@@ -720,13 +722,16 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if (! $this->exists()) {
             return;
         }
+
         $className = $this->getRelatedLogClassName();
         if ('' === $className) {
             return;
         }
+
         if(! class_exists($className)) {
             user_error($className.' does not exist in the orderstep ID#:'. $this->ID);
         }
+
         $pluralName = $className::singleton()->i18n_plural_name();
         $fields->addFieldsToTab(
             'Root.Logs',

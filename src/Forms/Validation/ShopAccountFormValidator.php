@@ -89,6 +89,7 @@ class ShopAccountFormValidator extends RequiredFieldsValidator
 
                     return false;
                 }
+
                 //can't be taken
                 $otherMembersWithSameEmail = Member::get()
                     ->filter([$uniqueFieldName => $uniqueFieldValue])
@@ -164,6 +165,7 @@ class ShopAccountFormValidator extends RequiredFieldsValidator
             );
             $valid = false;
         }
+
         // see ExtendedValidationTrait for how extensions work with validators
         if (! $this->extensionsAcceptTheData($data, _t('Account.ERRORINFORM', 'We could not save your details, please check your errors below.'))) {            $valid = false;
         }

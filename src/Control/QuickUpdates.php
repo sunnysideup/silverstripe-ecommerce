@@ -20,7 +20,6 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use SilverStripe\View\Requirements;
 use Sunnysideup\AjaxSelectField\AjaxSelectField;
 use Sunnysideup\Ecommerce\Api\JQueryRequirement;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -174,6 +173,7 @@ class QuickUpdates extends Controller
         if (! Permission::check($securityCheck)) {
             Security::permissionFailure($this);
         }
+
         JQueryRequirement::require();
         if (static::class === QuickUpdates::class) {
             return $this->httpError(404, 'Please choose a specific update.');
@@ -211,11 +211,13 @@ class QuickUpdates extends Controller
 
                 return $obj ? ['id' => $obj->ID, 'title' => $obj->FullName] : [];
             }
+
             // the query comes from the browser: it must be a plain string, and long enough to be a useful search
             $query = is_string($query) ? trim($query) : '';
             if (mb_strlen($query) < 3) {
                 return [];
             }
+
             // no raw2sql: the ORM escapes the values (doing it twice would change them)
             $list = Product::get()
                 ->filter(['AllowPurchase' => true])

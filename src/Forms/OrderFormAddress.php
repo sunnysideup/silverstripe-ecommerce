@@ -165,6 +165,7 @@ class OrderFormAddress extends Form
                     );
                 }
             }
+
             if ($this->loggedInMember) {
                 $memberFields->replaceField('Email', ReadonlyField::create('Email', 'Email', $this->loggedInMember->Email));
             } else {
@@ -359,6 +360,7 @@ class OrderFormAddress extends Form
                 $this->loadDataFrom($shippingAddress);
             }
         }
+
         if ($this->orderMemberAndLoggedInMemberAreEqual) {
             $fields->dataFieldByName('FirstName')->setValue($this->orderMember->FirstName);
             $fields->dataFieldByName('Surname')->setValue($this->orderMember->Surname);
@@ -553,7 +555,7 @@ class OrderFormAddress extends Form
      */
     public function uniqueMemberFieldCanBeUsed(array $data)
     {
-        if ($this->loggedInMember && $this->anotherExistingMemberWithSameUniqueFieldValue($data)) {
+        if ($this->loggedInMember && $this->anotherExistingMemberWithSameUniqueFieldValue($data) instanceof Member) {
             //there is an exception for shop admins
             //who can place an order on behalve of a customer.
             if ($this->loggedInMember->IsShopAdmin()) {
@@ -671,6 +673,7 @@ class OrderFormAddress extends Form
                     if ($this->debug) {
                         $this->debugArray[] = '4. is there no member logged in yet?';
                     }
+
                     //5. is there already a member with the email entered?
                     //SECURITY: we can not prove that this visitor owns that email address.
                     //We therefore do not attach the order to that member here, and we never use
@@ -682,6 +685,7 @@ class OrderFormAddress extends Form
                     if ($this->debug) {
                         $this->debugArray[] = '5. existing member with same email is NOT attached to order here for anonymous visitors (see OrderStepSubmitted)';
                     }
+
                     $this->orderMember = null;
 
                     //6. At this stage, if we dont have a member, we will create one!
@@ -836,7 +840,8 @@ class OrderFormAddress extends Form
                 )
                 ->First()
             ;
-        } elseif ($this->loggedInMember && $this->loggedInMember->Email) {
+        }
+        if ($this->loggedInMember && $this->loggedInMember->Email) {
             // all good
         }
 

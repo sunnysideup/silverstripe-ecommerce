@@ -317,7 +317,7 @@ class ReferralSummary extends LeftAndMain
 
         foreach ($refs as $ref) {
             $createdTs = strtotime((string) $ref->Created);
-            $created = (new DateTimeImmutable())->setTimestamp($createdTs);
+            $created = new DateTimeImmutable()->setTimestamp($createdTs);
 
             [$dateKey, $dateLabel] = $breakdownBy === 'AllTime'
                 ? ['AllTime', $dateFrom . ' ... ' . $dateUntil]

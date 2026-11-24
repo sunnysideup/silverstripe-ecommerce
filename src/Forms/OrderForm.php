@@ -229,6 +229,7 @@ class OrderForm extends Form
                     $form->sessionMessage(_t('Account.PASSWORD_CHANGE_ON_ACCOUNT_PAGE', 'Your password has not been changed. To change your password, please use your account page.'), 'warning');
                 }
             }
+
             if ($member->validate()->isValid()) {
                 $member->write();
             } else {

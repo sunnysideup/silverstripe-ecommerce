@@ -41,11 +41,12 @@ class SpecValue extends DataObject
             $value = $spec['value'] ?? null;
             if (!empty($groups) && $value !== null) {
                 $specValue = self::create_spec_for_product($product, $value, $groups);
-                if ($specValue) {
+                if ($specValue instanceof \Sunnysideup\Ecommerce\Model\Specs\SpecValue) {
                     $result[] = $specValue;
                 }
             }
         }
+
         return $result;
     }
 
@@ -73,9 +74,10 @@ class SpecValue extends DataObject
      */
     public static function remove_specs_for_product_by_group(Product $product, array $groups): void
     {
-        if (empty($groups)) {
+        if ($groups === []) {
             return;
         }
+
         // Find the leaf group
         $parent = null;
         foreach ($groups as $groupTitle) {
@@ -88,6 +90,7 @@ class SpecValue extends DataObject
                 return; // Group hierarchy doesn't exist
             }
         }
+
         // Remove specs in this group from the product
         $class = $parent->getSpecValueClass();
         $specValues = $class::get()->filter([
@@ -111,18 +114,21 @@ class SpecValue extends DataObject
      */
     public static function create_spec_for_product(Product $product, mixed $value, array $groups): ?SpecValue
     {
-        if (empty($groups)) {
+        if ($groups === []) {
             return null;
         }
+
         $type = SpecGroup::get_type_from_value($value);
         $parent = null;
         foreach ($groups as $group) {
             $parent = SpecGroup::find_or_create($group, $type, $parent);
         }
+
         $specValue = self::find_or_create($value, $parent);
         $specValue->Products()->add($product);
         return $specValue;
     }
+
     public static function find_or_create($value, SpecGroup $specGroup): SpecValue
     {
         $class = $specGroup->getSpecValueClass();
@@ -134,6 +140,7 @@ class SpecValue extends DataObject
         if ($obj) {
             return $obj;
         }
+
         $obj = $class::create($filter);
         $obj->write();
         return $obj;

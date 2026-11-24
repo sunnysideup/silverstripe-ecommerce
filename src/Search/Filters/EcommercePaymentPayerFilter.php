@@ -25,9 +25,9 @@ use Sunnysideup\Ecommerce\Model\Order;
  */
 class EcommercePaymentPayerFilter extends PartialMatchFilter
 {
-    private const MAX_WORDS = 6;
+    private const int MAX_WORDS = 6;
 
-    private const NAME_FIELDS = ['FirstName', 'Surname', 'Email'];
+    private const array NAME_FIELDS = ['FirstName', 'Surname', 'Email'];
 
     protected function applyOne(DataQuery $query)
     {

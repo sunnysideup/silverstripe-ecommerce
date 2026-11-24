@@ -50,6 +50,7 @@ class OrderFormValidator extends RequiredFieldsValidator
             );
             $valid = false;
         }
+
         $billingAddress = $order ? BillingAddress::get_by_id($order->BillingAddressID) : null;
         if (! $billingAddress) {
             $this->validationError(
@@ -59,6 +60,7 @@ class OrderFormValidator extends RequiredFieldsValidator
             );
             $valid = false;
         }
+
         // see ExtendedValidationTrait for how extensions work with validators in SilverStripe
         if (! $this->extensionsAcceptTheData($data, _t('OrderForm.ERRORINFORM', 'We could not process with your order, please check your errors below.'))) {
             $valid = false;
